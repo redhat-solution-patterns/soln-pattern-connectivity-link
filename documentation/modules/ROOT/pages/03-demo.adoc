@@ -1,4 +1,4 @@
-= Solution Pattern: Name Template
+= Solution Pattern: App Connectivity with Policy-as-Code
 :sectnums:
 :sectlinks:
 :doctype: book

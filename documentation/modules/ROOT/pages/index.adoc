@@ -4,11 +4,13 @@
 :sectlinks:
 :doctype: book
 
-A brief introduction of this solution pattern.
+With Hybrid cloud becoming the defacto standard, Platform engineering teams face increased complexity of setting up and running environments across multiple clusters and multiple environments There is a need to  make it easy to connect, protect and manage services and infrastructure across the different environments.
 
-_Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum_
+Red Hat Connectivity Link is  a cloud-native, open source solution, for hybrid cloud to Application Connectivity, API Management & Policy Management in single and multi-cluster Kubernetes environments. It is primarily  based on the open source Kuadrant project and builds on the capabilities of Red Hat OpenShift. 
 
-*Contributors:* _Your Name(s) here (can add links to your profile)_
+This Solution Pattern showcases how setup application connectivity with this Kubernetes-native solution using *Policy-as-Code approach*.
+
+*Contributors:* Jaya Christina Baskaran (Red Hat), Bernard Tison (Red Hat)
 
 ++++
  <br>
@@ -22,7 +24,25 @@ Solutions Patterns help you understand the art of the possible with Red Hat's po
 
 Common use cases that can be address with this architecture are:
 
-- xyz
-- xyz
+- Apply Policy-as-Code for repeatable and automated policy-based app-connectivity management
+- Adopt a zero-trust policy for your service end points
+- Secure access to expensive resources such as AI LLM endpoints
+- App-connectivity for single or multi-cluster environments
 
-include::01-pattern.adoc[]
+
+== The story behind this solution pattern
+
+Globex, a fictitious retail company, would like their product catalogue to be available for perusal in a secure fashion. This new application will need to access the Product Catalogue API in a secure way using OpenID Connect (OIDC) as the identity layer.
+
+Globex also wants to protect the endpoints by easily applying Rate Limiting and specific levels of access based on accessing users.
+They want all this to be easily managable through configurations without harcoding anything, and should be able to adjust rate limits easily too
+
+== The Solution
+
+For this purpose, Globex decides to embrace a policy-as-code approach. As https://www.gartner.com/document/3992070[Gartner^] points out Policy as code (PaC) provides repeatable and automated policy-based management through which one can define security through code
+
+Red Hat Connectivity Link offers delivering simplified Kubernetes application connectivity and policy management across multi-cluster environments. This is achieved through through the open source https://kuadrant.io[Kuadrant^] which brings together Gateway API and Policies to help you scale, load-balance, and secure your gateways in single or multi-cluster environments.
+
+* Gateway API is the new standard for Ingress from k8s community. It is the Next generation of Kubernetes Ingress, Load Balancing, and Service Mesh APIs. It is expressive, and role-oriented
+* Kuadrant provides  Gateway Policies for Kubernetes. The policies can connect, secure, and protect services for TLS, DNS, Auth and Rate limiting. The observability (metrics) templates make it easy to monitory for compliance
+

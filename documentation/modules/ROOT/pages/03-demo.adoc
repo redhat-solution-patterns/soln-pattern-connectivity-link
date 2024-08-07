@@ -31,7 +31,7 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 * Once a free DB is created, get the connection string.
 ** Click on DB created, and click on Connect button show in the page
 +
-image::redis-connection.png.png[width=40%]
+image::redis-connection.png[width=40%]
 * You will need only the connection string which will look like this
 +
 `redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155`

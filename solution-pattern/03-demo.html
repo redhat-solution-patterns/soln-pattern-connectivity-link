@@ -418,6 +418,11 @@ Run the Ansible script which will setup the Globex app.</p>
 </li>
 <li>
 <p>Click on Categories - you should see a 404. This is because the HTTPRoute hasn&#8217;t been created yet</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-404.png" alt="globex 404">
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -482,6 +487,11 @@ spec:
 <ul>
 <li>
 <p>Try accessing <strong>Categories</strong> again - you should see a 403.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-403.png" alt="globex 403" width="70%">
+</div>
+</div>
 </li>
 <li>
 <p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn’t allow any calls</p>
@@ -541,6 +551,11 @@ spec:
 <ul>
 <li>
 <p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-success.png" alt="globex success" width="70%">
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -575,6 +590,11 @@ spec:
           unit: second
       counters:
         - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-429.png" alt="globex 429" width="70%">
 </div>
 </div>
 </div>

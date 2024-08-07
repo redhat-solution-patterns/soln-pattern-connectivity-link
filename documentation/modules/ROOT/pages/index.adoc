@@ -1,4 +1,4 @@
-= Solution Patterns: Template Name
+= Solution Patterns: Connect, Secure and Protect with Red Hat Connectiity Link
 :page-layout: home
 :sectnums:
 :sectlinks:

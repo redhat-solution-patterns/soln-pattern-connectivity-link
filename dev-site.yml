@@ -13,7 +13,7 @@ content:
       start_path: documentation
 asciidoc:
   attributes:
-    title: Red Hat Solution Patterns (Dev Mode)
+    title: Solution Patterns from Red Hat  (Dev Mode)
   extensions:
     - ./lib/remote-include-processor.js
     - ./lib/tab-block.js

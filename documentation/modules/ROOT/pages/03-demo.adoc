@@ -114,7 +114,8 @@ The Gateway is now ready for developers to use for connect to their service endp
 * Acess the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes
 * Login using `asilva/openshift` credentials
 * Click on Categories - you should see a 404. This is because the HTTPRoute hasn't been created yet
-
++
+image::globex-404.png[]
 
 
 === Set up HTTPRoute and backend
@@ -163,6 +164,9 @@ spec:
 === Test Globex Mobile again (after HTTPRoute is setup)
 
 * Try accessing *Categories* again - you should see a 403.
++
+image::globex-403.png[width=70%]
+
 * This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn’t allow any calls
 
 === Setup Authpolicy
@@ -203,6 +207,8 @@ spec:
 === Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)
 
 * Try accessing *Categories* again - you should now be able to see the Categories
++
+image::globex-success.png[width=70%]
 
 === Setup RateLimit Policy
 
@@ -230,6 +236,7 @@ spec:
         - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
 ----
 
+image::globex-429.png[width=70%]
 
 === Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)
 

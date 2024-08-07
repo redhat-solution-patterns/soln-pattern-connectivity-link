@@ -59,7 +59,7 @@
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html" class=" query-params-link">Template Tutorial</a></h3>
+    <h3 class="title"><a href="index.html" class=" query-params-link">Connectivity Link</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -151,12 +151,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">Template Tutorial</span>
+    <span class="title">Connectivity Link</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">Template Tutorial</span>
+      <span class="title">Connectivity Link</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -174,7 +174,7 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">Template Tutorial</a></li>
+    <li><a href="index.html">Connectivity Link</a></li>
     <li><a href="03-demo.html">3. See the Solution in Action</a></li>
   </ul>
 </nav>
@@ -190,407 +190,338 @@
 <div class="sect2">
 <h3 id="_before_getting_started"><a class="anchor" href="#_before_getting_started"></a><a class="link" href="#_before_getting_started">1.1. Before getting started</a></h3>
 <div class="paragraph">
-<p>To run this demo, you will need xpto. Adding to that, make sure to have:</p>
+<p>To run this demo, you will need:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>ABC</p>
+<p>You will need an OpenShift cluster with admin access</p>
 </li>
 <li>
-<p>XYZ</p>
+<p>Access to AWS to be able to create Route53 domain names</p>
 </li>
 <li>
-<p>XPTO</p>
+<p>Free tier of Redis database</p>
 </li>
 </ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_installing_the_demo"><a class="anchor" href="#_installing_the_demo"></a><a class="link" href="#_installing_the_demo">1.2. Installing the demo</a></h3>
-<div class="paragraph">
-<p>Installation guide and basic test of the demo installation if needed</p>
 </div>
 </div>
 </div>
 </div>
 <h1 id="_walkthrough_guide" class="sect0"><a class="anchor" href="#_walkthrough_guide"></a><a class="link" href="#_walkthrough_guide">Walkthrough guide</a></h1>
 <div class="sect1">
-<h2 id="_setup_prerequisite_create_managed_zone_on_aws"><a class="anchor" href="#_setup_prerequisite_create_managed_zone_on_aws"></a><a class="link" href="#_setup_prerequisite_create_managed_zone_on_aws">2. Setup Prerequisite: Create Managed Zone on AWS</a></h2>
+<h2 id="_setup_prerequisite"><a class="anchor" href="#_setup_prerequisite"></a><a class="link" href="#_setup_prerequisite">2. Setup Prerequisite:</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">2.1. Create Managed Zone on AWS</a></h3>
 <div class="paragraph">
-<p>Refer to the [Prerequisites](<a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" class="bare">https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites</a>) section to correctly create a Managed Zone on AWS.</p>
+<p>Refer: <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" target="_blank" rel="noopener">Prerequisites on Red Hat Developers</a></p>
 </div>
-<div class="paragraph">
-<p>Setup prerequisites</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">export zid=&lt;zone id&gt;
-export rootDomain=&lt;globex.sandbox940.opentlc.com&gt;
-export gatewayNS=&lt;globex-apim-user1&gt;
-export gatewayName=&lt;globex&gt;
-export AWS_ACCESS_KEY_ID=&lt;Enter your AWS_ACCESS_KEY_ID&gt;
-export AWS_SECRET_ACCESS_KEY=&lt;Enter your  AWS_SECRET_ACCESS_KEY&gt;
-export AWS_REGION=&lt;Change to your defaulty zone e.g. eu-central-1&gt;
-export clusterIssuerName=&lt;prod-web-lets-encrypt-issuer&gt;
-export EMAIL=&lt;Replace with your email address example@example@.com&gt;</code></pre>
+<div class="ulist">
+<ul>
+<li>
+<p>In AWS Route53 add a hosted zone as a subdomain (for example, managed.mytopdomain.com) for the applications that you want to manage and secure with Connectivity Link.</p>
+</li>
+<li>
+<p>Refer to the the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html" target="_blank" rel="noopener">AWS documentation</a> on Route53 for instructions on how to setup the hosted zone.</p>
+</li>
+<li>
+<p>Make sure you will have to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in <a href="https://repost.aws/knowledge-center/create-subdomain-route-53" target="_blank" rel="noopener">this article</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setup_as_a_platform_engineer"><a class="anchor" href="#_setup_as_a_platform_engineer"></a><a class="link" href="#_setup_as_a_platform_engineer">3. Setup as a Platform Engineer</a></h2>
+<h2 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">3. Redis</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>You can sign up for a free tier of Redis Cloud. Sign up at <a href="https://app.redislabs.com/" target="_blank" rel="noopener">app.redislabs.com</a></p>
+</li>
+<li>
+<p>Once a free DB is created, get the connection string.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Click on DB created, and click on Connect button show in the page</p>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="redis-connection.png.png" alt="redis connection.png" width="40%">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>You will need only the connection string which will look like this</p>
+<div class="paragraph">
+<p><code>redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155</code></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploy_the_rhcl_operator_and_related_kuadrant_system"><a class="anchor" href="#_deploy_the_rhcl_operator_and_related_kuadrant_system"></a><a class="link" href="#_deploy_the_rhcl_operator_and_related_kuadrant_system">4. Deploy the RHCL Operator and related Kuadrant system</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Clone the ansible script</p>
+<div class="listingblock">
+<div class="content">
+<pre>git clone https://github.com/rh-soln-pattern-connectivity-link/cl-install-ansible</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Open the inventories/inventory.template file and update the following variables. Save the file.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_connectivity_link_kuadrant_redis_url=&lt;redis URL you setup in the previous step&gt;
+# E.g.: redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155
+
+ocp4_workload_connectivity_link_aws_access_key=&lt;AWS_ACCESS_KEY_ID&gt;
+ocp4_workload_connectivity_link_aws_secret_access_key=&lt;AWS_SECRET_ACCESS_KEY&gt;
+
+ocp4_workload_connectivity_link_aws_managed_zone_id=&lt;Managed Zone ID - created in the previous step&gt;
+# E.g.: Z12345677XYZ0FF0GBHIJ0
+
+ocp4_workload_connectivity_link_aws_managed_zone_domain=&lt;Managed Zone domain - created in the previous step&gt;
+# E.g.: managed.sandbox1585.opentlc.com
+
+ocp4_workload_connectivity_link_aws_managed_zone_region=&lt;Managed Zone region - default region of your AWS setup&gt;
+# E.g.: eu-central-1
+
+ocp4_workload_connectivity_link_ingress_gateway_tls_issuer_email=&lt;your  address email for letsencrypt&gt;
+
+ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
+# E.g.: EU or US</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ansible-playbook playbooks/ocp4_workload_connectivity_link.yml  -e ACTION=create -i inventories/inventory.template</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploy_the_globex_application"><a class="anchor" href="#_deploy_the_globex_application"></a><a class="link" href="#_deploy_the_globex_application">5. Deploy the Globex application</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Git clone the repo with the ansible script</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>git clone https://github.com/rh-soln-pattern-connectivity-link/globex-ansible.git</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the inventories/inventory.template file and update the following variables. Save the file.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.&lt;aws_managed_zone_domain&gt;
+
+#E.g.: https://globex-mobile.managed.sandbox2662.opentlc.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>*
+Run the Ansible script which will setup the Globex app.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ansible-playbook playbooks/globex.yml -e ACTION=create -i inventories/inventory.template</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deployment_walkthrough"><a class="anchor" href="#_deployment_walkthrough"></a><a class="link" href="#_deployment_walkthrough">6. Deployment Walkthrough</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So far you have setup (note that all this is setup by the Infra persona)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GatewayAPI with Istio has the provider</p>
+</li>
+<li>
+<p>RHCL Operator</p>
+</li>
+<li>
+<p>Various policies and CRDs including</p>
+<div class="ulist">
+<ul>
+<li>
+<p>ManagedZone</p>
+</li>
+<li>
+<p>Gateway (ingress-gateway namespace)</p>
+</li>
+<li>
+<p>DNS Policy (ingress-gateway namespace)</p>
+</li>
+<li>
+<p>TLS Policy (default policy in ingress-gateway namespace)</p>
+</li>
+<li>
+<p>Auth Policy (deny-all default policy in ingress-gateway namespace)</p>
+</li>
+<li>
+<p>RateLimit Policy (default policy in ingress-gateway namespace)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Gateway is now ready for developers to use for connect to their service endpoints.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup_service_endpoints_as_a_developer"><a class="anchor" href="#_setup_service_endpoints_as_a_developer"></a><a class="link" href="#_setup_service_endpoints_as_a_developer">7. Setup service-endpoints as a Developer</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_create_managedzone"><a class="anchor" href="#_create_managedzone"></a><a class="link" href="#_create_managedzone">3.1. Create ManagedZone</a></h3>
-<div class="paragraph">
-<p>Create the zone credentials as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">oc create ns ${gatewayNS}
-
-oc -n ${gatewayNS} create secret generic aws-credentials \
-  --type=kuadrant.io/aws \
-  --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-  --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then create a ManagedZone as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1alpha1
-kind: ManagedZone
-metadata:
-  name: managedzone
-  namespace: ${gatewayNS}
-spec:
-  id: ${zid}
-  domainName: ${rootDomain}
-  description: "Kuadrant managed zone"
-  dnsProviderSecretRef:
-    name: aws-credentials
-EOF</code></pre>
-</div>
+<h3 id="_test_globex_mobile"><a class="anchor" href="#_test_globex_mobile"></a><a class="link" href="#_test_globex_mobile">7.1. Test Globex Mobile</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Acess the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes</p>
+</li>
+<li>
+<p>Login using <code>asilva/openshift</code> credentials</p>
+</li>
+<li>
+<p>Click on Categories - you should see a 404. This is because the HTTPRoute hasn&#8217;t been created yet</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_add_a_tls_issuer"><a class="anchor" href="#_add_a_tls_issuer"></a><a class="link" href="#_add_a_tls_issuer">3.2. Add a TLS issuer</a></h3>
-<div class="paragraph">
-<p>already created</p>
+<h3 id="_set_up_httproute_and_backend"><a class="anchor" href="#_set_up_httproute_and_backend"></a><a class="link" href="#_set_up_httproute_and_backend">7.2. Set up HTTPRoute and backend</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+<li>
+<p>Make changes to the elements marked as &lt;&lt; REPLACE &gt;&gt;.</p>
+</li>
+<li>
+<p>In this YAML replae the the s`pec &gt; hostnames` as show below</p>
+</li>
+</ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_set_up_a_gateway"><a class="anchor" href="#_set_up_a_gateway"></a><a class="link" href="#_set_up_a_gateway">3.3. Set up a Gateway</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
+<pre>kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
 metadata:
-  name: ${gatewayName}
-  namespace: ${gatewayNS}
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
   labels:
-    kuadrant.io/gateway: "true"
+    deployment: globex-mobile-gateway
+    service: globex-mobile-gateway
 spec:
-    gatewayClassName: istio
-    listeners:
-
-    - allowedRoutes:
-        namespaces:
-          from: Same
-      hostname: "*.${rootDomain}"
-      name: api
-      port: 443
-      protocol: HTTPS
-      tls:
-        certificateRefs:
-        - group: ""
-          kind: Secret
-          name: api-${gatewayName}-tls
-        mode: Terminate
-EOF</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_setup_default_policies_auth_tls_rate_limit_and_dns_policies"><a class="anchor" href="#_setup_default_policies_auth_tls_rate_limit_and_dns_policies"></a><a class="link" href="#_setup_default_policies_auth_tls_rate_limit_and_dns_policies">3.4. Setup Default Policies: Auth, TLS, rate limit, and DNS policies</a></h3>
-<div class="sect3">
-<h4 id="_set_default_authpolicy"><a class="anchor" href="#_set_default_authpolicy"></a><a class="link" href="#_set_default_authpolicy">3.4.1. Set Default AuthPolicy</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1beta2
-kind: AuthPolicy
-metadata:
-  name: ${gatewayName}-auth
-  namespace: ${gatewayNS}
-spec:
-  rules:
-    authorization:
-      deny-all:
-        metrics: false
-        opa:
-          allValues: false
-          rego: allow = true
-        priority: 0
-    response:
-      unauthorized:
-        body:
-          value: |
-            {
-              "error": "Forbidden",
-              "message": "Access denied by default by the gateway operator. If you are the administrator of the service, create a specific auth policy for the route."
-            }
-        headers:
-          content-type:
-            value: application/json
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: Gateway
-    name: ${gatewayName}
-EOF</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Check that your auth policy was accepted by the controller as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl get authpolicy ${gatewayName}-auth -n ${gatewayNS} -o=jsonpath='{.status.conditions[?(@.type=="Accepted")].message}'</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_set_default_tlspolicy"><a class="anchor" href="#_set_default_tlspolicy"></a><a class="link" href="#_set_default_tlspolicy">3.5. Set Default TLSPolicy</a></h3>
-<div class="paragraph">
-<p>Refer to [this section](<a href="https://docs.kuadrant.io/0.7.0/kuadrant-operator/doc/user-guides/secure-protect-connect-single-multi-cluster/#set-the-tls-policy" class="bare">https://docs.kuadrant.io/0.7.0/kuadrant-operator/doc/user-guides/secure-protect-connect-single-multi-cluster/#set-the-tls-policy</a>)</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1alpha1
-kind: TLSPolicy
-metadata:
-  name: ${gatewayName}-tls
-  namespace: ${gatewayNS}
-spec:
-  targetRef:
-    name: ${gatewayName}
-    group: gateway.networking.k8s.io
-    kind: Gateway
-  issuerRef:
-    group: cert-manager.io
-    kind: ClusterIssuer
-    name: ${clusterIssuerName}
-EOF</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Check that your TLS policy was accepted by the controller as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl get tlspolicy ${gatewayName}-tls -n ${gatewayNS} -o=jsonpath='{.status.conditions[?(@.type=="Accepted")].message}'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>&lt;hr&gt;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_set_default_ratelimitpolicy"><a class="anchor" href="#_set_default_ratelimitpolicy"></a><a class="link" href="#_set_default_ratelimitpolicy">3.6. Set Default RateLimitPolicy</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f  - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1beta2
-kind: RateLimitPolicy
-metadata:
-  name: ${gatewayName}-rlp
-  namespace: ${gatewayNS}
-spec:
-  defaults:
-    limits:
-      low-limit:
-        rates:
-          - duration: 10
-            limit: 2
-            unit: second
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: Gateway
-    name: mobile-gateway
-EOF</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To check your rate limits have been accepted, enter the following command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl get ratelimitpolicy ${gatewayName}-rlp -n ${gatewayNS} -o=jsonpath='{.status.conditions[?(@.type=="Accepted")].message}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_set_default_dnspolicy"><a class="anchor" href="#_set_default_dnspolicy"></a><a class="link" href="#_set_default_dnspolicy">3.7. Set Default DNSPolicy</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1alpha1
-kind: DNSPolicy
-metadata:
-  name: ${gatewayName}-dnspolicy
-  namespace: ${gatewayNS}
-spec:
-  routingStrategy: loadbalanced
-  loadBalancing:
-    geo:
-      defaultGeo: EU
-    weighted:
-      defaultWeight: 120
-  targetRef:
-    name: ${gatewayName}
-    group: gateway.networking.k8s.io
-    kind: Gateway
-EOF</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_test_connectivity_and_deny_all_auth"><a class="anchor" href="#_test_connectivity_and_deny_all_auth"></a><a class="link" href="#_test_connectivity_and_deny_all_auth">3.8. Test connectivity and deny all auth</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p>You can use curl to hit your endpoint. Because this example uses Let&#8217;s Encrypt staging, you can pass the -k flag:</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">curl -k -w "%{http_code}" https://$(kubectl get httproute test -n ${gatewayNS} -o=jsonpath='{.spec.hostnames[0]}')</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>You should see a 403.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_opening_up_the_gateway_for_other_namespaces"><a class="anchor" href="#_opening_up_the_gateway_for_other_namespaces"></a><a class="link" href="#_opening_up_the_gateway_for_other_namespaces">3.9. Opening up the Gateway for other namespaces</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl patch gateway ${gatewayName} -n ${gatewayNS} --type='json' -p='[{"op": "replace", "path": "/spec/listeners/0/allowedRoutes/namespaces/from", "value":"All"}]'</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_setup_service_endpoints_as_a_developer"><a class="anchor" href="#_setup_service_endpoints_as_a_developer"></a><a class="link" href="#_setup_service_endpoints_as_a_developer">4. Setup service-endpoints as a Developer</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_globex_mobile_is_already_created"><a class="anchor" href="#_globex_mobile_is_already_created"></a><a class="link" href="#_globex_mobile_is_already_created">4.1. Globex Mobile is already created</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="_set_up_httproute_and_backend"><a class="anchor" href="#_set_up_httproute_and_backend"></a><a class="link" href="#_set_up_httproute_and_backend">4.2. Set up HTTPRoute and backend</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: globex-mobile
-  namespace: ${gatewayNS}
-spec:
-  hostnames:
-    - mobile.${rootDomain}
   parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: ${gatewayName}
-      namespace: ${gatewayNS}
+    - kind: Gateway
+      namespace: ingress-gateway
+      name: prod-web
+  hostnames:
+    - globex-mobile.&lt;&lt;REPLACE WITH YOUR MANAGED ZONE . E.g. managed.sandbox1585.opentlc.com&gt;&gt;
   rules:
-    - backendRefs:
-        - group: ''
-          kind: Service
-          namespace: globex-apim-user1
-          name: globex-mobile-gateway
-          port: 8080
-          weight: 1
-      matches:
+    - matches:
         - path:
             type: PathPrefix
-            value: /
-# ---
-# apiVersion: gateway.networking.k8s.io/v1beta1
-# kind: ReferenceGrant
-# metadata:
-#   name: globex-ref-grant
-#   namespace: globex-apim-user1
-# spec:
-#   from:
-#   - group: gateway.networking.k8s.io
-#     kind: HTTPRoute
-#     namespace: globex-gateway
-#   to:
-#   - group: ""
-#     kind: Service
-EOF</code></pre>
+            value: "/mobile/services/product/category/"
+          method: GET
+      backendRefs:
+        - name: globex-mobile-gateway
+          namespace: globex-apim-user1
+          port: 8080
+    - matches:
+        - path:
+            type: Exact
+            value: "/mobile/services/category/list"
+          method: GET
+      backendRefs:
+        - name: globex-mobile-gateway
+          namespace: globex-apim-user1
+          port: 8080</pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_test_connectivity_and_deny_all_auth_2"><a class="anchor" href="#_test_connectivity_and_deny_all_auth_2"></a><a class="link" href="#_test_connectivity_and_deny_all_auth_2">4.3. Test connectivity and deny-all auth</a></h3>
-<div class="paragraph">
-<p>You can use curl to hit an endpoint in the toystore app. Because you are using Let&#8217;s Encrypt staging in this example, you can pass the -k flag as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">curl -s -k -o /dev/null -w "%{http_code}" "https://$(kubectl get httproute globex-mobile -n ${gatewayNS} -o=jsonpath='{.spec.hostnames[0]}')/v1/toys"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You are getting a 403 because of the existing default, deny-all AuthPolicy applied at the Gateway. You can override this for your HTTPRoute.</p>
+<h3 id="_test_globex_mobile_again_after_httproute_is_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_is_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_is_setup">7.3. Test Globex Mobile again (after HTTPRoute is setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should see a 403.</p>
+</li>
+<li>
+<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn’t allow any calls</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_setup_overrides_auth_and_rate_limit_policies_using_auth_key"><a class="anchor" href="#_setup_overrides_auth_and_rate_limit_policies_using_auth_key"></a><a class="link" href="#_setup_overrides_auth_and_rate_limit_policies_using_auth_key">4.4. Setup overrides: Auth and Rate limit  policies using Auth Key</a></h3>
-<div class="sect3">
-<h4 id="_override_authpolicy"><a class="anchor" href="#_override_authpolicy"></a><a class="link" href="#_override_authpolicy">4.4.1. Override AuthPolicy</a></h4>
-<div class="paragraph">
-<p>Ref: [on Kuadrant](<a href="https://docs.kuadrant.io/0.7.0/kuadrant-operator/doc/user-guides/secure-protect-connect/#override-the-gateways-deny-all-authpolicy" class="bare">https://docs.kuadrant.io/0.7.0/kuadrant-operator/doc/user-guides/secure-protect-connect/#override-the-gateways-deny-all-authpolicy</a>)</p>
+<h3 id="_setup_authpolicy"><a class="anchor" href="#_setup_authpolicy"></a><a class="link" href="#_setup_authpolicy">7.4. Setup Authpolicy</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+<li>
+<p>Make changes to the elements marked as &lt;&lt; REPLACE &gt;&gt;.</p>
+</li>
+<li>
+<p>In this YAML replae the the s`pec &gt; hostnames` as show below</p>
+</li>
+</ul>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_now_we_will_override_the_authpolicy_to_start_accepting_the_api_keys"><a class="anchor" href="#_now_we_will_override_the_authpolicy_to_start_accepting_the_api_keys"></a><a class="link" href="#_now_we_will_override_the_authpolicy_to_start_accepting_the_api_keys">4.4.2. Now, we will override the AuthPolicy to start accepting the API keys:</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1beta2
+<pre>apiVersion: kuadrant.io/v1beta2
 kind: AuthPolicy
 metadata:
-  name: globex-mobile
-  namespace: ${gatewayNS}
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
 spec:
   targetRef:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: globex-mobile
+    name: globex-mobile-gateway
+    namespace: globex-apim-user1
   rules:
     authentication:
-      "keycloak-kuadrant-realm":
+      "keycloak-users":
         jwt:
-          issuerUrl: https://sso.apps.rhcl.sandbox940.opentlc.com/realms/globex-user1
+          issuerUrl: https://sso.apps.&lt;&lt;REPLACE WITH OPENSHIFT DOMAIN e.g. rhcl.sandbox123.opentlc.com&gt;&gt;/realms/globex-user1
     response:
       success:
         dynamicMetadata:
@@ -598,67 +529,69 @@ spec:
             json:
               properties:
                 userid:
-                  selector: auth.identity.preferred_username
+                  selector: auth.identity.sub
   routeSelectors:
-    - matches: []
-EOF</code></pre>
+    - matches: []</pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_test_if_the_api_key_works_for_alice"><a class="anchor" href="#_test_if_the_api_key_works_for_alice"></a><a class="link" href="#_test_if_the_api_key_works_for_alice">4.4.3. Test if the API key works for ALICE</a></h4>
+<div class="sect2">
+<h3 id="_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup">7.5. Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setup_ratelimit_policy"><a class="anchor" href="#_setup_ratelimit_policy"></a><a class="link" href="#_setup_ratelimit_policy">7.6. Setup RateLimit Policy</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+</ul>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">curl -k -w "%{http_code}" https://$(kubectl get httproute toystore -n ${gatewayNS} -o=jsonpath='{.spec.hostnames[0]}') -H 'Authorization: APIKEY IAMALICE'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_3_1_override_ratelimitpolicy"><a class="anchor" href="#_3_1_override_ratelimitpolicy"></a><a class="link" href="#_3_1_override_ratelimitpolicy">4.4.4. 3.1 Override RateLimitPolicy</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">kubectl apply -f - &lt;&lt;EOF
-apiVersion: kuadrant.io/v1beta2
+<pre>apiVersion: kuadrant.io/v1beta2
 kind: RateLimitPolicy
 metadata:
-  name: globex-mobile
-  namespace: ${gatewayNS}
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
 spec:
   targetRef:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: globex-mobile
+    name: globex-mobile-gateway
+    namespace: globex-apim-user1
   limits:
-    "all-users":
+    "per-user":
       rates:
-      - limit: 5
-        duration: 10
-        unit: second
+        - limit: 5
+          duration: 10
+          unit: second
       counters:
-        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
-EOF</code></pre>
+        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_lets_test_this_new_setup"><a class="anchor" href="#_lets_test_this_new_setup"></a><a class="link" href="#_lets_test_this_new_setup">4.4.5. Let&#8217;s test this new setup.</a></h4>
-
-</div>
-<div class="sect3">
-<h4 id="_by_sending_requests_as_alice"><a class="anchor" href="#_by_sending_requests_as_alice"></a><a class="link" href="#_by_sending_requests_as_alice">4.4.6. By sending requests as alice:</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">while :; do curl -k -w "%{http_code}" https://$(kubectl get httproute toystore -n ${gatewayNS} -o=jsonpath='{.spec.hostnames[0]}')  --silent --output /dev/null -H 'Authorization: APIKEY IAMALICE' | grep -E --color "\b(429)\b|$"; sleep 1; done</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_by_sending_requests_as_bob"><a class="anchor" href="#_by_sending_requests_as_bob"></a><a class="link" href="#_by_sending_requests_as_bob">4.4.7. By sending requests as bob:</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">while :; do curl -k -w "%{http_code}" https://$(kubectl get httproute toystore -n ${gatewayNS} -o=jsonpath='{.spec.hostnames[0]}')  --silent --output /dev/null -H 'Authorization: APIKEY IAMBOB' | grep -E --color "\b(429)\b|$"; sleep 1; done</code></pre>
-</div>
-</div>
+<div class="sect2">
+<h3 id="_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup">7.7. Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories</p>
+</li>
+<li>
+<p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times</p>
+</li>
+<li>
+<p>You would see a 429 error</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

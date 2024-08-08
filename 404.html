@@ -10,11 +10,53 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body class="status-404">
+
 <header class="header">
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () { 
+      const urlParams = new URLSearchParams(window.location.search);
+      const managedzone = urlParams.get('MANAGEDZONE');
+      const subdomain = urlParams.get('SUBDOMAIN'); 
+      if (managedzone) {
+        showManagedZone( managedzone, subdomain);
+      }
+      else {
+        showManagedZoneForm(subdomain);
+      }
+    } );
+
+
+    function showManagedZone( managedzone, subdomain) {
+      document.getElementById('navbar-form-empty').style.display = "none";
+      document.getElementById('navbar-form-filled').style.display = "flex";
+      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+    }
+
+    function showManagedZoneForm( subdomain ) {
+      document.getElementById('navbar-form-empty').style.display = "flex";
+      document.getElementById('navbar-form-filled').style.display = "none";
+      document.getElementById('subdomain').value = subdomain; 
+
+    }
+
+    function goWithManagedZone() {
+      elManagedZoneInput = document.getElementById('managedzone');
+      elSubdomainInput = document.getElementById('subdomain');
+      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+    }
+
+    function recycle() {
+      document.getElementById('managedzone').value='';
+      document.getElementById('subdomain').value='';
+      window.location.search = ('');
+    }
+
+
+  </script>
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" style="font-size: 20px; color: white"
-        href="https://solution.io">
+      <a class="navbar-item" style="font-size: 20px; color: white" href="https://solution.io">
         <img src="/_/img/logo.png" height="35px" alt="Solution Patterns">&nbsp; Solution Patterns from Red Hat</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
@@ -46,10 +88,37 @@
           <a class="navbar-item" target="_blank" href="https://github.com/redhat-solution-patterns/redhat-solution-patterns.github.io/issues">Feedback</a>
           <a class="navbar-item" target="_blank" href="https://redhat-solution-patterns.github.io/solution-patterns/contributors-guide.html">Contribute</a>
 
+          <div class="navbar-item" >         
+              <div id="navbar-form-empty">
+                <span >
+                  <span>
+                    &nbsp;
+                    <i style="color: orange;" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                  </span>
+                  Your Workshop Environment
+                <form action="javascript:void(0);" onsu>
+                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <button type="hidden" onclick="goWithManagedZone();">Set</button>
+                </form>
+                </span>
+              </div>
+        
+              <div  id="navbar-form-filled" style="display: none;">
+                <span>
+                <span>
+                  Your Workshop Environment
+                    <span class="navbar-text" style="margin-left: 1rem; margin-right: 1rem;">
+                    <i alt="Clear details" title="Clear details" onclick="recycle();" style="color: green;" class="fa fa-recycle" aria-hidden="true"></i>
+                    <br><span  id="managedZoneDisplay"></span> <span>|</span>
+                <span id="subdomainDisplay"></span>
+              </div>
+          </div>
       </div>
     </div>
   </nav>
 </header>
+
 <div class="body">
 <div class="nav-container">
   <aside class="nav">
@@ -93,10 +162,12 @@ If you typed the URL of this page manually, please double check that you entered
   </div>
 </main>
 </div>
-<footer class="footer">
-  <img
-          src="/_/img/app-services-logo.png" height="40px" alt="Cloud Native Architecture Solution Patterns"  href="https://redhat.com" ></a>
-</footer><script src="/_/js/vendor/clipboard.js"></script>
+<footer class="footer" style="justify-content: center;">
+  <div>
+    <img src="./_images/red_hat_logo.png" height="40px" alt="Cloud Native Architecture Solution Patterns" href="https://redhat.com">
+  </div>
+</footer>
+<script src="/_/js/vendor/clipboard.js"></script>
 <script src="/_/js/site.js"></script>
 <script async src="/_/js/vendor/highlight.js"></script>
   </body>

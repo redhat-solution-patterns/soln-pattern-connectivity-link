@@ -13,11 +13,53 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body class="article">
+
 <header class="header">
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () { 
+      const urlParams = new URLSearchParams(window.location.search);
+      const managedzone = urlParams.get('MANAGEDZONE');
+      const subdomain = urlParams.get('SUBDOMAIN'); 
+      if (managedzone) {
+        showManagedZone( managedzone, subdomain);
+      }
+      else {
+        showManagedZoneForm(subdomain);
+      }
+    } );
+
+
+    function showManagedZone( managedzone, subdomain) {
+      document.getElementById('navbar-form-empty').style.display = "none";
+      document.getElementById('navbar-form-filled').style.display = "flex";
+      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+    }
+
+    function showManagedZoneForm( subdomain ) {
+      document.getElementById('navbar-form-empty').style.display = "flex";
+      document.getElementById('navbar-form-filled').style.display = "none";
+      document.getElementById('subdomain').value = subdomain; 
+
+    }
+
+    function goWithManagedZone() {
+      elManagedZoneInput = document.getElementById('managedzone');
+      elSubdomainInput = document.getElementById('subdomain');
+      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+    }
+
+    function recycle() {
+      document.getElementById('managedzone').value='';
+      document.getElementById('subdomain').value='';
+      window.location.search = ('');
+    }
+
+
+  </script>
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" style="font-size: 20px; color: white"
-        href="https://solution.io">
+      <a class="navbar-item" style="font-size: 20px; color: white" href="https://solution.io">
         <img src="../_/img/logo.png" height="35px" alt="Solution Patterns">&nbsp; Solution Patterns from Red Hat</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
@@ -49,10 +91,37 @@
           <a class="navbar-item" target="_blank" href="https://github.com/redhat-solution-patterns/redhat-solution-patterns.github.io/issues">Feedback</a>
           <a class="navbar-item" target="_blank" href="https://redhat-solution-patterns.github.io/solution-patterns/contributors-guide.html">Contribute</a>
 
+          <div class="navbar-item" >         
+              <div id="navbar-form-empty">
+                <span >
+                  <span>
+                    &nbsp;
+                    <i style="color: orange;" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                  </span>
+                  Your Workshop Environment
+                <form action="javascript:void(0);" onsu>
+                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <button type="hidden" onclick="goWithManagedZone();">Set</button>
+                </form>
+                </span>
+              </div>
+        
+              <div  id="navbar-form-filled" style="display: none;">
+                <span>
+                <span>
+                  Your Workshop Environment
+                    <span class="navbar-text" style="margin-left: 1rem; margin-right: 1rem;">
+                    <i alt="Clear details" title="Clear details" onclick="recycle();" style="color: green;" class="fa fa-recycle" aria-hidden="true"></i>
+                    <br><span  id="managedZoneDisplay"></span> <span>|</span>
+                <span id="subdomainDisplay"></span>
+              </div>
+          </div>
       </div>
     </div>
   </nav>
 </header>
+
 <div class="body">
 <div class="nav-container" data-component="solution-pattern" data-version="master">
   <aside class="nav">
@@ -185,10 +254,8 @@
 <h1 class="page">Solution Pattern: App Connectivity with Policy-as-Code</h1>
 <h1 id="_see_the_solution_in_action" class="sect0"><a class="anchor" href="#_see_the_solution_in_action"></a><a class="link" href="#_see_the_solution_in_action">See the Solution in Action</a></h1>
 <div class="sect1">
-<h2 id="_run_the_demonstration"><a class="anchor" href="#_run_the_demonstration"></a><a class="link" href="#_run_the_demonstration">1. Run the demonstration</a></h2>
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a><a class="link" href="#_prerequisites">1. Prerequisites</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_before_getting_started"><a class="anchor" href="#_before_getting_started"></a><a class="link" href="#_before_getting_started">1.1. Before getting started</a></h3>
 <div class="paragraph">
 <p>To run this demo, you will need:</p>
 </div>
@@ -205,15 +272,8 @@
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-<h1 id="_walkthrough_guide" class="sect0"><a class="anchor" href="#_walkthrough_guide"></a><a class="link" href="#_walkthrough_guide">Walkthrough guide</a></h1>
-<div class="sect1">
-<h2 id="_setup_prerequisite"><a class="anchor" href="#_setup_prerequisite"></a><a class="link" href="#_setup_prerequisite">2. Setup Prerequisite:</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">2.1. Create Managed Zone on AWS</a></h3>
+<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">1.1. Create Managed Zone on AWS</a></h3>
 <div class="paragraph">
 <p>Refer: <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" target="_blank" rel="noopener">Prerequisites on Red Hat Developers</a></p>
 </div>
@@ -231,11 +291,8 @@
 </ul>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">3. Redis</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">1.2. Redis</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -259,16 +316,75 @@
 <li>
 <p>You will need only the connection string which will look like this</p>
 <div class="paragraph">
-<p><code>redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155</code></p>
+<p><code>redis://default:<strong><strong></strong>@redis-xx<strong></strong></strong>.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155</code></p>
 </div>
 </li>
 </ul>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_deploy_the_rhcl_operator_and_related_kuadrant_system"><a class="anchor" href="#_deploy_the_rhcl_operator_and_related_kuadrant_system"></a><a class="link" href="#_deploy_the_rhcl_operator_and_related_kuadrant_system">4. Deploy the RHCL Operator and related Kuadrant system</a></h2>
+<h2 id="_personalize_the_instructions"><a class="anchor" href="#_personalize_the_instructions"></a><a class="link" href="#_personalize_the_instructions">2. Personalize the instructions</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>To personalize the rest of the instructions to your OpenShift environment,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>At the top-right of this page enter the following information under the <strong>Your Workshop Environment</strong> section</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>MANAGEDZONE</strong> as per the new Managed Zone that your created in the previous step and</p>
+</li>
+<li>
+<p><strong>Subdomain</strong> to match your OpenShift cluster</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Press enter or click on the Set button</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/setup-instructions.png" alt="setup instructions">
+</div>
+</div>
+</li>
+<li>
+<p>The menubar and the rest of this walkthrough guide will be updated with the username and subdomain as shown below</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/setup-instructions-complete.png" alt="setup instructions complete">
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The subdomain would look something like this <code>apps.cluster-name.guid.subdomain.myopenshift.com</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<h1 id="_walkthrough_guide" class="sect0"><a class="anchor" href="#_walkthrough_guide"></a><a class="link" href="#_walkthrough_guide">Walkthrough guide</a></h1>
+<div class="sect1">
+<h2 id="_deploy_the_workshop"><a class="anchor" href="#_deploy_the_workshop"></a><a class="link" href="#_deploy_the_workshop">3. Deploy the workshop</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_deploy_the_operator_and_related_systems"><a class="anchor" href="#_deploy_the_operator_and_related_systems"></a><a class="link" href="#_deploy_the_operator_and_related_systems">3.1. Deploy the Operator and related systems</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -284,7 +400,7 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_connectivity_link_kuadrant_redis_url=&lt;redis URL you setup in the previous step&gt;
-# E.g.: redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155
+# E.g.: redis://default:*****@redis-xx.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155
 
 ocp4_workload_connectivity_link_aws_access_key=&lt;AWS_ACCESS_KEY_ID&gt;
 ocp4_workload_connectivity_link_aws_secret_access_key=&lt;AWS_SECRET_ACCESS_KEY&gt;
@@ -316,10 +432,8 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_deploy_the_globex_application"><a class="anchor" href="#_deploy_the_globex_application"></a><a class="link" href="#_deploy_the_globex_application">5. Deploy the Globex application</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_deploy_the_globex_application"><a class="anchor" href="#_deploy_the_globex_application"></a><a class="link" href="#_deploy_the_globex_application">3.2. Deploy the Globex application</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -355,13 +469,20 @@ Run the Ansible script which will setup the Globex app.</p>
 </li>
 </ul>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">PLAY RECAP *********************************************************************************************************************************************************************
+localhost                  : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_walkthrough"><a class="anchor" href="#_deployment_walkthrough"></a><a class="link" href="#_deployment_walkthrough">6. Deployment Walkthrough</a></h2>
+<h2 id="_deployment_walkthrough_as_a_platform_engineer"><a class="anchor" href="#_deployment_walkthrough_as_a_platform_engineer"></a><a class="link" href="#_deployment_walkthrough_as_a_platform_engineer">4. Deployment Walkthrough As a Platform Engineer</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>So far you have setup (note that all this is setup by the Infra persona)</p>
+<p>As a Platform Engineer, so far you have setup</p>
 </div>
 <div class="ulist">
 <ul>
@@ -390,24 +511,58 @@ Run the Ansible script which will setup the Globex app.</p>
 <li>
 <p>Auth Policy (deny-all default policy in ingress-gateway namespace)</p>
 </li>
-<li>
-<p>RateLimit Policy (default policy in ingress-gateway namespace)</p>
-</li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
+<p>What is missing now is a default Rate Limit Policy</p>
+</div>
+<div class="sect2">
+<h3 id="_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"><a class="anchor" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"></a><a class="link" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace">4.1. Create default RateLimit Policy (default policy in ingress-gateway namespace)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
+kind: RateLimitPolicy
+metadata:
+  name: ingress-gateway-rlp-lowlimits
+  namespace: ingress-gateway
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: prod-web
+  limits:
+    "default-limits":
+      rates:
+      - limit: 5
+        duration: 10
+        unit: second</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
 <p>The Gateway is now ready for developers to use for connect to their service endpoints.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setup_service_endpoints_as_a_developer"><a class="anchor" href="#_setup_service_endpoints_as_a_developer"></a><a class="link" href="#_setup_service_endpoints_as_a_developer">7. Setup service-endpoints as a Developer</a></h2>
+<h2 id="_setup_service_endpoints_as_a_developer"><a class="anchor" href="#_setup_service_endpoints_as_a_developer"></a><a class="link" href="#_setup_service_endpoints_as_a_developer">5. Setup service-endpoints as a Developer</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_test_globex_mobile"><a class="anchor" href="#_test_globex_mobile"></a><a class="link" href="#_test_globex_mobile">7.1. Test Globex Mobile</a></h3>
+<h3 id="_test_globex_mobile"><a class="anchor" href="#_test_globex_mobile"></a><a class="link" href="#_test_globex_mobile">5.1. Test Globex Mobile</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -428,7 +583,7 @@ Run the Ansible script which will setup the Globex app.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_set_up_httproute_and_backend"><a class="anchor" href="#_set_up_httproute_and_backend"></a><a class="link" href="#_set_up_httproute_and_backend">7.2. Set up HTTPRoute and backend</a></h3>
+<h3 id="_set_up_httproute_and_backend"><a class="anchor" href="#_set_up_httproute_and_backend"></a><a class="link" href="#_set_up_httproute_and_backend">5.2. Set up HTTPRoute and backend</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -442,9 +597,9 @@ Run the Ansible script which will setup the Globex app.</p>
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre>kind: HTTPRoute
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1beta1
 metadata:
   name: globex-mobile-gateway
@@ -458,7 +613,7 @@ spec:
       namespace: ingress-gateway
       name: prod-web
   hostnames:
-    - globex-mobile.&lt;&lt;REPLACE WITH YOUR MANAGED ZONE . E.g. managed.sandbox1585.opentlc.com&gt;&gt;
+    - globex-mobile.%MANAGEDZONE%
   rules:
     - matches:
         - path:
@@ -477,12 +632,12 @@ spec:
       backendRefs:
         - name: globex-mobile-gateway
           namespace: globex-apim-user1
-          port: 8080</pre>
+          port: 8080</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_test_globex_mobile_again_after_httproute_is_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_is_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_is_setup">7.3. Test Globex Mobile again (after HTTPRoute is setup)</a></h3>
+<h3 id="_test_globex_mobile_again_after_httproute_is_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_is_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_is_setup">5.3. Test Globex Mobile again (after HTTPRoute is setup)</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -500,7 +655,7 @@ spec:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_setup_authpolicy"><a class="anchor" href="#_setup_authpolicy"></a><a class="link" href="#_setup_authpolicy">7.4. Setup Authpolicy</a></h3>
+<h3 id="_setup_authpolicy"><a class="anchor" href="#_setup_authpolicy"></a><a class="link" href="#_setup_authpolicy">5.4. Setup Authpolicy</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -514,9 +669,9 @@ spec:
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre>apiVersion: kuadrant.io/v1beta2
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
 kind: AuthPolicy
 metadata:
   name: globex-mobile-gateway
@@ -541,12 +696,12 @@ spec:
                 userid:
                   selector: auth.identity.sub
   routeSelectors:
-    - matches: []</pre>
+    - matches: []</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup">7.5. Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)</a></h3>
+<h3 id="_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup">5.5. Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -561,7 +716,24 @@ spec:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_setup_ratelimit_policy"><a class="anchor" href="#_setup_ratelimit_policy"></a><a class="link" href="#_setup_ratelimit_policy">7.6. Setup RateLimit Policy</a></h3>
+<h3 id="_test_the_default_ratelimit_policy"><a class="anchor" href="#_test_the_default_ratelimit_policy"></a><a class="link" href="#_test_the_default_ratelimit_policy">5.6. Test the default <strong>RateLimit Policy</strong></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories</p>
+</li>
+<li>
+<p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times</p>
+</li>
+<li>
+<p>You would see a 429 error
+image::globex-429.png[width=70%]</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_new_ratelimit_policy_which_ovverides_defauly"><a class="anchor" href="#_create_a_new_ratelimit_policy_which_ovverides_defauly"></a><a class="link" href="#_create_a_new_ratelimit_policy_which_ovverides_defauly">5.7. Create a new RateLimit Policy which ovverides defauly</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -569,9 +741,9 @@ spec:
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre>apiVersion: kuadrant.io/v1beta2
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
 kind: RateLimitPolicy
 metadata:
   name: globex-mobile-gateway
@@ -585,21 +757,16 @@ spec:
   limits:
     "per-user":
       rates:
-        - limit: 5
+        - limit: 100
           duration: 10
           unit: second
       counters:
-        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</pre>
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/globex-429.png" alt="globex 429" width="70%">
+        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup">7.7. Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)</a></h3>
+<h3 id="_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup">5.8. Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -609,11 +776,17 @@ spec:
 <p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times</p>
 </li>
 <li>
-<p>You would see a 429 error</p>
+<p>You would now see there is no 429 for upto 100 request in a duration of 10 seconds</p>
 </li>
 </ul>
 </div>
 </div>
+</div>
+</div>
+<h1 id="_conclusion" class="sect0"><a class="anchor" href="#_conclusion"></a><a class="link" href="#_conclusion">Conclusion</a></h1>
+<div class="openblock partintro">
+<div class="content">
+TBC
 </div>
 </div>
 <nav class="pagination">
@@ -627,10 +800,12 @@ spec:
   </div>
 </main>
 </div>
-<footer class="footer">
-  <img
-          src="../_/img/app-services-logo.png" height="40px" alt="Cloud Native Architecture Solution Patterns"  href="https://redhat.com" ></a>
-</footer><script src="../_/js/vendor/clipboard.js"></script>
+<footer class="footer" style="justify-content: center;">
+  <div>
+    <img src="./_images/red_hat_logo.png" height="40px" alt="Cloud Native Architecture Solution Patterns" href="https://redhat.com">
+  </div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
 <script src="../_/js/site.js"></script>
 <script async src="../_/js/vendor/highlight.js"></script>
   </body>

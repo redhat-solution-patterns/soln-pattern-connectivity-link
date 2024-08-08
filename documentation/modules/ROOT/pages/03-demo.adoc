@@ -5,17 +5,13 @@
 
 = See the Solution in Action
 
-== Run the demonstration
+== Prerequisites
 
-=== Before getting started
 To run this demo, you will need:
 
 * You will need an OpenShift cluster with admin access
 * Access to AWS to be able to create Route53 domain names
 * Free tier of Redis database
-
-= Walkthrough guide
-== Setup Prerequisite:
 
 === Create Managed Zone on AWS
 
@@ -25,7 +21,9 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 * Refer to the the https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html[AWS documentation^] on Route53 for instructions on how to setup the hosted zone.
 * Make sure you will have to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in https://repost.aws/knowledge-center/create-subdomain-route-53[this article^].
 
-== Redis
+
+
+=== Redis
 
 * You can sign up for a free tier of Redis Cloud. Sign up at https://app.redislabs.com/[app.redislabs.com^]
 * Once a free DB is created, get the connection string.
@@ -34,9 +32,31 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 image::redis-connection.png[width=40%]
 * You will need only the connection string which will look like this
 +
-`redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155`
+`redis://default:*****@redis-xx*****.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155`
 
-== Deploy the RHCL Operator and related Kuadrant system
+
+== Personalize the instructions
+To personalize the rest of the instructions to your OpenShift environment, 
+
+* At the top-right of this page enter the following information under the *Your Workshop Environment* section 
+** *MANAGEDZONE* as per the new Managed Zone that your created in the previous step and 
+** *Subdomain* to match your OpenShift cluster 
+* Press enter or click on the Set button
++
+image::setup-instructions.png[]
+* The menubar and the rest of this walkthrough guide will be updated with the username and subdomain as shown below
++
+image::setup-instructions-complete.png[]
+
+[NOTE]
+=====
+The subdomain would look something like this `apps.cluster-name.guid.subdomain.myopenshift.com`
+=====
+
+= Walkthrough guide
+
+== Deploy the workshop
+=== Deploy the Operator and related systems
 
 * Clone the ansible script
 +
@@ -47,7 +67,7 @@ git clone https://github.com/rh-soln-pattern-connectivity-link/cl-install-ansibl
 +
 ```
 ocp4_workload_connectivity_link_kuadrant_redis_url=<redis URL you setup in the previous step>
-# E.g.: redis://default:qwertyqwertyqwerty@redis-12345678.c1000.eu-central-1-1.ec2.redns.redis-cloud.com:10155
+# E.g.: redis://default:*****@redis-xx.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155
 
 ocp4_workload_connectivity_link_aws_access_key=<AWS_ACCESS_KEY_ID>
 ocp4_workload_connectivity_link_aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
@@ -71,7 +91,7 @@ ocp4_workload_connectivity_link_gateway_geo_code=<gateway geo code>
 ansible-playbook playbooks/ocp4_workload_connectivity_link.yml  -e ACTION=create -i inventories/inventory.template
 ----
 
-== Deploy the Globex application
+=== Deploy the Globex application
 
 * Git clone the repo with the ansible script
 ---- 
@@ -90,10 +110,15 @@ Run the Ansible script which will setup the Globex app.
 ----
 ansible-playbook playbooks/globex.yml -e ACTION=create -i inventories/inventory.template
 ----
+[Output]
+```
+PLAY RECAP *********************************************************************************************************************************************************************
+localhost                  : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
+```
 
-== Deployment Walkthrough
+== Deployment Walkthrough As a Platform Engineer
 
-So far you have setup (note that all this is setup by the Infra persona)
+As a Platform Engineer, so far you have setup
 
 * GatewayAPI with Istio has the provider
 * RHCL Operator
@@ -103,9 +128,37 @@ So far you have setup (note that all this is setup by the Infra persona)
 ** DNS Policy (ingress-gateway namespace)
 ** TLS Policy (default policy in ingress-gateway namespace)
 ** Auth Policy (deny-all default policy in ingress-gateway namespace)
-** RateLimit Policy (default policy in ingress-gateway namespace)
 
-The Gateway is now ready for developers to use for connect to their service endpoints.
+What is missing now is a default Rate Limit Policy
+
+=== Create default RateLimit Policy (default policy in ingress-gateway namespace)
+
+* Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
+
+[.console-input]
+[source,shell script]
+----
+apiVersion: kuadrant.io/v1beta2
+kind: RateLimitPolicy
+metadata:
+  name: ingress-gateway-rlp-lowlimits
+  namespace: ingress-gateway
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: prod-web
+  limits:
+    "default-limits":
+      rates:
+      - limit: 5
+        duration: 10
+        unit: second
+----
+
+* The Gateway is now ready for developers to use for connect to their service endpoints.
+
+
 
 == Setup service-endpoints as a Developer
 
@@ -124,6 +177,8 @@ image::globex-404.png[]
 * Make changes to the elements marked as << REPLACE >>.
 * In this YAML replae the the s`pec > hostnames` as show below
 
+[.console-input]
+[source,shell script]
 ----
 kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -139,7 +194,7 @@ spec:
       namespace: ingress-gateway
       name: prod-web
   hostnames:
-    - globex-mobile.<<REPLACE WITH YOUR MANAGED ZONE . E.g. managed.sandbox1585.opentlc.com>>
+    - globex-mobile.%MANAGEDZONE%
   rules:
     - matches:
         - path:
@@ -175,6 +230,8 @@ image::globex-403.png[width=70%]
 * Make changes to the elements marked as << REPLACE >>.
 * In this YAML replae the the s`pec > hostnames` as show below
 
+[.console-input]
+[source,shell script]
 ----
 apiVersion: kuadrant.io/v1beta2
 kind: AuthPolicy
@@ -210,10 +267,21 @@ spec:
 +
 image::globex-success.png[width=70%]
 
-=== Setup RateLimit Policy
+=== Test the default *RateLimit Policy*
+
+* Try accessing *Categories* again - you should now be able to see the Categories
+* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times
+* You would see a 429 error
+image::globex-429.png[width=70%]
+
+
+
+=== Create a new RateLimit Policy which ovverides defauly 
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
 
+[.console-input]
+[source,shell script]
 ----
 apiVersion: kuadrant.io/v1beta2
 kind: RateLimitPolicy
@@ -229,17 +297,20 @@ spec:
   limits:
     "per-user":
       rates:
-        - limit: 5
+        - limit: 100
           duration: 10
           unit: second
       counters:
         - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
 ----
 
-image::globex-429.png[width=70%]
-
 === Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)
 
 * Try accessing *Categories* again - you should now be able to see the Categories
 * Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times
-* You would see a 429 error
+* You would now see there is no 429 for upto 100 request in a duration of 10 seconds
+
+
+= Conclusion
+
+TBC

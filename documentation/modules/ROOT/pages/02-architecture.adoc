@@ -9,7 +9,7 @@ Introduction for the architecture of this solution pattern.
 
 == Common Challenges 
 
-* 
+* TBC
 
 [#tech_stack]
 == Technology Stack
@@ -29,9 +29,21 @@ Introduction for the architecture of this solution pattern.
 
 As Globex gears to support access to their core services from other applications, they adopt a Kubernetes native approach to application connectivity through Red Hat Connectivity Link. 
 
-In this solution we will look at a step-by-step approach to onboarding a new application in a secure fashion. 
+In this solution we will look at a step-by-step approach to onboarding a new application and allowing for accessing the Globex services in a secure fashion
 
+This pattern aims to cover the following use cases of Connectivity Link
+
+* *Connect*: Setup app connectivity across service endpoints
+* *Secure*: Secure traffic with automatic ACME-based TLS integration
+* *Protect*: AuthPolicy and RateLimitPolicy help to protect services with our flexible and powerful policies 
 
 [#more_tech]
 == About the Technology Stack
 
+* What is GatewayAPI
+** Istio as Gateway provider
+* What is Kuadrant and Policy as Code
+** DNS Policy
+** Cert Manager
+** TLS Policy
+* Defaults and overrides

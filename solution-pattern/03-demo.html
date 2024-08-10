@@ -6,7 +6,7 @@
     <title>Solution Pattern: App Connectivity with Policy-as-Code :: Solution Patterns from Red Hat</title>
     <link rel="canonical" href="https://solution.io/solution-pattern/03-demo.html">
     <link rel="prev" href="02-architecture.html">
-    <link rel="next" href="04-workshop.html">
+    <link rel="next" href="developer-resources.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -167,48 +167,28 @@
     <a class="nav-link" href="03-demo.html">3. See the Solution in Action</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#_demonstration">3.1. Demonstration</a>
+    <a class="nav-link" href="#_prerequisites">3.1. Pre-requisites</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="#_run_the_demonstration">3.2. Run this demonstration</a>
+    <a class="nav-link" href="#_installing_the_demo">3.2. Platform Setup</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#_walkthrough_as_a_platform_engineer">3.3. Platform Engineer workflow</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#demo-setup">3.4. Solution Setup</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#walkthrough">3.5. Developer workflow</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#_before_getting_started">3.3. Pre-requisites</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#_installing_the_demo">3.4. Installing the demo</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#_walkthrough_guide">3.5. Walkthrough guide</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </li>
   <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="04-workshop.html">4. Workshop</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="04-workshop.html#_installing_the_workshop_environment">4.1. Installing the workshop environment</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="04-workshop.html#_before_getting_started">4.2. Pre-requisites</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="04-workshop.html#_installing_the_environment">4.3. Installing the environment</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-workshop.html#deliver_wksp">4.4. Delivering the workshop</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="developer-resources.html">5. Developer Resources</a>
+    <a class="nav-link" href="developer-resources.html">4. Developer Resources</a>
   </li>
   <li class="nav-item" data-depth="1">
     <span class="nav-text"><a href="https://redhat-solution-patterns.github.io/solution-patterns/patterns.html" target="_blank" rel="noopener">Explore Red Hat Solution Patterns</a></span>
@@ -253,19 +233,27 @@
 <article class="doc">
 <h1 class="page">Solution Pattern: App Connectivity with Policy-as-Code</h1>
 <h1 id="_see_the_solution_in_action" class="sect0"><a class="anchor" href="#_see_the_solution_in_action"></a><a class="link" href="#_see_the_solution_in_action">See the Solution in Action</a></h1>
+<div class="openblock partintro">
+<div class="content">
+This solution walks you through the activities from the lens of a Platform Engineer and a Developer. But first, we need a few prerequisites before getting started.
+</div>
+</div>
 <div class="sect1">
 <h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a><a class="link" href="#_prerequisites">1. Prerequisites</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run this demo, you will need:</p>
+<p>To provision the demo you will perform the following steps - each of which is explained in detail in the next sections:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>You will need an OpenShift cluster with admin access</p>
+<p>You will need an OpenShift cluster with <strong><code>cluster-admin</code> privileges</strong>. This solution pattern has been tested on OpenShift 4.15 and 4.16</p>
 </li>
 <li>
-<p>Access to AWS to be able to create Route53 domain names</p>
+<p>Ensure you have the <strong>tools</strong> <code>oc</code> and <code>ansible</code> installed in your local environment such as your laptop</p>
+</li>
+<li>
+<p>Access to <strong>AWS Route53</strong> or <strong>Google Cloud DNS</strong> to be able to create new domain names</p>
 </li>
 <li>
 <p>Free tier of Redis database</p>
@@ -273,7 +261,37 @@
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">1.1. Create Managed Zone on AWS</a></h3>
+<h3 id="_cli_tools"><a class="anchor" href="#_cli_tools"></a><a class="link" href="#_cli_tools">1.1. CLI tools</a></h3>
+<div class="paragraph">
+<p>To check if you have the cli tools, you can open your terminal and use following commands:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">oc version #openshift cli client
+ansible --version
+ansible-galaxy --version
+ansible-galaxy collection list #the list should include kubernetes.core</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you can&#8217;t see <code>kubernetes.core</code> collection listed, you can install it with <code>ansible-galaxy</code>:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">ansible-galaxy collection install kubernetes.core</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">1.2. Create Managed Zone on AWS</a></h3>
 <div class="paragraph">
 <p>Refer: <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" target="_blank" rel="noopener">Prerequisites on Red Hat Developers</a></p>
 </div>
@@ -292,7 +310,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">1.2. Redis</a></h3>
+<h3 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">1.3. Redis</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -322,11 +340,8 @@
 </ul>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_personalize_the_instructions"><a class="anchor" href="#_personalize_the_instructions"></a><a class="link" href="#_personalize_the_instructions">2. Personalize the instructions</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_personalize_the_instructions"><a class="anchor" href="#_personalize_the_instructions"></a><a class="link" href="#_personalize_the_instructions">1.4. Personalize the instructions</a></h3>
 <div class="paragraph">
 <p>To personalize the rest of the instructions to your OpenShift environment,</p>
 </div>
@@ -379,10 +394,62 @@
 </div>
 </div>
 </div>
-<h1 id="_walkthrough_guide" class="sect0"><a class="anchor" href="#_walkthrough_guide"></a><a class="link" href="#_walkthrough_guide">Walkthrough guide</a></h1>
+</div>
 <div class="sect1">
-<h2 id="_deploy_the_workshop"><a class="anchor" href="#_deploy_the_workshop"></a><a class="link" href="#_deploy_the_workshop">3. Deploy the workshop</a></h2>
+<h2 id="_installing_the_demo"><a class="anchor" href="#_installing_the_demo"></a><a class="link" href="#_installing_the_demo">2. Platform Setup</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This section is typically setup by a <strong>Platform Engineer</strong> persona.</p>
+</div>
+<div class="paragraph">
+<p>The primary goal of a Platform Engineer is to deploy a Gateway that provides secure communication and is protected and ready for use by application development teams to deploy their service-endpoints/API. This gateway should be protected and secured with global rate limiting and auth policies.</p>
+</div>
+<div class="paragraph">
+<p>In this demo, the deployment script uses ArgoCD to setup</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Install Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits</p>
+</li>
+<li>
+<p>Set up a ManagedZone used to set up DNS config.</p>
+</li>
+<li>
+<p>Define a TLS issuer for TLS certificates for secure communication to the Gateways.</p>
+</li>
+<li>
+<p>Create a Gateway (based on istio gateway) with a wildcard hostname based on the root domain.</p>
+</li>
+<li>
+<p>Kuadrant Custom Resources (CRs) including various policies: DNS, TLS</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_run_the_deployment_scripts"><a class="anchor" href="#_run_the_deployment_scripts"></a><a class="link" href="#_run_the_deployment_scripts">2.1. Run the deployment scripts</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Login to your OpenShift cluster as cluster-admin (because a number of operators will need to be installed)</p>
+</li>
+<li>
+<p>Click on the username on the top right hand, and then click on <strong>Copy login command</strong>. This will open another tab and you will need to login again</p>
+</li>
+<li>
+<p>Click on <strong>Display token</strong> link, and copy the command under <strong>Log in with this token</strong>. This will look like this</p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">oc login --token=&lt;token&gt; --server=&lt;server&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -393,17 +460,8 @@
 </div>
 </div>
 </li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_deploy_the_operator_and_related_systems"><a class="anchor" href="#_deploy_the_operator_and_related_systems"></a><a class="link" href="#_deploy_the_operator_and_related_systems">3.1. Deploy the Operator and related systems</a></h3>
-<div class="ulist">
-<ul>
 <li>
 <p>Open the inventories/inventory.template file and update the variable variables. Save the file.</p>
-</li>
-</ul>
-</div>
 <details>
 <summary class="title"><span class="underline">Click for details of inventory.template file</span></summary>
 <div class="content">
@@ -432,123 +490,99 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 </div>
 </div>
 </details>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre>ansible-playbook playbooks/ocp4_workload_connectivity_link.yml  -e ACTION=create -i inventories/inventory.template</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_deploy_the_globex_application"><a class="anchor" href="#_deploy_the_globex_application"></a><a class="link" href="#_deploy_the_globex_application">3.2. Deploy the Globex application</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Run the Ansible script which will setup the Globex app.</p>
-<div class="listingblock">
-<div class="content">
-<pre>cd ../demo-setup
-ansible-playbook playbooks/globex.yml -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory.template</code></pre>
 </div>
 </div>
 </li>
 </ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">PLAY RECAP *********************************************************************************************************************************************************************
-localhost                  : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0</code></pre>
-</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_walkthrough_as_a_platform_engineer"><a class="anchor" href="#_deployment_walkthrough_as_a_platform_engineer"></a><a class="link" href="#_deployment_walkthrough_as_a_platform_engineer">4. Deployment Walkthrough As a Platform Engineer</a></h2>
+<h2 id="_walkthrough_as_a_platform_engineer"><a class="anchor" href="#_walkthrough_as_a_platform_engineer"></a><a class="link" href="#_walkthrough_as_a_platform_engineer">3. Walkthrough As a Platform Engineer</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As a Platform Engineer, so far you have setup</p>
+<p>As a Platform Engineer, so far we have setup  the operator, ManagedZone, Gateway, Policies and a sample endpoint</p>
 </div>
+<details>
+<summary class="title"><span class="underline">Click to view details of what is setup</span></summary>
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>GatewayAPI with Istio has the provider</p>
+<p>Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits</p>
 </li>
 <li>
-<p>RHCL Operator</p>
+<p>ManagedZone used to set up DNS config. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1alpha1~ManagedZone/prod-web-aws-zone/yaml" target="_blank" rel="noopener">View</a>]</p>
 </li>
 <li>
-<p>Various policies and CRDs including</p>
+<p>TLS issuer for TLS certificates using  <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let&#8217;s Encrypt</a>. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/cert-manager.io~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml" target="_blank" rel="noopener">View</a>]</p>
+</li>
+<li>
+<p>Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io~v1~Gateway/prod-web/yaml" target="_blank" rel="noopener">View</a>]</p>
+</li>
+<li>
+<p>Various policies attached to the Gateway</p>
 <div class="ulist">
 <ul>
 <li>
-<p>ManagedZone</p>
+<p>A default <code>deny-all</code> Auth Policy [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1beta2~AuthPolicy/prod-web-deny-all/yaml" target="_blank" rel="noopener">View</a>]</p>
 </li>
 <li>
-<p>Gateway (ingress-gateway namespace)</p>
+<p>TLS Policy [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml" target="_blank" rel="noopener">View</a>]</p>
 </li>
 <li>
-<p>DNS Policy (ingress-gateway namespace)</p>
+<p>DNS Policy [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1alpha1~DNSPolicy/prod-web-dnspolicy/yaml" target="_blank" rel="noopener">View</a>]</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>TLS Policy (default policy in ingress-gateway namespace)</p>
+<p>A sample EchoAPI endpoint</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is service literally echoes the request and is just used here for testing purposes.</p>
 </li>
 <li>
-<p>Auth Policy (deny-all default policy in ingress-gateway namespace)</p>
+<p>[<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io~v1~HTTPRoute/echo-api/yaml" target="_blank" rel="noopener">View HTTP Rout</a>]</p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
+</div>
+</details>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>What is missing now is a default Rate Limit Policy</p>
+<p>The Gateway is now ready for developers to use with their service endpoints to securely expose them.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
-<h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">4.1. echo API Walkthrough</a></h3>
+<h3 id="_default_ratelimit_policy"><a class="anchor" href="#_default_ratelimit_policy"></a><a class="link" href="#_default_ratelimit_policy">3.1. Default RateLimit Policy</a></h3>
 <div class="paragraph">
-<p>A default HTTPRoute has been created.</p>
+<p>But one more thing! You might have noticed that this setup misses a default RateLimit Policy. Let&#8217;s go ahead and create one.<br></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Check if the HTTPRoute works as it should</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Check how this affects the DNS records created on AWS Route 53</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/route53-dnsrecords.png" alt="route53 dnsrecords">
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"><a class="anchor" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"></a><a class="link" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace">4.2. Create default RateLimit Policy (default policy in ingress-gateway namespace)</a></h3>
 <div class="ulist">
 <ul>
 <li>
 <p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
-</li>
-</ul>
-</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
@@ -569,10 +603,68 @@ spec:
         unit: second</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">3.2. Echo API Walkthrough</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p>The Gateway is now ready for developers to use for connect to their service endpoints.</p>
+<p>When a HttpRoute is created, a number of DNS records are created on AWS Route 53.</p>
+<details>
+<summary class="title"><span class="underline">Click to see an example</span></summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="_images/route53-dnsrecords.png" alt="route53 dnsrecords">
+</div>
+</div>
+</div>
+</details>
+</li>
+<li>
+<p>Check if the HTTPRoute works as it should. Run this curl command from a terminal.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Due to the nature of DNS Records it may take a while for it get propagated. An easy way is to install the OpenShift web terminal (use the operator to install this) and run the command through that, or you could use the the DNS provders console.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Output will look like this</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">{
+  "method": "GET",
+  "path": "/",
+  "query_string": null,
+  "body": "",
+  "headers": {
+    "HTTP_HOST": "echo.%MANAGEDZONE%",
+    ...
+  }
+  ..
+}</code></pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -580,26 +672,64 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setup_service_endpoints_as_a_developer"><a class="anchor" href="#_setup_service_endpoints_as_a_developer"></a><a class="link" href="#_setup_service_endpoints_as_a_developer">5. Setup service-endpoints as a Developer</a></h2>
+<h2 id="demo-setup"><a class="anchor" href="#demo-setup"></a><a class="link" href="#demo-setup">4. Solution Setup - Onboard service enpoint</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints</p>
+</div>
 <div class="sect2">
-<h3 id="_test_globex_mobile"><a class="anchor" href="#_test_globex_mobile"></a><a class="link" href="#_test_globex_mobile">5.1. Test Globex Mobile</a></h3>
+<h3 id="_run_the_deployment_scripts_2"><a class="anchor" href="#_run_the_deployment_scripts_2"></a><a class="link" href="#_run_the_deployment_scripts_2">4.1. Run the deployment scripts</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Acess the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%SUBDOMAIN%">here</a></p>
+<p>Run the Ansible script which will setup the <code>ProductCategory Service Endpoint</code> and <code>Globex Mobile app</code>. This also setups Red Hat build of Keycloak for SSO.</p>
+<div class="listingblock">
+<div class="content">
+<pre>cd ../demo-setup
+ansible-playbook playbooks/globex.yml -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
+</div>
+</div>
 </li>
 <li>
-<p>Login using <code>asilva/openshift</code> credentials</p>
+<p>Expected output:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">PLAY RECAP *****************************************************************************************
+localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="anchor" href="#walkthrough"></a><a class="link" href="#walkthrough">5. Solution walkthrough as a Developer</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_test_globex_mobile_app"><a class="anchor" href="#_test_globex_mobile_app"></a><a class="link" href="#_test_globex_mobile_app">5.1. Test Globex Mobile app</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Access the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%SUBDOMAIN%" target="_blank" rel="noopener">here</a></p>
 </li>
 <li>
-<p>Click on Categories - you should see a 504. This is because the HTTPRoute hasn&#8217;t been created yet</p>
+<p>Login using <code>asilva/openshift</code> credentials; Click on <code>Categories</code> button on the homespage</p>
+</li>
+<li>
+<p>You should see a 404. This is because the ProductCatalog service-enpoint hasn&#8217;t been exposed using a HTTPRoute</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-404.png" alt="globex 404">
+</div>
+</div>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_set_up_httproute_and_backend"><a class="anchor" href="#_set_up_httproute_and_backend"></a><a class="link" href="#_set_up_httproute_and_backend">5.2. Set up HTTPRoute and backend</a></h3>
+<h3 id="_set_up_httproute_for_productcatalog_service_enpoint"><a class="anchor" href="#_set_up_httproute_for_productcatalog_service_enpoint"></a><a class="link" href="#_set_up_httproute_for_productcatalog_service_enpoint">5.2. Set up HTTPRoute for ProductCatalog service-enpoint</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -662,7 +792,7 @@ spec:
 </div>
 </li>
 <li>
-<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn&#8217;t allow any calls</p>
+<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn&#8217;t allow any requests to made. We have a zero-trust auth in place!!</p>
 </li>
 </ul>
 </div>
@@ -733,14 +863,18 @@ spec:
 <p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times</p>
 </li>
 <li>
-<p>You would see a 429 error
-image::globex-429.png[width=70%]</p>
+<p>You would see a 429 error</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-429.png" alt="globex 429" width="70%">
+</div>
+</div>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_a_new_ratelimit_policy_which_ovverides_defauly"><a class="anchor" href="#_create_a_new_ratelimit_policy_which_ovverides_defauly"></a><a class="link" href="#_create_a_new_ratelimit_policy_which_ovverides_defauly">5.7. Create a new RateLimit Policy which ovverides defauly</a></h3>
+<h3 id="_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy"><a class="anchor" href="#_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy"></a><a class="link" href="#_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy">5.7. Create a new RateLimit Policy which overrides default gateway policy</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -790,15 +924,23 @@ spec:
 </div>
 </div>
 </div>
-<h1 id="_conclusion" class="sect0"><a class="anchor" href="#_conclusion"></a><a class="link" href="#_conclusion">Conclusion</a></h1>
-<div class="openblock partintro">
-<div class="content">
-TBC
+<div class="sect1">
+<h2 id="_conclusion"><a class="anchor" href="#_conclusion"></a><a class="link" href="#_conclusion">6. Conclusion</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With this setup, Globex is all set to onboard further service enpoints so as to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.</p>
+</div>
+<div class="paragraph">
+<p>We will also extend this pattern to include the all important Observability aspects as well.</p>
+</div>
+<div class="paragraph">
+<p>Read more <a href="https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster" target="_blank" rel="noopener">here</a></p>
+</div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="02-architecture.html" class="query-params-link">2. Architecture</a></span>
-  <span class="next"><a href="04-workshop.html" class="query-params-link">4. Workshop</a></span>
+  <span class="next"><a href="developer-resources.html" class="query-params-link">4. Developer Resources</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

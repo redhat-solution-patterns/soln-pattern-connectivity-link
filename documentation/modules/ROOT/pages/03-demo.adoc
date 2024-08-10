@@ -115,7 +115,7 @@ oc login --token=<token> --server=<server>
 * Clone the ansible script
 +
 ----
-git clone https://github.com/rh-soln-pattern-connectivity-link/cl-install-ansible
+git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link-ansible
 ----
 
 * Open the inventories/inventory.template file and update the variable variables. Save the file.

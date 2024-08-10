@@ -56,18 +56,24 @@ The subdomain would look something like this `apps.cluster-name.guid.subdomain.m
 = Walkthrough guide
 
 == Deploy the workshop
-=== Deploy the Operator and related systems
 
 * Clone the ansible script
 +
 ----
 git clone https://github.com/rh-soln-pattern-connectivity-link/cl-install-ansible
 ----
-* Open the inventories/inventory.template file and update the following variables. Save the file.
-+
+
+=== Deploy the Operator and related systems
+
+* Open the inventories/inventory.template file and update the variable variables. Save the file.
+
+.[underline]#Click for details of inventory.template file#
+[%collapsible]
+====
+
 ```
 ocp4_workload_connectivity_link_kuadrant_redis_url=<redis URL you setup in the previous step>
-# E.g.: redis://default:*****@redis-xx.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155
+
 
 ocp4_workload_connectivity_link_aws_access_key=<AWS_ACCESS_KEY_ID>
 ocp4_workload_connectivity_link_aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
@@ -86,6 +92,8 @@ ocp4_workload_connectivity_link_ingress_gateway_tls_issuer_email=<your  address 
 ocp4_workload_connectivity_link_gateway_geo_code=<gateway geo code>
 # E.g.: EU or US
 ```
+====
+
 * Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads
 ----
 ansible-playbook playbooks/ocp4_workload_connectivity_link.yml  -e ACTION=create -i inventories/inventory.template
@@ -93,22 +101,11 @@ ansible-playbook playbooks/ocp4_workload_connectivity_link.yml  -e ACTION=create
 
 === Deploy the Globex application
 
-* Git clone the repo with the ansible script
----- 
-git clone https://github.com/rh-soln-pattern-connectivity-link/globex-ansible.git
-----
-* Open the inventories/inventory.template file and update the following variables. Save the file.
-+
-```
-ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.<aws_managed_zone_domain>
-
-#E.g.: https://globex-mobile.managed.sandbox2662.opentlc.com
-```
-* 
-Run the Ansible script which will setup the Globex app.
+*  Run the Ansible script which will setup the Globex app.
 +
 ----
-ansible-playbook playbooks/globex.yml -e ACTION=create -i inventories/inventory.template
+cd ../demo-setup
+ansible-playbook playbooks/globex.yml -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"
 ----
 [Output]
 ```
@@ -130,6 +127,22 @@ As a Platform Engineer, so far you have setup
 ** Auth Policy (deny-all default policy in ingress-gateway namespace)
 
 What is missing now is a default Rate Limit Policy
+
+=== echo API Walkthrough
+
+A default HTTPRoute has been created. 
+
+* Check if the HTTPRoute works as it should
+[.console-input]
+[source,shell script]
+----
+curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%
+----
+
+* Check how this affects the DNS records created on AWS Route 53
++
+image::route53-dnsrecords.png[]
+
 
 === Create default RateLimit Policy (default policy in ingress-gateway namespace)
 
@@ -164,17 +177,16 @@ spec:
 
 === Test Globex Mobile
 
-* Acess the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes
+* Acess the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes or click  https://globex-mobile-globex-apim-user1.%SUBDOMAIN%[here]
 * Login using `asilva/openshift` credentials
-* Click on Categories - you should see a 404. This is because the HTTPRoute hasn't been created yet
-+
-image::globex-404.png[]
+* Click on Categories - you should see a 504. This is because the HTTPRoute hasn't been created yet
+// +
+// image::globex-404.png[]
 
 
 === Set up HTTPRoute and backend
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-* Make changes to the elements marked as << REPLACE >>.
 * In this YAML replae the the s`pec > hostnames` as show below
 
 [.console-input]
@@ -222,13 +234,11 @@ spec:
 +
 image::globex-403.png[width=70%]
 
-* This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn’t allow any calls
+* This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn't allow any calls
 
 === Setup Authpolicy
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-* Make changes to the elements marked as << REPLACE >>.
-* In this YAML replae the the s`pec > hostnames` as show below
 
 [.console-input]
 [source,shell script]
@@ -248,7 +258,7 @@ spec:
     authentication:
       "keycloak-users":
         jwt:
-          issuerUrl: https://sso.apps.<<REPLACE WITH OPENSHIFT DOMAIN e.g. rhcl.sandbox123.opentlc.com>>/realms/globex-user1
+          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
     response:
       success:
         dynamicMetadata:

@@ -6,6 +6,6 @@
 
 = Developer Resources
 
-* Add link to the git repo of the code
-* Add links to whitepapers, ebooks, learning paths, product pages
-
+* https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift[Getting started with Red Hat Connectivity Link on OpenShift^]
+* Red Hat Connectivity Link on https://developers.redhat.com/products/red-hat-connectivity-link[Red Hat Developers^]
+* Kuadrant https://docs.kuadrant.io/0.8.0/[upstream docs^]

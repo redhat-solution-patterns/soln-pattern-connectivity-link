@@ -383,8 +383,6 @@
 <div class="sect1">
 <h2 id="_deploy_the_workshop"><a class="anchor" href="#_deploy_the_workshop"></a><a class="link" href="#_deploy_the_workshop">3. Deploy the workshop</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_deploy_the_operator_and_related_systems"><a class="anchor" href="#_deploy_the_operator_and_related_systems"></a><a class="link" href="#_deploy_the_operator_and_related_systems">3.1. Deploy the Operator and related systems</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -395,12 +393,24 @@
 </div>
 </div>
 </li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_deploy_the_operator_and_related_systems"><a class="anchor" href="#_deploy_the_operator_and_related_systems"></a><a class="link" href="#_deploy_the_operator_and_related_systems">3.1. Deploy the Operator and related systems</a></h3>
+<div class="ulist">
+<ul>
 <li>
-<p>Open the inventories/inventory.template file and update the following variables. Save the file.</p>
+<p>Open the inventories/inventory.template file and update the variable variables. Save the file.</p>
+</li>
+</ul>
+</div>
+<details>
+<summary class="title"><span class="underline">Click for details of inventory.template file</span></summary>
+<div class="content">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_connectivity_link_kuadrant_redis_url=&lt;redis URL you setup in the previous step&gt;
-# E.g.: redis://default:*****@redis-xx.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155
+
 
 ocp4_workload_connectivity_link_aws_access_key=&lt;AWS_ACCESS_KEY_ID&gt;
 ocp4_workload_connectivity_link_aws_secret_access_key=&lt;AWS_SECRET_ACCESS_KEY&gt;
@@ -420,7 +430,10 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 # E.g.: EU or US</code></pre>
 </div>
 </div>
-</li>
+</div>
+</details>
+<div class="ulist">
+<ul>
 <li>
 <p>Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads</p>
 </li>
@@ -437,33 +450,11 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 <div class="ulist">
 <ul>
 <li>
-<p>Git clone the repo with the ansible script</p>
-</li>
-</ul>
-</div>
+<p>Run the Ansible script which will setup the Globex app.</p>
 <div class="listingblock">
 <div class="content">
-<pre>git clone https://github.com/rh-soln-pattern-connectivity-link/globex-ansible.git</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Open the inventories/inventory.template file and update the following variables. Save the file.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.&lt;aws_managed_zone_domain&gt;
-
-#E.g.: https://globex-mobile.managed.sandbox2662.opentlc.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>*
-Run the Ansible script which will setup the Globex app.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>ansible-playbook playbooks/globex.yml -e ACTION=create -i inventories/inventory.template</pre>
+<pre>cd ../demo-setup
+ansible-playbook playbooks/globex.yml -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
 </div>
 </div>
 </li>
@@ -520,7 +511,37 @@ localhost                  : ok=37   changed=10   unreachable=0    failed=0    s
 <p>What is missing now is a default Rate Limit Policy</p>
 </div>
 <div class="sect2">
-<h3 id="_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"><a class="anchor" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"></a><a class="link" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace">4.1. Create default RateLimit Policy (default policy in ingress-gateway namespace)</a></h3>
+<h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">4.1. echo API Walkthrough</a></h3>
+<div class="paragraph">
+<p>A default HTTPRoute has been created.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check if the HTTPRoute works as it should</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check how this affects the DNS records created on AWS Route 53</p>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="route53-dnsrecords.png" alt="route53 dnsrecords">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"><a class="anchor" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace"></a><a class="link" href="#_create_default_ratelimit_policy_default_policy_in_ingress_gateway_namespace">4.2. Create default RateLimit Policy (default policy in ingress-gateway namespace)</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -566,18 +587,13 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p>Acess the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes</p>
+<p>Acess the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%SUBDOMAIN%">here</a></p>
 </li>
 <li>
 <p>Login using <code>asilva/openshift</code> credentials</p>
 </li>
 <li>
-<p>Click on Categories - you should see a 404. This is because the HTTPRoute hasn&#8217;t been created yet</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/globex-404.png" alt="globex 404">
-</div>
-</div>
+<p>Click on Categories - you should see a 504. This is because the HTTPRoute hasn&#8217;t been created yet</p>
 </li>
 </ul>
 </div>
@@ -588,9 +604,6 @@ spec:
 <ul>
 <li>
 <p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
-</li>
-<li>
-<p>Make changes to the elements marked as &lt;&lt; REPLACE &gt;&gt;.</p>
 </li>
 <li>
 <p>In this YAML replae the the s`pec &gt; hostnames` as show below</p>
@@ -649,7 +662,7 @@ spec:
 </div>
 </li>
 <li>
-<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn’t allow any calls</p>
+<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn&#8217;t allow any calls</p>
 </li>
 </ul>
 </div>
@@ -660,12 +673,6 @@ spec:
 <ul>
 <li>
 <p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
-</li>
-<li>
-<p>Make changes to the elements marked as &lt;&lt; REPLACE &gt;&gt;.</p>
-</li>
-<li>
-<p>In this YAML replae the the s`pec &gt; hostnames` as show below</p>
 </li>
 </ul>
 </div>
@@ -686,7 +693,7 @@ spec:
     authentication:
       "keycloak-users":
         jwt:
-          issuerUrl: https://sso.apps.&lt;&lt;REPLACE WITH OPENSHIFT DOMAIN e.g. rhcl.sandbox123.opentlc.com&gt;&gt;/realms/globex-user1
+          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
     response:
       success:
         dynamicMetadata:

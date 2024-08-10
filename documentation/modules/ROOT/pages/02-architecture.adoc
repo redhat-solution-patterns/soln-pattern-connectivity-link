@@ -40,6 +40,8 @@ This pattern aims to cover the following use cases of Connectivity Link
 * *Secure*: Secure traffic with automatic ACME-based TLS integration
 * *Protect*: AuthPolicy and RateLimitPolicy help to protect services with our flexible and powerful policies 
 
+image::architecture.png[]
+
 [#more_tech]
 == About the Technology Stack
 

@@ -386,7 +386,7 @@ ansible-galaxy collection list #the list should include kubernetes.core</code></
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The subdomain would look something like this <code>apps.cluster-name.guid.subdomain.myopenshift.com</code></p>
+<p>The subdomain would look something like this <code>apps.mycluster.myopenshift.com</code></p>
 </div>
 </td>
 </tr>
@@ -491,6 +491,41 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 </div>
 </details>
 </li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Before running the following Ansible script, check if you have done these prerequisites
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prerequisites checklist</strong></p>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><input type="checkbox" data-item-complete="0"> New ManagedZone has been created</p>
+</li>
+<li>
+<p><input type="checkbox" data-item-complete="0"> Root domain has been updated with the new ManagedZone along with its nameservers</p>
+</li>
+<li>
+<p><input type="checkbox" data-item-complete="0"> The inventory file reflects the correct  ManagedZone domain name and Zone ID</p>
+</li>
+<li>
+<p><input type="checkbox" data-item-complete="0"> The inventory file reflects the correct  Redis credentials</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads</p>
 <div class="listingblock console-input">
@@ -508,11 +543,8 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 <h2 id="_walkthrough_as_a_platform_engineer"><a class="anchor" href="#_walkthrough_as_a_platform_engineer"></a><a class="link" href="#_walkthrough_as_a_platform_engineer">3. Walkthrough As a Platform Engineer</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As a Platform Engineer, so far we have setup  the operator, ManagedZone, Gateway, Policies and a sample endpoint</p>
+<p>The ansible scripts we just run has setup</p>
 </div>
-<details>
-<summary class="title"><span class="underline">Click to view details of what is setup</span></summary>
-<div class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -558,8 +590,6 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 </li>
 </ul>
 </div>
-</div>
-</details>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -582,7 +612,7 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 <div class="ulist">
 <ul>
 <li>
-<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the <a href="https://console-openshift-console.%SUBDOMAIN%" target="_blank" rel="noopener">OpenShift Console</a></p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
@@ -672,10 +702,13 @@ Due to the nature of DNS Records it may take a while for it get propagated. An e
 </div>
 </div>
 <div class="sect1">
-<h2 id="demo-setup"><a class="anchor" href="#demo-setup"></a><a class="link" href="#demo-setup">4. Solution Setup - Onboard service enpoint</a></h2>
+<h2 id="demo-setup"><a class="anchor" href="#demo-setup"></a><a class="link" href="#demo-setup">4. Solution Setup - Onboard ProductCatalog service endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints</p>
+</div>
+<div class="paragraph">
+<p>In this solution pattern, the Globex developers are now ready to onboard the ProductCatalog service to be securely exposed as an endpoint.</p>
 </div>
 <div class="sect2">
 <h3 id="_run_the_deployment_scripts_2"><a class="anchor" href="#_run_the_deployment_scripts_2"></a><a class="link" href="#_run_the_deployment_scripts_2">4.1. Run the deployment scripts</a></h3>
@@ -686,7 +719,8 @@ Due to the nature of DNS Records it may take a while for it get propagated. An e
 <div class="listingblock">
 <div class="content">
 <pre>cd ../demo-setup
-ansible-playbook playbooks/globex.yml -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
+ansible-playbook playbooks/globex.yml \
+  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
 </div>
 </div>
 </li>

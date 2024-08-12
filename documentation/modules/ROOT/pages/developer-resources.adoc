@@ -4,7 +4,7 @@
 :doctype: book
 
 
-= Developer Resources
+== Developer Resources
 
 * https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift[Getting started with Red Hat Connectivity Link on OpenShift^]
 * Red Hat Connectivity Link on https://developers.redhat.com/products/red-hat-connectivity-link[Red Hat Developers^]

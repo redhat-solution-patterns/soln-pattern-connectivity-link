@@ -9,6 +9,10 @@ Introduction for the architecture of this solution pattern.
 
 == Common Challenges addressed
 
+With Hybrid Cloud becoming the defacto standard, Platform Engineering teams face increased complexity of setting up and running environments across multiple clusters and multiple regions.
+
+There is a need to  make it easy to connect, protect and manage services and infrastructure across the different environments so as to:
+
 * To provide an connectivity solution that leverages Gateway API as it's foundation that enable platform engineers and application developers to collaborate to connect, secure, protect and observe their HTTP based APIs and infrastructure leveraging CRD based APIs rather than additional heavy weight platforms. 
 
 * To provide a lightweight layer of API mgmt focused tooling that provides an “API mgmt lens” that compliments the core connectivity features.

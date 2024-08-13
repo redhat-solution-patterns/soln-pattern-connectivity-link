@@ -34,17 +34,50 @@ There is a need to  make it easy to connect, protect and manage services and inf
 [#in_depth]
 == An in-depth look at the solution's architecture
 
-As Globex gears to support access to their core services from other channels/applications, they adopt a Kubernetes native approach to application connectivity through Red Hat Connectivity Link. 
 
-In this solution we will look at a step-by-step approach to onboarding a new application and allowing for accessing the Globex services in a secure fashion
-
-This pattern aims to cover the following use cases of Connectivity Link
-
-* *Connect*: Setup app connectivity across service endpoints
-* *Secure*: Secure traffic with automatic ACME-based TLS integration
-* *Protect*: AuthPolicy and RateLimitPolicy help to protect services with our flexible and powerful policies 
+With growing demand for mobile based apps, Globex gears to support access to their core services from other channels/applications. In this solution we will look at a step-by-step approach to onboarding a new application and allowing for accessing the Globex services in a secure fashion.
 
 image::architecture.png[]
+
+. Globex's development team build a `Mobile Gateway` as a single point (a wrapper) in front of Globex's core services. Ref: https://martinfowler.com/articles/gateway-pattern.html[gateway-pattern^]
+. The access to this `mobile-gateway` service endpoint needs to be secured and protected for connectitiviy from the Mobile App that is being built.
+. To setup such a secure connectivity for a growing demand for access to core services, the Globex team adopts a Kubernetes native approach to application connectivity through Red Hat Connectivity Link. 
+. Connectivity Link allows for clear separation of concerns with regards to the various teams involved in setting up such a secure connectivity
+. *Platform Engineers* workflow: + 
+The Platform Engineer has to setup a Gateway which will allow for secure connection to the backend service endpoints. To achieve this a number of components are needed to be setup. 
++
+.[underline]#Click to view details about these components#
+[%collapsible]
+====
+
+.. https://docs.kuadrant.io/0.8.0/dns-operator/docs/managedzone/[*ManagedZone*^]:  is a reference to a https://en.wikipedia.org/wiki/DNS_zone[DNS zone^].  This defined the domain/subdomain that can be used as a host by any gateways. E.g.  `managed.globex.com`
+
+.. *TLS issuer* (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses https://letsencrypt.org/[Let's Encrypt^]. This certificate is stored as a secret to be referenced by the Gateways.
+
+..https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the GatewayAPI and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
+
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/[*TLS Policy*^]: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests. This is defined with a wildcard hostname based on the root domain. These gateways can use a subdomain of the ManagedZone. E.g.  `*.managed.globex.com`
+
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/auth/[*Auth Policy*^]: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints
+
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/dns/[*DNS Policy*^]: provide dns management by managing the lifecycle of dns records so as to setup ingress connectivity using DNS to bring traffic to the Gateway.  
+
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/rate-limiting/[*RateLimit Policy*^]: set up a default artificially low global limit to further protect any endpoints exposed by this Gateway
+====
+
+. *Developer/Application owners* workflow: +
+Now that the Gateway is made available, the developers can now start onboarding their service endpoints by creating a HTTPRoute representing each endpoint. Developers can also override the Auth and RateLimit policies setup by the Platform Engineer to suit their specific authz/authn needs and  non-functional requirements for rate limiting.
++
+.[underline]#Click to view details about these components#
+[%collapsible]
+====
+.. https://gateway-api.sigs.k8s.io/api-types/httproute/[*HTTPRoute*^]: this is part of the Gateway API. Setup a HTTPRoute by defining the parent Gateway that was setup by Platform Engineer. Define a hostname for the route so that requests can be sent to the correct route. Rules can be setup to send the requests to the right backend endpoint.
+.. *AuthPolicy*: Globex adopts OIDC for auth and the developer creates a new policy attached to the HTTPRoute. This policy overrides the `deny-all` policy created by the Platform Engineer.
+.. *RateLimit Policy*: the low-limits default RateLimit Policy created at the Gateway level is overridden by this policy to provide for a suitable limit based on non-functional requirements. Any changes can be made easily to the syste by applying changes to this policy.
+====
+
+. Once the components and custom resources are in place, a Globex customer can login to the Globex Mobile application. The request will then be served securely through the Connectivity Link platform that has been setup
+. Suitable metrics can also be enabled which will be covered in the next version of this Solution Pattern.
 
 [#more_tech]
 == About the Technology Stack
@@ -59,7 +92,8 @@ Used to define the Gateways and Routing rules for requests entering those gatewa
 Connectiity Link (Kuadrant) provides connectivity, security and service protection capabilities in the form of Kubernetes CRDs that implement the Gateway API concept of policy attachment. These policy APIs can target specific Gateway API resources such as Gateways and HTTPRoutes to extend their capabilities and configuration. 
 
 ==== Istio as Gateway provider
-Connectivity Link/Kuadrant's focus is on HTTP traffic and Istio | OSSM as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane in order to enforce the applied policies and register components such as Authorino and Limitador.
+Connectivity Link/Kuadrant's focus is on HTTP traffic and Istio | OSSM as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane in order to enforce the applied policies and register components such as Authorino and Limitador.+
+Ref: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/ [Istio with Gateway API]
 
 ==== HTTPRoute
 HTTPRoute enables advanced routing capabilities for Ingress. It is a Gateway API type for specifying routing behavior of HTTP requests from a Gateway listener to an API object, i.e. Service. +
@@ -67,6 +101,11 @@ Ref: https://gateway-api.sigs.k8s.io/api-types/httproute/
 
 
 === What is Kuadrant
+
+
+video::euWAMvQojP4[youtube, width=800, height=480]
+
+
 It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters with policies for TLS, DNS, application authentication & authorization, and rate limiting. Additionally, Kuadrant offers observability templates to further support infrastructure management. +
 Ref: https://docs.kuadrant.io
 

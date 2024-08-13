@@ -240,7 +240,7 @@
 <p>Red Hat Connectivity Link is  a cloud-native, open source solution, for hybrid cloud to Application Connectivity, API Management &amp; Policy Management in single and multi-cluster Kubernetes environments. It is primarily  based on the open source Kuadrant project and builds on the capabilities of Red Hat OpenShift.</p>
 </div>
 <div class="paragraph">
-<p>This Solution Pattern showcases how setup application connectivity with this Kubernetes-native solution using <strong>Policy-as-Code approach</strong>.</p>
+<p>This Solution Pattern showcases how setup application connectivity with this Kubernetes-native solution using a <strong>Policy-as-Code approach</strong>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Contributors:</strong> Jaya Christina Baskaran (Red Hat), Bernard Tison (Red Hat)</p>
@@ -254,7 +254,7 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Solutions Patterns help you understand the art of the possible with Red Hat&#8217;s portfolio, and not intended to be used as is for production environments. You are welcome use any part of this solution pattern for your own workloads.</p>
+<p>Solutions Patterns help you understand the art of the possible with Red Hat&#8217;s portfolio, and not intended to be used as is for production environments. You are welcome to use any part of this solution pattern for your own workloads.</p>
 </div>
 </td>
 </tr>
@@ -274,7 +274,7 @@
 <p>Apply Policy-as-Code for repeatable and automated policy-based app-connectivity management</p>
 </li>
 <li>
-<p>Adopt a zero-trust policy for your service end points</p>
+<p>Adopt a zero-trust policy for your service endpoints</p>
 </li>
 <li>
 <p>Secure access to expensive resources such as AI LLM endpoints</p>
@@ -290,11 +290,11 @@
 <h2 id="_the_story_behind_this_solution_pattern"><a class="anchor" href="#_the_story_behind_this_solution_pattern"></a><a class="link" href="#_the_story_behind_this_solution_pattern">2. The story behind this solution pattern</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Globex, a fictitious retail company, would like their product catalogue to be available for perusal in a secure fashion. This new application will need to access the Product Catalogue API in a secure way using OpenID Connect (OIDC) as the identity layer.</p>
+<p>Globex, a fictitious retail company, would like their product catalog to be available for perusal in a secure fashion. This new application will need to access the Product Catalog API in a secure way using OpenID Connect (OIDC) as the authentication layer.</p>
 </div>
 <div class="paragraph">
-<p>Globex also wants to protect the endpoints by easily applying Rate Limiting and specific levels of access based on accessing users.
-They want all this to be easily managable through configurations without harcoding anything, and should be able to adjust rate limits easily too</p>
+<p>Globex also wants to protect the endpoints by easily applying rate limiting and specific levels of access based on accessing users.
+They want all this to be easily managable through configuration without harcoding anything, and should be able to adjust rate limits easily too.</p>
 </div>
 </div>
 </div>
@@ -302,18 +302,18 @@ They want all this to be easily managable through configurations without harcodi
 <h2 id="_the_solution"><a class="anchor" href="#_the_solution"></a><a class="link" href="#_the_solution">3. The Solution</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For this purpose, Globex decides to embrace a policy-as-code approach. As <a href="https://www.gartner.com/document/3992070" target="_blank" rel="noopener">Gartner</a> points out Policy as code (PaC) provides repeatable and automated policy-based management through which one can define security through code</p>
+<p>For this purpose, Globex decides to embrace a policy-as-code approach. As <a href="https://www.gartner.com/document/3992070" target="_blank" rel="noopener">Gartner</a> points out Policy as code (PaC) provides repeatable and automated policy-based management through which one can define security through code.</p>
 </div>
 <div class="paragraph">
-<p>Red Hat Connectivity Link offers delivering simplified Kubernetes application connectivity and policy management across multi-cluster environments. This is achieved through through the open source <a href="https://kuadrant.io" target="_blank" rel="noopener">Kuadrant</a> which brings together Gateway API and Policies to help you scale, load-balance, and secure your gateways in single or multi-cluster environments.</p>
+<p>Red Hat Connectivity Link offers simplified Kubernetes application connectivity and policy management across multi-cluster environments. This is achieved through the open source <a href="https://kuadrant.io" target="_blank" rel="noopener">Kuadrant</a> project which brings together Gateway API and Policies to help you scale, load-balance, and secure your gateways in single or multi-cluster environments.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener">Gateway API</a> is the new standard for Ingress from k8s community. It is the Next generation of Kubernetes Ingress, Load Balancing, and Service Mesh APIs. It is expressive, and role-oriented</p>
+<p><a href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener">Gateway API</a> is the new standard for Ingress from the Kubernetes community. It is the next generation of Kubernetes Ingress, Load Balancing, and Service Mesh APIs. It is expressive, and role-oriented.</p>
 </li>
 <li>
-<p><a href="https://kuadrant.io" target="_blank" rel="noopener">Kuadrant</a> provides  Gateway Policies for Kubernetes. The policies can connect, secure, and protect services for TLS, DNS, Auth and Rate limiting. The observability (metrics) templates make it easy to monitory for compliance</p>
+<p><a href="https://kuadrant.io" target="_blank" rel="noopener">Kuadrant</a> provides  Gateway Policies for Kubernetes. The policies can connect, secure, and protect services for TLS, DNS, Auth and Rate Limiting. The observability (metrics) templates make it easy to monitory for compliance.</p>
 </li>
 </ul>
 </div>
@@ -323,13 +323,13 @@ They want all this to be easily managable through configurations without harcodi
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Connect</strong>: Setup app connectivity across service endpoints</p>
+<p><strong>Connect</strong>: Setup app connectivity across service endpoints.</p>
 </li>
 <li>
-<p><strong>Secure</strong>: Secure traffic with automatic ACME-based TLS integration</p>
+<p><strong>Secure</strong>: Secure traffic with automatic ACME-based TLS integration.</p>
 </li>
 <li>
-<p><strong>Protect</strong>: AuthPolicy and RateLimitPolicy help to protect services with our flexible and powerful policies</p>
+<p><strong>Protect</strong>: AuthPolicy and RateLimitPolicy help to protect services with our flexible and powerful policies.</p>
 </li>
 </ul>
 </div>

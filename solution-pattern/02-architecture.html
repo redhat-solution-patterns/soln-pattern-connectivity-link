@@ -335,7 +335,8 @@ The Platform Engineer has to setup a Gateway which will allow for secure connect
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><a href="https://docs.kuadrant.io/0.8.0/dns-operator/docs/managedzone/" target="_blank" rel="noopener"><strong>ManagedZone</strong></a>:  is a reference to a <a href="https://en.wikipedia.org/wiki/DNS_zone" target="_blank" rel="noopener">DNS zone</a>.  This defined the domain/subdomain that can be used as a host by any gateways. E.g.  <code>managed.globex.com</code>.</p>
+<p>A Managed Zone needs to be setup within the DNS provider. E.g.  <code>managed.globex.com</code>.<br>
+Refer to the <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift" target="_blank" rel="noopener">Getting started page</a>  to learn how to setup a Managed Zone.</p>
 </li>
 <li>
 <p><strong>TLS issuer</strong> (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let&#8217;s Encrypt</a>. This certificate is stored as a secret to be referenced by the Gateways.</p>

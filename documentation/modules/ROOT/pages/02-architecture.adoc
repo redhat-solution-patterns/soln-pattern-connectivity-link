@@ -50,7 +50,8 @@ The Platform Engineer has to setup a Gateway which will allow for secure connect
 [%collapsible]
 ====
 
-.. https://docs.kuadrant.io/0.8.0/dns-operator/docs/managedzone/[*ManagedZone*^]:  is a reference to a https://en.wikipedia.org/wiki/DNS_zone[DNS zone^].  This defined the domain/subdomain that can be used as a host by any gateways. E.g.  `managed.globex.com`.
+.. A Managed Zone needs to be setup within the DNS provider. E.g.  `managed.globex.com`. +
+Refer to the https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift[Getting started page^]  to learn how to setup a Managed Zone.
 
 .. *TLS issuer* (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses https://letsencrypt.org/[Let's Encrypt^]. This certificate is stored as a secret to be referenced by the Gateways.
 

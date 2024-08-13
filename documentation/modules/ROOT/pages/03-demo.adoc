@@ -48,7 +48,7 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 
 * In AWS Route53 add a hosted zone as a subdomain (for example, managed.mytopdomain.com) for the applications that you want to manage and secure with Connectivity Link.
 * Refer to the the https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html[AWS documentation^] on Route53 for instructions on how to setup the hosted zone.
-* Make sure you will have to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in https://repost.aws/knowledge-center/create-subdomain-route-53[this article^].
+* Make sure you to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in https://repost.aws/knowledge-center/create-subdomain-route-53[this article^].
 
 
 
@@ -59,21 +59,21 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 ** Click on DB created, and click on Connect button show in the page
 +
 image::redis-connection.png[width=40%]
-* You will need only the connection string which will look like this
+* You will only need the connection string which will look like this
 +
 `redis://default:*****@redis-xx*****.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155`
 
 
 === Personalize the instructions
-To personalize the rest of the instructions to your OpenShift environment, 
+To personalize the rest of the instructions to your OpenShift environment:
 
 * At the top-right of this page enter the following information under the *Your Workshop Environment* section 
-** *MANAGEDZONE* as per the new Managed Zone that your created in the previous step and 
+** *MANAGEDZONE* as per the new Managed Zone that you created in the previous step
 ** *Subdomain* to match your OpenShift cluster 
 * Press enter or click on the Set button
 +
 image::setup-instructions.png[]
-* The menubar and the rest of this walkthrough guide will be updated with the username and subdomain as shown below
+* The menubar and the rest of this walkthrough guide will be updated with the Managed Zone name and the subdomain as shown below
 +
 image::setup-instructions-complete.png[]
 
@@ -86,17 +86,17 @@ The subdomain would look something like this `apps.mycluster.myopenshift.com`
 [#_installing_the_demo]
 == Platform Setup
 
-This section is typically setup by a *Platform Engineer* persona.
+This section is typically performed by a *Platform Engineer* persona.
 
-The primary goal of a Platform Engineer is to deploy a Gateway that provides secure communication and is protected and ready for use by application development teams to deploy their service-endpoints/API. This gateway should be protected and secured with global rate limiting and auth policies.
+The primary goal of a Platform Engineer is to deploy a Gateway that provides secure communication and is protected and ready for use by application development teams to deploy their service endpoints or APIs. This gateway should be protected and secured with global rate limiting and auth policies.
 
-In this demo, the deployment script uses ArgoCD to setup 
+In this demo, the deployment script uses ArgoCD to:
 
 * Install Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits
-* Set up a ManagedZone used to set up DNS config. 
+* Setup a ManagedZone for DNS configuration. 
 * Define a TLS issuer for TLS certificates for secure communication to the Gateways.
-* Create a Gateway (based on istio gateway) with a wildcard hostname based on the root domain.
-* Kuadrant Custom Resources (CRs) including various policies: DNS, TLS
+* Create a Gateway (based on Istio gateway) with a wildcard hostname based on the root domain.
+* Kuadrant Custom Resources (CRs) including various policies: DNS, TLS.
 
 
 === Run the deployment scripts
@@ -118,7 +118,7 @@ oc login --token=<token> --server=<server>
 git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link-ansible
 ----
 
-* Open the inventories/inventory.template file and update the variable variables. Save the file.
+* Open the `inventories/inventory.template` file and update the variables. Save the file.
 +
 .[underline]#Click for details of inventory.template file#
 [%collapsible]
@@ -154,7 +154,7 @@ Before running the following Ansible script, check if you have done these prereq
 +
 [%interactive]
 ** [ ] New ManagedZone has been created
-** [ ] Root domain has been updated with the new ManagedZone along with its nameservers
+** [ ] Root domain has been updated with the new ManagedZone along with its name servers
 ** [ ] The inventory file reflects the correct  ManagedZone domain name and Zone ID
 ** [ ] The inventory file reflects the correct  Redis credentials
 
@@ -170,19 +170,19 @@ ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create 
 
 == Walkthrough As a Platform Engineer
 
-The ansible scripts we just run has setup 
+The ansible scripts we just run has setup:
 
 * Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits
-* ManagedZone used to set up DNS config. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~ManagedZone/prod-web-aws-zone/yaml[View^]]
-* TLS issuer for TLS certificates using  https://letsencrypt.org/[Let's Encrypt^]. [https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/cert-manager.io\~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml[View^]]
-* Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[View^]]
-* Various policies attached to the Gateway
-** A default `deny-all` Auth Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1beta2~AuthPolicy/prod-web-deny-all/yaml[View^]]
-** TLS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml[View^]]
-** DNS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~DNSPolicy/prod-web-dnspolicy/yaml[View^]]
-* A sample EchoAPI endpoint
+* ManagedZone used to set up DNS config. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~ManagedZone/prod-web-aws-zone/yaml[View^]].
+* TLS issuer for TLS certificates using  https://letsencrypt.org/[Let's Encrypt^]. [https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/cert-manager.io\~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml[View^]].
+* Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[View^]].
+* Various policies attached to the Gateway:
+** A default `deny-all` Auth Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1beta2~AuthPolicy/prod-web-deny-all/yaml[View^]].
+** TLS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml[View^]].
+** DNS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~DNSPolicy/prod-web-dnspolicy/yaml[View^]].
+* A sample EchoAPI endpoint:
 ** This is service literally echoes the request and is just used here for testing purposes.
-** [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io\~v1~HTTPRoute/echo-api/yaml[View HTTP Rout^]]
+** [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io\~v1~HTTPRoute/echo-api/yaml[View HTTP Rout^]].
 
 
 [NOTE]
@@ -256,7 +256,7 @@ WARNING: Due to the nature of DNS Records it may take a while for it get propaga
 
 == Solution Setup - Onboard ProductCatalog service endpoint
 
-Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints
+Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints.
 
 In this solution pattern, the Globex developers are now ready to onboard the ProductCatalog service to be securely exposed as an endpoint.
 
@@ -293,7 +293,7 @@ image::globex-404.png[]
 === Set up HTTPRoute for ProductCatalog service-enpoint
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-* In this YAML replae the the s`pec > hostnames` as show below
+* In this YAML replace the the `spec > hostnames` as show below
 
 [.console-input]
 [source,shell script]
@@ -379,15 +379,15 @@ spec:
 
 === Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)
 
-* Try accessing *Categories* again - you should now be able to see the Categories
+* Try accessing *Categories* again - you should now be able to see the Categories.
 +
 image::globex-success.png[width=70%]
 
 === Test the default *RateLimit Policy*
 
-* Try accessing *Categories* again - you should now be able to see the Categories
-* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times
-* You would see a 429 error
+* Try accessing *Categories* again - you should now be able to see the Categories.
+* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times.
+* Expect to see a 429 error:
 +
 image::globex-429.png[width=70%]
 
@@ -423,14 +423,14 @@ spec:
 
 === Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)
 
-* Try accessing *Categories* again - you should now be able to see the Categories
-* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times
-* You would now see there is no 429 for upto 100 request in a duration of 10 seconds
+* Try accessing *Categories* again - you should now be able to see the Categories.
+* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times.
+* You would now see there is no 429 for up to 100 requests in a duration of 10 seconds.
 
 
 == Conclusion
 
-With this setup, Globex is all set to onboard further service enpoints so as to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.
+With this setup, Globex is all set to onboard further service enpoints to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.
 
 We will also extend this pattern to include the all important Observability aspects as well.
 

@@ -11,11 +11,11 @@ Introduction for the architecture of this solution pattern.
 
 With Hybrid Cloud becoming the defacto standard, Platform Engineering teams face increased complexity of setting up and running environments across multiple clusters and multiple regions.
 
-There is a need to  make it easy to connect, protect and manage services and infrastructure across the different environments so as to:
+There is a need to  make it easy to connect, protect and manage services and infrastructure across the different environments to:
 
-* To provide an connectivity solution that leverages Gateway API as it's foundation that enable platform engineers and application developers to collaborate to connect, secure, protect and observe their HTTP based APIs and infrastructure leveraging CRD based APIs rather than additional heavy weight platforms. 
+* Provide a connectivity solution that leverages Gateway API as it's foundation which enables platform engineers and application developers to collaborate to connect, secure, protect and observe their HTTP based APIs and infrastructure leveraging CRD based APIs rather than additional heavy weight platforms. 
 
-* To provide a lightweight layer of API mgmt focused tooling that provides an “API mgmt lens” that compliments the core connectivity features.
+* Provide a lightweight layer of API management focused tooling that provides an “API management lens” that compliments the core connectivity features.
 
 
 [#tech_stack]
@@ -35,34 +35,34 @@ There is a need to  make it easy to connect, protect and manage services and inf
 == An in-depth look at the solution's architecture
 
 
-With growing demand for mobile based apps, Globex gears to support access to their core services from other channels/applications. In this solution we will look at a step-by-step approach to onboarding a new application and allowing for accessing the Globex services in a secure fashion.
+With growing demand for mobile based apps, Globex gears to support access to their core services from other channels/applications. In this solution we will look at a step-by-step approach to onboarding a new application and allowing to access the Globex services in a secure fashion.
 
 image::architecture.png[]
 
-. Globex's development team build a `Mobile Gateway` as a single point (a wrapper) in front of Globex's core services. Ref: https://martinfowler.com/articles/gateway-pattern.html[gateway-pattern^]
+. Globex's development team built a `Mobile Gateway` as a single point of entry (a wrapper) in front of Globex's core services. Ref: https://martinfowler.com/articles/gateway-pattern.html[gateway-pattern^]
 . The access to this `mobile-gateway` service endpoint needs to be secured and protected for connectitiviy from the Mobile App that is being built.
 . To setup such a secure connectivity for a growing demand for access to core services, the Globex team adopts a Kubernetes native approach to application connectivity through Red Hat Connectivity Link. 
 . Connectivity Link allows for clear separation of concerns with regards to the various teams involved in setting up such a secure connectivity
 . *Platform Engineers* workflow: + 
-The Platform Engineer has to setup a Gateway which will allow for secure connection to the backend service endpoints. To achieve this a number of components are needed to be setup. 
+The Platform Engineer has to setup a Gateway which will allow for secure connection to the backend service endpoints. To achieve this a number of components need to be setup. 
 +
 .[underline]#Click to view details about these components#
 [%collapsible]
 ====
 
-.. https://docs.kuadrant.io/0.8.0/dns-operator/docs/managedzone/[*ManagedZone*^]:  is a reference to a https://en.wikipedia.org/wiki/DNS_zone[DNS zone^].  This defined the domain/subdomain that can be used as a host by any gateways. E.g.  `managed.globex.com`
+.. https://docs.kuadrant.io/0.8.0/dns-operator/docs/managedzone/[*ManagedZone*^]:  is a reference to a https://en.wikipedia.org/wiki/DNS_zone[DNS zone^].  This defined the domain/subdomain that can be used as a host by any gateways. E.g.  `managed.globex.com`.
 
 .. *TLS issuer* (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses https://letsencrypt.org/[Let's Encrypt^]. This certificate is stored as a secret to be referenced by the Gateways.
 
-..https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the GatewayAPI and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
+..https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/[*TLS Policy*^]: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests. This is defined with a wildcard hostname based on the root domain. These gateways can use a subdomain of the ManagedZone. E.g.  `*.managed.globex.com`
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/[*TLS Policy*^]: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests. This is defined with a wildcard hostname based on the root domain. These gateways can use a subdomain of the ManagedZone. E.g.  `*.managed.globex.com`.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/auth/[*Auth Policy*^]: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/auth/[*Auth Policy*^]: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/dns/[*DNS Policy*^]: provide dns management by managing the lifecycle of dns records so as to setup ingress connectivity using DNS to bring traffic to the Gateway.  
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/dns/[*DNS Policy*^]: provide DNS management by managing the lifecycle of DNS records to setup ingress connectivity using DNS to bring traffic to the Gateway.  
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/rate-limiting/[*RateLimit Policy*^]: set up a default artificially low global limit to further protect any endpoints exposed by this Gateway
+.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/rate-limiting/[*RateLimit Policy*^]: set up a default artificially low global limit to further protect any endpoints exposed by this Gateway.
 ====
 
 . *Developer/Application owners* workflow: +
@@ -73,26 +73,26 @@ Now that the Gateway is made available, the developers can now start onboarding 
 ====
 .. https://gateway-api.sigs.k8s.io/api-types/httproute/[*HTTPRoute*^]: this is part of the Gateway API. Setup a HTTPRoute by defining the parent Gateway that was setup by Platform Engineer. Define a hostname for the route so that requests can be sent to the correct route. Rules can be setup to send the requests to the right backend endpoint.
 .. *AuthPolicy*: Globex adopts OIDC for auth and the developer creates a new policy attached to the HTTPRoute. This policy overrides the `deny-all` policy created by the Platform Engineer.
-.. *RateLimit Policy*: the low-limits default RateLimit Policy created at the Gateway level is overridden by this policy to provide for a suitable limit based on non-functional requirements. Any changes can be made easily to the syste by applying changes to this policy.
+.. *RateLimit Policy*: the low-limits default RateLimit Policy created at the Gateway level is overridden by this policy to provide for a suitable limit based on non-functional requirements. Any changes can be made easily to the system by applying changes to this policy.
 ====
 
-. Once the components and custom resources are in place, a Globex customer can login to the Globex Mobile application. The request will then be served securely through the Connectivity Link platform that has been setup
+. Once the components and custom resources are in place, a Globex customer can login to the Globex Mobile application. The request will then be served securely through the Connectivity Link platform that has been setup.
 . Suitable metrics can also be enabled which will be covered in the next version of this Solution Pattern.
 
 [#more_tech]
 == About the Technology Stack
 
-=== What is GatewayAPI
+=== What is Gateway API
 https://gateway-api.sigs.k8s.io/[Gateway API^]This is the new standard for Ingress from the Kubernetes community. 
 
-Gateway API is a relatively new k8s based API focused on traffic routing and is often referred to as the next generation of Ingress on kube. 
+Gateway API is a relatively new Kubernetes based API focused on traffic routing and is often referred to as the next generation of Ingress on kube. 
 
-Used to define the Gateways and Routing rules for requests entering those gateways. Our supported provider is Istio via OpenShift Service Mesh
+Used to define the Gateways and Routing rules for requests entering those gateways. Our supported provider is Istio via OpenShift Service Mesh.
 
-Connectiity Link (Kuadrant) provides connectivity, security and service protection capabilities in the form of Kubernetes CRDs that implement the Gateway API concept of policy attachment. These policy APIs can target specific Gateway API resources such as Gateways and HTTPRoutes to extend their capabilities and configuration. 
+Connectivity Link (Kuadrant) provides connectivity, security and service protection capabilities in the form of Kubernetes CRDs that implement the Gateway API concept of policy attachment. These policy APIs can target specific Gateway API resources such as Gateways and HTTPRoutes to extend their capabilities and configuration. 
 
 ==== Istio as Gateway provider
-Connectivity Link/Kuadrant's focus is on HTTP traffic and Istio | OSSM as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane in order to enforce the applied policies and register components such as Authorino and Limitador.+
+Connectivity Link/Kuadrant's focus is on HTTP traffic and Istio/OpenShift Service Mesh as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane to enforce the applied policies and register components such as Authorino and Limitador.+
 Ref: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/ [Istio with Gateway API]
 
 ==== HTTPRoute
@@ -113,11 +113,11 @@ Ref: https://docs.kuadrant.io
 
 ==== DNS Operator
 
-DNS operator consumes DNSRecord resources that are configured via the *DNSPolicy* api and applies them into the targeted cloud DNS provider AWS, Azure and Google DNS are our main targets
+DNS operator consumes DNSRecord resources that are configured via the *DNSPolicy* API and applies them into the targeted cloud DNS provider. AWS, Azure and Google DNS are our main targets.
 
 ==== Cert Manager for TLS Policy
 
-Manages TLS certificates for our components and for the Gateways. Consumes Certificate resources created by Kuadrant operator in response to the TLSPolicy.
+Manages TLS certificates for our components and for the Gateways. Consumes Certificate resources created by the Kuadrant operator in response to the TLSPolicy.
 
 ====  Authorino Operator for Auth Policy
 
@@ -127,7 +127,7 @@ Ref: https://docs.kuadrant.io/0.8.0/authorino/
 
 ==== Limitador Operator for Ratelimits
 
-Limitador is a generic rate-limiter and can be enabled using RateLimit APIs
+Limitador is a generic rate-limiter and can be enabled using RateLimit APIs.
 
 ===  Policy Attachement 
 
@@ -138,6 +138,6 @@ Ref: https://gateway-api.sigs.k8s.io/reference/policy-attachment/
 ==== Defaults and overrides
 For example, we can apply a RateLimit Policy to a Gateway which will by *default* be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway's rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be acheved by applying another RateLimit Policy to the HTTPRoute thereby *overriding* the default value.
 
-The same can be extended for AuthPolicy - with a *default* deny-all policy which setup the system for zero-trust. Each developers can *override* this with AuthPolucy based on for e.g. APIKey or JWT Token through new AuthPolicy CRS applied for each of their service endpoints.
+The same can be extended for AuthPolicy - with a *default* deny-all policy which configures the system for zero-trust. Each developers can *override* this with AuthPolicy based on for e.g. APIKey or JWT Token through new AuthPolicy CR's applied for each of their service endpoints.
 
 Ref: https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec

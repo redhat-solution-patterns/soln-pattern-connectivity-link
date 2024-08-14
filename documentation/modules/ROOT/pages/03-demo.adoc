@@ -16,7 +16,6 @@ To provision the demo you will perform the following steps - each of which is ex
 * You will need an OpenShift cluster with *`cluster-admin` privileges*. This solution pattern has been tested on OpenShift 4.15 and 4.16
 * Ensure you have the *tools* `oc` and `ansible` installed in your local environment such as your laptop
 * Access to *AWS Route53* or *Google Cloud DNS* to be able to create new domain names
-* Free tier of Redis database
 
 === CLI tools
 
@@ -51,19 +50,6 @@ Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat
 * Make sure you to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in https://repost.aws/knowledge-center/create-subdomain-route-53[this article^].
 
 
-
-=== Redis
-
-* You can sign up for a free tier of Redis Cloud. Sign up at https://app.redislabs.com/[app.redislabs.com^]
-* Once a free DB is created, get the connection string.
-** Click on DB created, and click on Connect button show in the page
-+
-image::redis-connection.png[width=40%]
-* You will only need the connection string which will look like this
-+
-`redis://default:*****@redis-xx*****.cxx.eu-central-1-1.ec2.redns.redis-cloud.com:10155`
-
-
 === Personalize the instructions
 To personalize the rest of the instructions to your OpenShift environment:
 
@@ -92,14 +78,14 @@ The primary goal of a Platform Engineer is to deploy a Gateway that provides sec
 
 In this demo, the deployment script uses ArgoCD to:
 
-* Install Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits
+* Install Red Hat Connectivity Link (Kuadrant) operator 
 * Setup a ManagedZone for DNS configuration. 
 * Define a TLS issuer for TLS certificates for secure communication to the Gateways.
 * Create a Gateway (based on Istio gateway) with a wildcard hostname based on the root domain.
 * Kuadrant Custom Resources (CRs) including various policies: DNS, TLS.
 
 
-=== Run the deployment scripts
+=== Get the deployment scripts
 
 * Login to your OpenShift cluster as cluster-admin (because a number of operators will need to be installed)
 * Click on the username on the top right hand, and then click on *Copy login command*. This will open another tab and you will need to login again
@@ -124,8 +110,6 @@ git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link
 [%collapsible]
 ====
 ```
-ocp4_workload_connectivity_link_kuadrant_redis_url=<redis URL you setup in the previous step>
-
 
 ocp4_workload_connectivity_link_aws_access_key=<AWS_ACCESS_KEY_ID>
 ocp4_workload_connectivity_link_aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
@@ -147,291 +131,31 @@ ocp4_workload_connectivity_link_gateway_geo_code=<gateway geo code>
 ====
 
 
-[IMPORTANT]
-Before running the following Ansible script, check if you have done these prerequisites
 
-* *Prerequisites checklist*
-+
-[%interactive]
-** [ ] New ManagedZone has been created
-** [ ] Root domain has been updated with the new ManagedZone along with its name servers
-** [ ] The inventory file reflects the correct  ManagedZone domain name and Zone ID
-** [ ] The inventory file reflects the correct  Redis credentials
-
-* Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads
-+
-[.console-input]
-[source,shell script]
-----
-ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory.template
-----
-
-
-
-== Walkthrough As a Platform Engineer
-
-The ansible scripts we just run has setup:
-
-* Red Hat Connectivity Link (Kuadrant) operator and configure the Redis storage for Rate Limits
-* ManagedZone used to set up DNS config. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~ManagedZone/prod-web-aws-zone/yaml[View^]].
-* TLS issuer for TLS certificates using  https://letsencrypt.org/[Let's Encrypt^]. [https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/cert-manager.io\~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml[View^]].
-* Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[View^]].
-* Various policies attached to the Gateway:
-** A default `deny-all` Auth Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1beta2~AuthPolicy/prod-web-deny-all/yaml[View^]].
-** TLS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml[View^]].
-** DNS Policy [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~DNSPolicy/prod-web-dnspolicy/yaml[View^]].
-* A sample EchoAPI endpoint:
-** This is service literally echoes the request and is just used here for testing purposes.
-** [https://console-openshift-console.%SUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io\~v1~HTTPRoute/echo-api/yaml[View HTTP Rout^]].
-
-
-[NOTE]
-====
-The Gateway is now ready for developers to use with their service endpoints to securely expose them.
-====
-
-=== Default RateLimit Policy
-
-But one more thing! You might have noticed that this setup misses a default RateLimit Policy. Let's go ahead and create one. +
-
-* Copy the following into the *Import YAML* utility accessible by the (+) button on top of the https://console-openshift-console.%SUBDOMAIN%[OpenShift Console^]
-+
-[.console-input]
-[source,shell script]
-----
-apiVersion: kuadrant.io/v1beta2
-kind: RateLimitPolicy
-metadata:
-  name: ingress-gateway-rlp-lowlimits
-  namespace: ingress-gateway
-spec:
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: Gateway
-    name: prod-web
-  limits:
-    "default-limits":
-      rates:
-      - limit: 5
-        duration: 10
-        unit: second
-----
-
-=== Echo API Walkthrough
-
-* When a HttpRoute is created, a number of DNS records are created on AWS Route 53. 
-+
-.[underline]#Click to see an example#
-[%collapsible]
-====
-image::route53-dnsrecords.png[]
-====
-* Check if the HTTPRoute works as it should. Run this curl command from a terminal. 
-
-[.console-input]
-[source,shell script]
-----
-curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%
-----
-WARNING: Due to the nature of DNS Records it may take a while for it get propagated. An easy way is to install the OpenShift web terminal (use the operator to install this) and run the command through that, or you could use the the DNS provders console.
-
-* The Output will look like this
-+
-```
-{
-  "method": "GET",
-  "path": "/",
-  "query_string": null,
-  "body": "",
-  "headers": {
-    "HTTP_HOST": "echo.%MANAGEDZONE%",
-    ...
-  }
-  ..
-}
-```
-
-
-[#demo-setup]
-
-== Solution Setup - Onboard ProductCatalog service endpoint
-
-Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints.
-
-In this solution pattern, the Globex developers are now ready to onboard the ProductCatalog service to be securely exposed as an endpoint.
 
 === Run the deployment scripts
 
-*  Run the Ansible script which will setup the `ProductCategory Service Endpoint` and `Globex Mobile app`. This also setups Red Hat build of Keycloak for SSO.
-+
-----
-cd ../demo-setup
-ansible-playbook playbooks/globex.yml \
-  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"
-----
-* Expected output:
-+
-[Output]
-```
-PLAY RECAP *****************************************************************************************
-localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
-```
+*Prerequisites checklist*
 
-[#walkthrough]
-
-== Solution walkthrough as a Developer
-
-=== Test Globex Mobile app
-
-* Access the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes or click  https://globex-mobile-globex-apim-user1.%SUBDOMAIN%[here^]
-* Login using `asilva/openshift` credentials; Click on `Categories` button on the homespage
-* You should see a 404. This is because the ProductCatalog service-enpoint hasn't been exposed using a HTTPRoute
-+
-image::globex-404.png[]
+[IMPORTANT]
+====
+Before running the following Ansible script, check if you have done these prerequisites
+[%interactive]
+** [ ] New Managed Zone on the DNS provider has been created
+** [ ] Root domain has been updated with the new Managed Zone along with its name servers
+** [ ] The inventory file reflects the correct Managed Zone domain name and Zone ID
+====
 
 
-=== Set up HTTPRoute for ProductCatalog service-enpoint
-
-* Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-* In this YAML replace the the `spec > hostnames` as show below
+Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads
 
 [.console-input]
 [source,shell script]
 ----
-kind: HTTPRoute
-apiVersion: gateway.networking.k8s.io/v1beta1
-metadata:
-  name: globex-mobile-gateway
-  namespace: globex-apim-user1
-  labels:
-    deployment: globex-mobile-gateway
-    service: globex-mobile-gateway
-spec:
-  parentRefs:
-    - kind: Gateway
-      namespace: ingress-gateway
-      name: prod-web
-  hostnames:
-    - globex-mobile.%MANAGEDZONE%
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: "/mobile/services/product/category/"
-          method: GET
-      backendRefs:
-        - name: globex-mobile-gateway
-          namespace: globex-apim-user1
-          port: 8080
-    - matches:
-        - path:
-            type: Exact
-            value: "/mobile/services/category/list"
-          method: GET
-      backendRefs:
-        - name: globex-mobile-gateway
-          namespace: globex-apim-user1
-          port: 8080
+cd operator-setup 
+ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory.template
 ----
 
-=== Test Globex Mobile again (after HTTPRoute is setup)
+=== What's next
 
-* Try accessing *Categories* again - you should see a 403.
-+
-image::globex-403.png[width=70%]
-
-* This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn't allow any requests to made. We have a zero-trust auth in place!! 
-
-=== Setup Authpolicy
-
-* Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-
-[.console-input]
-[source,shell script]
-----
-apiVersion: kuadrant.io/v1beta2
-kind: AuthPolicy
-metadata:
-  name: globex-mobile-gateway
-  namespace: globex-apim-user1
-spec:
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: globex-mobile-gateway
-    namespace: globex-apim-user1
-  rules:
-    authentication:
-      "keycloak-users":
-        jwt:
-          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
-    response:
-      success:
-        dynamicMetadata:
-          identity:
-            json:
-              properties:
-                userid:
-                  selector: auth.identity.sub
-  routeSelectors:
-    - matches: []
-----
-
-=== Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)
-
-* Try accessing *Categories* again - you should now be able to see the Categories.
-+
-image::globex-success.png[width=70%]
-
-=== Test the default *RateLimit Policy*
-
-* Try accessing *Categories* again - you should now be able to see the Categories.
-* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times.
-* Expect to see a 429 error:
-+
-image::globex-429.png[width=70%]
-
-
-
-=== Create a new RateLimit Policy which overrides default gateway policy
-
-* Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
-
-[.console-input]
-[source,shell script]
-----
-apiVersion: kuadrant.io/v1beta2
-kind: RateLimitPolicy
-metadata:
-  name: globex-mobile-gateway
-  namespace: globex-apim-user1
-spec:
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    name: globex-mobile-gateway
-    namespace: globex-apim-user1
-  limits:
-    "per-user":
-      rates:
-        - limit: 100
-          duration: 10
-          unit: second
-      counters:
-        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
-----
-
-=== Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)
-
-* Try accessing *Categories* again - you should now be able to see the Categories.
-* Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times.
-* You would now see there is no 429 for up to 100 requests in a duration of 10 seconds.
-
-
-== Conclusion
-
-With this setup, Globex is all set to onboard further service enpoints to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.
-
-We will also extend this pattern to include the all important Observability aspects as well.
-
-Read more https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster[here^]
+In the next section, we'll go through the *Platform Engineer's Workflow*

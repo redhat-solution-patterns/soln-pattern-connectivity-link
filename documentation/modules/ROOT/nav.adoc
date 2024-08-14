@@ -11,10 +11,9 @@
 * xref:03-demo.adoc[{counter:module}. See the Solution in Action]
 // ** xref:03-demo.adoc#_demonstration[{module}.{counter:submodule3}. Demonstration]
 ** xref:03-demo.adoc#_prerequisites[{module}.{counter:submodule3}. Pre-requisites]
-** xref:03-demo.adoc#_installing_the_demo[{module}.{counter:submodule3}. Platform Setup]
-** xref:03-demo.adoc#_walkthrough_as_a_platform_engineer[{module}.{counter:submodule3}. Platform Engineer workflow]
-** xref:03-demo.adoc#demo-setup[{module}.{counter:submodule3}. Solution Setup]
-** xref:03-demo.adoc#walkthrough[{module}.{counter:submodule3}. Developer workflow]
+** xref:03.1-platform.adoc[{module}.{counter:submodule3}. Platform Engineer workflow]
+** xref:03.2-developer.adoc[{module}.{counter:submodule3}. Developer workflow]
+
 
 // * xref:04-workshop.adoc[{counter:module}. Workshop]
 // ** xref:04-workshop.adoc#_installing_the_workshop_environment[{module}.{counter:submodule4}. Installing the workshop environment]

@@ -8,7 +8,7 @@ With Hybrid cloud becoming the defacto standard, Platform engineering teams face
 
 Red Hat Connectivity Link is  a cloud-native, open source solution, for hybrid cloud to Application Connectivity, API Management & Policy Management in single and multi-cluster Kubernetes environments. It is primarily  based on the open source Kuadrant project and builds on the capabilities of Red Hat OpenShift. 
 
-This Solution Pattern showcases how setup application connectivity with this Kubernetes-native solution using a *Policy-as-Code approach*.
+This Solution Pattern showcases how to setup secure and protected application connectivity with a Kubernetes-native solution using Gateway API and Kuadrant's powerful policy APIs.
 
 *Contributors:* Jaya Christina Baskaran (Red Hat), Bernard Tison (Red Hat)
 
@@ -32,7 +32,7 @@ Common use cases that can be address with this architecture are:
 
 == The story behind this solution pattern
 
-image::secure-app-connecticity.png[]
+image::secure-app-connecticity.png[width=60%]
 
 Globex, a fictitious retail company, would like their product catalog to be available for perusal in a secure fashion. This new application will need to access the Product Catalog API in a secure way using OpenID Connect (OIDC) as the authentication layer.
 

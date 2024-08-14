@@ -170,16 +170,10 @@
     <a class="nav-link" href="03-demo.html#_prerequisites">3.1. Pre-requisites</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-demo.html#_installing_the_demo">3.2. Platform Setup</a>
+    <a class="nav-link" href="03.1-platform.html">3.2. Platform Engineer workflow</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-demo.html#_walkthrough_as_a_platform_engineer">3.3. Platform Engineer workflow</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-demo.html#demo-setup">3.4. Solution Setup</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-demo.html#walkthrough">3.5. Developer workflow</a>
+    <a class="nav-link" href="03.2-developer.html">3.3. Developer workflow</a>
   </li>
 </ul>
   </li>
@@ -347,7 +341,7 @@ Refer to the <a href="https://developers.redhat.com/articles/2024/06/12/getting-
 <div class="title">.https://gateway-api.sigs.k8s.io/api-types/gateway/[<strong>Gateway</strong>^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex&#8217;s system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.</div>
 <ol class="loweralpha" type="a">
 <li>
-<p><a href="https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/" target="_blank" rel="noopener"><strong>TLS Policy</strong></a>: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests. This is defined with a wildcard hostname based on the root domain. These gateways can use a subdomain of the ManagedZone. E.g.  <code>*.managed.globex.com</code>.</p>
+<p><a href="https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/" target="_blank" rel="noopener"><strong>TLS Policy</strong></a>: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests and is denoted with a wildcard hostname based on the root domain. These gateways can use a subdomain of the Managed Zone. E.g.  <code>*.managed.globex.com</code>.</p>
 </li>
 <li>
 <p><a href="https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/auth/" target="_blank" rel="noopener"><strong>Auth Policy</strong></a>: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints.</p>
@@ -468,18 +462,28 @@ Ref: <a href="https://docs.kuadrant.io/0.8.0/authorino/" class="bare">https://do
 </div>
 </div>
 <div class="sect2">
-<h3 id="_policy_attachement"><a class="anchor" href="#_policy_attachement"></a><a class="link" href="#_policy_attachement">4.4. Policy Attachement</a></h3>
+<h3 id="_policies"><a class="anchor" href="#_policies"></a><a class="link" href="#_policies">4.4. Policies</a></h3>
+<div class="paragraph">
+<p>Kuadrant at its heart, provides Gateway Policies for Kubernetes. To quote <a href="https://kuadrant.io/" class="bare">https://kuadrant.io/</a>:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Gateways play a pivotal role in application connectivity. With Kuadrant, platform engineers and application developers can easily connect, secure and protect their services and infrastructure using its powerful policy APIs</p>
+</div>
+</blockquote>
+</div>
+<div class="sect3">
+<h4 id="_policy_attachement"><a class="anchor" href="#_policy_attachement"></a><a class="link" href="#_policy_attachement">4.4.1. Policy Attachement</a></h4>
 <div class="paragraph">
 <p>Policy Attachment augments the behavior of an object to add additional settings that can&#8217;t be described within the spec of that object. A "Policy Attachment" is a specific type of resprce that can affect specific settings across either one object (this is "Direct Policy Attachment"), or objects in a hierarchy (this is "Inherited Policy Attachment").<br>
 Ref: <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" class="bare">https://gateway-api.sigs.k8s.io/reference/policy-attachment/</a></p>
 </div>
-<div class="sect3">
-<h4 id="_defaults_and_overrides"><a class="anchor" href="#_defaults_and_overrides"></a><a class="link" href="#_defaults_and_overrides">4.4.1. Defaults and overrides</a></h4>
-<div class="paragraph">
-<p>For example, we can apply a RateLimit Policy to a Gateway which will by <strong>default</strong> be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway&#8217;s rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be acheved by applying another RateLimit Policy to the HTTPRoute thereby <strong>overriding</strong> the default value.</p>
 </div>
+<div class="sect3">
+<h4 id="_defaults_and_overrides"><a class="anchor" href="#_defaults_and_overrides"></a><a class="link" href="#_defaults_and_overrides">4.4.2. Defaults and overrides</a></h4>
 <div class="paragraph">
-<p>The same can be extended for AuthPolicy - with a <strong>default</strong> deny-all policy which configures the system for zero-trust. Each developers can <strong>override</strong> this with AuthPolicy based on for e.g. APIKey or JWT Token through new AuthPolicy CR&#8217;s applied for each of their service endpoints.</p>
+<p>AuthPolicy and RateLimitPolicy can be attached to Gateways or to HTTPRoutes, with cascading effects through the hierarchy that result in one effective policy per gateway-route combination.</p>
 </div>
 <div class="paragraph">
 <p>Ref: <a href="https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec" class="bare">https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec</a></p>

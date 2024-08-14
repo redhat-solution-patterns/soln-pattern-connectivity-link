@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Solution Pattern: App Connectivity with Policy-as-Code :: Solution Patterns from Red Hat</title>
-    <link rel="canonical" href="https://solution.io/solution-pattern/03-demo.html">
-    <link rel="prev" href="02-architecture.html">
-    <link rel="next" href="03.1-platform.html">
+    <link rel="canonical" href="https://solution.io/solution-pattern/03.2-developer.html">
+    <link rel="prev" href="03.1-platform.html">
+    <link rel="next" href="developer-resources.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -162,17 +162,17 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="03-demo.html">3. See the Solution in Action</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#_prerequisites">3.1. Pre-requisites</a>
+    <a class="nav-link" href="03-demo.html#_prerequisites">3.1. Pre-requisites</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03.1-platform.html">3.2. Platform Engineer workflow</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="03.2-developer.html">3.3. Developer workflow</a>
   </li>
 </ul>
@@ -219,291 +219,289 @@
   <ul>
     <li><a href="index.html">Connectivity Link</a></li>
     <li><a href="03-demo.html">3. See the Solution in Action</a></li>
+    <li><a href="03.2-developer.html">3.3. Developer workflow</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/redhat-solution-patterns/soln-pattern-connectivity-link/edit/main/documentation/modules/ROOT/pages/03-demo.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/redhat-solution-patterns/soln-pattern-connectivity-link/edit/main/documentation/modules/ROOT/pages/03.2-developer.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <h1 class="page">Solution Pattern: App Connectivity with Policy-as-Code</h1>
 <h1 id="_see_the_solution_in_action" class="sect0"><a class="anchor" href="#_see_the_solution_in_action"></a><a class="link" href="#_see_the_solution_in_action">See the Solution in Action</a></h1>
-<div class="openblock partintro">
-<div class="content">
-This solution walks you through the activities from the lens of a Platform Engineer and a Developer. But first, we need a few prerequisites before getting started.
-</div>
-</div>
 <div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a><a class="link" href="#_prerequisites">1. Prerequisites</a></h2>
+<h2 id="demo-setup"><a class="anchor" href="#demo-setup"></a><a class="link" href="#demo-setup">1. Solution Setup - Onboard ProductCatalog service endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To provision the demo you will perform the following steps - each of which is explained in detail in the next sections:</p>
+<p>Now that the Platform Engineer has made the Gateway available, Developers/App owners can now onboard their application/service endpoints to be available for secure access. Application developers can self service and refine policies to their specific needs in order to protect their exposed service endpoints.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>You will need an OpenShift cluster with <strong><code>cluster-admin</code> privileges</strong>. This solution pattern has been tested on OpenShift 4.15 and 4.16</p>
-</li>
-<li>
-<p>Ensure you have the <strong>tools</strong> <code>oc</code> and <code>ansible</code> installed in your local environment such as your laptop</p>
-</li>
-<li>
-<p>Access to <strong>AWS Route53</strong> or <strong>Google Cloud DNS</strong> to be able to create new domain names</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>In this solution pattern, the Globex developers are now ready to onboard the ProductCatalog service to be securely exposed as an endpoint.</p>
 </div>
 <div class="sect2">
-<h3 id="_cli_tools"><a class="anchor" href="#_cli_tools"></a><a class="link" href="#_cli_tools">1.1. CLI tools</a></h3>
-<div class="paragraph">
-<p>To check if you have the cli tools, you can open your terminal and use following commands:</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">oc version #openshift cli client
-ansible --version
-ansible-galaxy --version
-ansible-galaxy collection list #the list should include kubernetes.core</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>If you can&#8217;t see <code>kubernetes.core</code> collection listed, you can install it with <code>ansible-galaxy</code>:</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">ansible-galaxy collection install kubernetes.core</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">1.2. Create Managed Zone on AWS</a></h3>
-<div class="paragraph">
-<p>Refer: <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" target="_blank" rel="noopener">Prerequisites on Red Hat Developers</a></p>
-</div>
+<h3 id="_run_the_deployment_scripts"><a class="anchor" href="#_run_the_deployment_scripts"></a><a class="link" href="#_run_the_deployment_scripts">1.1. Run the deployment scripts</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p>In AWS Route53 add a hosted zone as a subdomain (for example, managed.mytopdomain.com) for the applications that you want to manage and secure with Connectivity Link.</p>
-</li>
-<li>
-<p>Refer to the the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html" target="_blank" rel="noopener">AWS documentation</a> on Route53 for instructions on how to setup the hosted zone.</p>
-</li>
-<li>
-<p>Make sure you to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in <a href="https://repost.aws/knowledge-center/create-subdomain-route-53" target="_blank" rel="noopener">this article</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_personalize_the_instructions"><a class="anchor" href="#_personalize_the_instructions"></a><a class="link" href="#_personalize_the_instructions">1.3. Personalize the instructions</a></h3>
-<div class="paragraph">
-<p>To personalize the rest of the instructions to your OpenShift environment:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>At the top-right of this page enter the following information under the <strong>Your Workshop Environment</strong> section</p>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>MANAGEDZONE</strong> as per the new Managed Zone that you created in the previous step</p>
-</li>
-<li>
-<p><strong>Subdomain</strong> to match your OpenShift cluster</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Press enter or click on the Set button</p>
-<div class="imageblock">
+<p>Run the Ansible script which will setup the <code>ProductCategory Service Endpoint</code> and <code>Globex Mobile app</code>. This also setups Red Hat build of Keycloak for SSO.</p>
+<div class="listingblock">
 <div class="content">
-<img src="_images/setup-instructions.png" alt="setup instructions">
+<pre>cd ../demo-setup
+ansible-playbook playbooks/globex.yml \
+  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
 </div>
 </div>
 </li>
 <li>
-<p>The menubar and the rest of this walkthrough guide will be updated with the Managed Zone name and the subdomain as shown below</p>
-<div class="imageblock">
+<p>Expected output:</p>
+<div class="listingblock">
 <div class="content">
-<img src="_images/setup-instructions-complete.png" alt="setup instructions complete">
+<pre class="highlightjs highlight"><code class="language-none hljs">PLAY RECAP *****************************************************************************************
+localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0</code></pre>
 </div>
 </div>
 </li>
 </ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The subdomain would look something like this <code>apps.mycluster.myopenshift.com</code></p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_installing_the_demo"><a class="anchor" href="#_installing_the_demo"></a><a class="link" href="#_installing_the_demo">2. Platform Setup</a></h2>
+<h2 id="walkthrough"><a class="anchor" href="#walkthrough"></a><a class="link" href="#walkthrough">2. Solution walkthrough as a Developer</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section is typically performed by a <strong>Platform Engineer</strong> persona.</p>
-</div>
-<div class="paragraph">
-<p>The primary goal of a Platform Engineer is to deploy a Gateway that provides secure communication and is protected and ready for use by application development teams to deploy their service endpoints or APIs. This gateway should be protected and secured with global rate limiting and auth policies.</p>
-</div>
-<div class="paragraph">
-<p>In this demo, the deployment script uses ArgoCD to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Install Red Hat Connectivity Link (Kuadrant) operator</p>
-</li>
-<li>
-<p>Setup a ManagedZone for DNS configuration.</p>
-</li>
-<li>
-<p>Define a TLS issuer for TLS certificates for secure communication to the Gateways.</p>
-</li>
-<li>
-<p>Create a Gateway (based on Istio gateway) with a wildcard hostname based on the root domain.</p>
-</li>
-<li>
-<p>Kuadrant Custom Resources (CRs) including various policies: DNS, TLS.</p>
-</li>
-</ul>
-</div>
 <div class="sect2">
-<h3 id="_get_the_deployment_scripts"><a class="anchor" href="#_get_the_deployment_scripts"></a><a class="link" href="#_get_the_deployment_scripts">2.1. Get the deployment scripts</a></h3>
+<h3 id="_test_globex_mobile_app"><a class="anchor" href="#_test_globex_mobile_app"></a><a class="link" href="#_test_globex_mobile_app">2.1. Test Globex Mobile app</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Login to your OpenShift cluster as cluster-admin (because a number of operators will need to be installed)</p>
+<p>Access the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%SUBDOMAIN%" target="_blank" rel="noopener">here</a></p>
 </li>
 <li>
-<p>Click on the username on the top right hand, and then click on <strong>Copy login command</strong>. This will open another tab and you will need to login again</p>
+<p>Login using <code>asilva/openshift</code> credentials; Click on <code>Categories</code> button on the homespage</p>
 </li>
 <li>
-<p>Click on <strong>Display token</strong> link, and copy the command under <strong>Log in with this token</strong>. This will look like this</p>
-</li>
-</ul>
-</div>
-<div class="sidebarblock">
+<p>You should see a 404. This is because the ProductCatalog service-enpoint hasn&#8217;t been exposed using a HTTPRoute</p>
+<div class="imageblock">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">oc login --token=&lt;token&gt; --server=&lt;server&gt;</code></pre>
+<img src="_images/globex-404.png" alt="globex 404">
 </div>
 </div>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Clone the ansible script</p>
-<div class="listingblock">
-<div class="content">
-<pre>git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link-ansible</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Open the <code>inventories/inventory.template</code> file and update the variables. Save the file.</p>
-<details>
-<summary class="title"><span class="underline">Click for details of inventory.template file</span></summary>
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_connectivity_link_aws_access_key=&lt;AWS_ACCESS_KEY_ID&gt;
-ocp4_workload_connectivity_link_aws_secret_access_key=&lt;AWS_SECRET_ACCESS_KEY&gt;
-
-ocp4_workload_connectivity_link_aws_managed_zone_id=&lt;Managed Zone ID - created in the previous step&gt;
-# E.g.: Z12345677XYZ0FF0GBHIJ0
-
-ocp4_workload_connectivity_link_aws_managed_zone_domain=&lt;Managed Zone domain - created in the previous step&gt;
-# E.g.: managed.sandbox1585.opentlc.com
-
-ocp4_workload_connectivity_link_aws_managed_zone_region=&lt;Managed Zone region - default region of your AWS setup&gt;
-# E.g.: eu-central-1
-
-ocp4_workload_connectivity_link_ingress_gateway_tls_issuer_email=&lt;your  address email for letsencrypt&gt;
-
-ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
-# E.g.: EU or US</code></pre>
-</div>
-</div>
-</div>
-</details>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_run_the_deployment_scripts"><a class="anchor" href="#_run_the_deployment_scripts"></a><a class="link" href="#_run_the_deployment_scripts">2.2. Run the deployment scripts</a></h3>
-<div class="paragraph">
-<p><strong>Prerequisites checklist</strong></p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Before running the following Ansible script, check if you have done these prerequisites</p>
-</div>
-<div class="ulist checklist">
-<ul class="checklist">
+<h3 id="_set_up_httproute_for_productcatalog_service_enpoint"><a class="anchor" href="#_set_up_httproute_for_productcatalog_service_enpoint"></a><a class="link" href="#_set_up_httproute_for_productcatalog_service_enpoint">2.2. Set up HTTPRoute for ProductCatalog service-enpoint</a></h3>
+<div class="ulist">
+<ul>
 <li>
-<p><input type="checkbox" data-item-complete="0"> New Managed Zone on the DNS provider has been created</p>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
 </li>
 <li>
-<p><input type="checkbox" data-item-complete="0"> Root domain has been updated with the new Managed Zone along with its name servers</p>
-</li>
-<li>
-<p><input type="checkbox" data-item-complete="0"> The inventory file reflects the correct Managed Zone domain name and Zone ID</p>
+<p>In this YAML replace the the <code>spec &gt; hostnames</code> as show below</p>
 </li>
 </ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">cd operator-setup
-ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory.template</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
+  labels:
+    deployment: globex-mobile-gateway
+    service: globex-mobile-gateway
+spec:
+  parentRefs:
+    - kind: Gateway
+      namespace: ingress-gateway
+      name: prod-web
+  hostnames:
+    - globex-mobile.%MANAGEDZONE%
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/mobile/services/product/category/"
+          method: GET
+      backendRefs:
+        - name: globex-mobile-gateway
+          namespace: globex-apim-user1
+          port: 8080
+    - matches:
+        - path:
+            type: Exact
+            value: "/mobile/services/category/list"
+          method: GET
+      backendRefs:
+        - name: globex-mobile-gateway
+          namespace: globex-apim-user1
+          port: 8080</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_whats_next"><a class="anchor" href="#_whats_next"></a><a class="link" href="#_whats_next">2.3. What&#8217;s next</a></h3>
-<div class="paragraph">
-<p>In the next section, we&#8217;ll go through the <strong>Platform Engineer&#8217;s Workflow</strong></p>
+<h3 id="_test_globex_mobile_again_after_httproute_is_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_is_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_is_setup">2.3. Test Globex Mobile again (after HTTPRoute is setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should see a 403.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-403.png" alt="globex 403" width="70%">
 </div>
+</div>
+</li>
+<li>
+<p>This is because while you have the HTTPRoute now, the original deny-all default policy kicks in and doesn&#8217;t allow any requests to made. We have a zero-trust auth in place!!</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setup_authpolicy"><a class="anchor" href="#_setup_authpolicy"></a><a class="link" href="#_setup_authpolicy">2.4. Setup Authpolicy</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
+kind: AuthPolicy
+metadata:
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: globex-mobile-gateway
+    namespace: globex-apim-user1
+  rules:
+    authentication:
+      "keycloak-users":
+        jwt:
+          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
+    response:
+      success:
+        dynamicMetadata:
+          identity:
+            json:
+              properties:
+                userid:
+                  selector: auth.identity.sub
+  routeSelectors:
+    - matches: []</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_and_authpolicy_are_setup">2.5. Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-success.png" alt="globex success" width="70%">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_the_default_ratelimit_policy"><a class="anchor" href="#_test_the_default_ratelimit_policy"></a><a class="link" href="#_test_the_default_ratelimit_policy">2.6. Test the default <strong>RateLimit Policy</strong></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories.</p>
+</li>
+<li>
+<p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times.</p>
+</li>
+<li>
+<p>Expect to see a 429 error:</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/globex-429.png" alt="globex 429" width="70%">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy"><a class="anchor" href="#_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy"></a><a class="link" href="#_create_a_new_ratelimit_policy_which_overrides_default_gateway_policy">2.7. Create a new RateLimit Policy which overrides default gateway policy</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the OpenShift Console</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
+kind: RateLimitPolicy
+metadata:
+  name: globex-mobile-gateway
+  namespace: globex-apim-user1
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: globex-mobile-gateway
+    namespace: globex-apim-user1
+  limits:
+    "per-user":
+      rates:
+        - limit: 100
+          duration: 10
+          unit: second
+      counters:
+        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"><a class="anchor" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup"></a><a class="link" href="#_test_globex_mobile_again_after_httproute_authpolicy_and_ratelimitpolicy_are_setup">2.8. Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Try accessing <strong>Categories</strong> again - you should now be able to see the Categories.</p>
+</li>
+<li>
+<p>Click any of the Categories from the list, and then the <strong>Categories</strong> menu, and repeat this a few times.</p>
+</li>
+<li>
+<p>You would now see there is no 429 for up to 100 requests in a duration of 10 seconds.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion"><a class="anchor" href="#_conclusion"></a><a class="link" href="#_conclusion">3. Conclusion</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With this setup, Globex is all set to onboard further service enpoints to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.</p>
+</div>
+<div class="paragraph">
+<p>We will also extend this pattern to include the all important Observability aspects as well.</p>
+</div>
+<div class="paragraph">
+<p>Read more <a href="https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster" target="_blank" rel="noopener">here</a></p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="02-architecture.html" class="query-params-link">2. Architecture</a></span>
-  <span class="next"><a href="03.1-platform.html" class="query-params-link">3.2. Platform Engineer workflow</a></span>
+  <span class="prev"><a href="03.1-platform.html" class="query-params-link">3.2. Platform Engineer workflow</a></span>
+  <span class="next"><a href="developer-resources.html" class="query-params-link">4. Developer Resources</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

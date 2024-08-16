@@ -5,8 +5,6 @@
 
 = Architecture 
 
-Introduction for the architecture of this solution pattern.
-
 == Common Challenges addressed
 
 With Hybrid Cloud becoming the defacto standard, Platform Engineering teams face increased complexity of setting up and running environments across multiple clusters and multiple regions.
@@ -55,7 +53,7 @@ Refer to the https://developers.redhat.com/articles/2024/06/12/getting-started-r
 
 .. *TLS issuer* (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses https://letsencrypt.org/[Let's Encrypt^]. This certificate is stored as a secret to be referenced by the Gateways.
 
-..https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
+.. https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
 
 .. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/[*TLS Policy*^]: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests and is denoted with a wildcard hostname based on the root domain. These gateways can use a subdomain of the Managed Zone. E.g.  `*.managed.globex.com`.
 

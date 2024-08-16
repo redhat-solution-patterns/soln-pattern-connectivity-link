@@ -227,11 +227,6 @@
 <article class="doc">
 <h1 class="page">Solution Pattern: App Connectivity with Policy-as-Code</h1>
 <h1 id="_architecture" class="sect0"><a class="anchor" href="#_architecture"></a><a class="link" href="#_architecture">Architecture</a></h1>
-<div class="openblock partintro">
-<div class="content">
-Introduction for the architecture of this solution pattern.
-</div>
-</div>
 <div class="sect1">
 <h2 id="_common_challenges_addressed"><a class="anchor" href="#_common_challenges_addressed"></a><a class="link" href="#_common_challenges_addressed">1. Common Challenges addressed</a></h2>
 <div class="sectionbody">
@@ -335,11 +330,9 @@ Refer to the <a href="https://developers.redhat.com/articles/2024/06/12/getting-
 <li>
 <p><strong>TLS issuer</strong> (a.k.a ClusterIssuer): Sets up a Certificate Issuer to create TLS certificates that are needed to secure communication. In this case, Globex uses <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let&#8217;s Encrypt</a>. This certificate is stored as a secret to be referenced by the Gateways.</p>
 </li>
-</ol>
-</div>
-<div class="olist loweralpha">
-<div class="title">.https://gateway-api.sigs.k8s.io/api-types/gateway/[<strong>Gateway</strong>^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex&#8217;s system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.</div>
-<ol class="loweralpha" type="a">
+<li>
+<p><a href="https://gateway-api.sigs.k8s.io/api-types/gateway/" target="_blank" rel="noopener"><strong>Gateway</strong></a>: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex&#8217;s system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.</p>
+</li>
 <li>
 <p><a href="https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/" target="_blank" rel="noopener"><strong>TLS Policy</strong></a>: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests and is denoted with a wildcard hostname based on the root domain. These gateways can use a subdomain of the Managed Zone. E.g.  <code>*.managed.globex.com</code>.</p>
 </li>

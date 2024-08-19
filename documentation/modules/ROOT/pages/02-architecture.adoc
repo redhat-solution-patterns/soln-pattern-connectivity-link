@@ -1,4 +1,4 @@
-= Solution Pattern: App Connectivity with Policy-as-Code
+= Solution Patterns: Connect, Secure and Protect with Red Hat Connectivity Link
 :sectnums:
 :sectlinks:
 :doctype: book

@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: Solution Patterns from Red Hat
-  url: https://solution.io
+  url: https://solutionpatterns.io
   start_page: solution-pattern::index.adoc
   keys:
     google_analytics: 'G-TKK0SMEFQH'  

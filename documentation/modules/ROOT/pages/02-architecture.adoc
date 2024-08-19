@@ -145,7 +145,7 @@ Ref: https://gateway-api.sigs.k8s.io/reference/policy-attachment/
 
 AuthPolicy and RateLimitPolicy can be attached to Gateways or to HTTPRoutes, with cascading effects through the hierarchy that result in one effective policy per gateway-route combination. 
 
-Ref: https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec
+Ref: More about https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec[defaults and overrides^]
 
 // For example, we can apply a RateLimit Policy to a Gateway which will by *default* be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway's rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be acheved by applying another RateLimit Policy to the HTTPRoute thereby *overriding* the default value.
 

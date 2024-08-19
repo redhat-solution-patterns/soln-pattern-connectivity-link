@@ -10,6 +10,11 @@ Red Hat Connectivity Link is  a cloud-native, open source solution, for hybrid c
 
 This Solution Pattern showcases how to setup secure and protected application connectivity with a Kubernetes-native solution using Gateway API and Kuadrant's powerful policy APIs.
 
+[NOTE]
+====
+Red Hat Connectivity Link is in *Developer Preview*. More details about the product and Early Access program at https://developers.redhat.com/products/red-hat-connectivity-link
+====
+
 *Contributors:* Jaya Christina Baskaran (Red Hat), Bernard Tison (Red Hat)
 
 ++++
@@ -17,7 +22,7 @@ This Solution Pattern showcases how to setup secure and protected application co
 ++++
 [NOTE]
 ====
-Solutions Patterns help you understand the art of the possible with Red Hat's portfolio, and not intended to be used as is for production environments. You are welcome to use any part of this solution pattern for your own workloads.
+Solutions Patterns help you understand the art of the possible with Red Hat's portfolio, and are not intended to be used as is for production environments. You are welcome to use any part of this solution pattern for your own workloads.
 ====
 [#use-cases]
 == Use cases

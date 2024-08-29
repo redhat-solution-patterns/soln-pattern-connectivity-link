@@ -18,8 +18,8 @@
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () { 
       const urlParams = new URLSearchParams(window.location.search);
-      const managedzone = urlParams.get('MANAGEDZONE');
-      const subdomain = urlParams.get('SUBDOMAIN'); 
+      const managedzone = urlParams.get('AWSROOTZONE');
+      const subdomain = urlParams.get('OPENSHIFTSUBDOMAIN'); 
       if (managedzone) {
         showManagedZone( managedzone, subdomain);
       }
@@ -32,8 +32,8 @@
     function showManagedZone( managedzone, subdomain) {
       document.getElementById('navbar-form-empty').style.display = "none";
       document.getElementById('navbar-form-filled').style.display = "flex";
-      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
-      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+      document.getElementById('managedZoneDisplay').textContent = "AWS Root Zone: " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "OpenShift Subdomain: " + subdomain; 
     }
 
     function showManagedZoneForm( subdomain ) {
@@ -46,7 +46,7 @@
     function goWithManagedZone() {
       elManagedZoneInput = document.getElementById('managedzone');
       elSubdomainInput = document.getElementById('subdomain');
-      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+      window.location.search = ('&AWSROOTZONE=' + elManagedZoneInput.value  + '&OPENSHIFTSUBDOMAIN=' + elSubdomainInput.value);
     }
 
     function recycle() {
@@ -100,8 +100,8 @@
                   </span>
                   Your Workshop Environment
                 <form action="javascript:void(0);" onsu>
-                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
-                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <input size="20" id="managedzone" type="text" placeholder="AWS ROOT ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="OPENSHIFT SUBDOMAIN">
                   <button type="hidden" onclick="goWithManagedZone();">Set</button>
                 </form>
                 </span>

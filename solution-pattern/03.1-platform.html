@@ -20,8 +20,8 @@
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () { 
       const urlParams = new URLSearchParams(window.location.search);
-      const managedzone = urlParams.get('MANAGEDZONE');
-      const subdomain = urlParams.get('SUBDOMAIN'); 
+      const managedzone = urlParams.get('AWSROOTZONE');
+      const subdomain = urlParams.get('OPENSHIFTSUBDOMAIN'); 
       if (managedzone) {
         showManagedZone( managedzone, subdomain);
       }
@@ -34,8 +34,8 @@
     function showManagedZone( managedzone, subdomain) {
       document.getElementById('navbar-form-empty').style.display = "none";
       document.getElementById('navbar-form-filled').style.display = "flex";
-      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
-      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+      document.getElementById('managedZoneDisplay').textContent = "AWS Root Zone: " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "OpenShift Subdomain: " + subdomain; 
     }
 
     function showManagedZoneForm( subdomain ) {
@@ -48,7 +48,7 @@
     function goWithManagedZone() {
       elManagedZoneInput = document.getElementById('managedzone');
       elSubdomainInput = document.getElementById('subdomain');
-      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+      window.location.search = ('&AWSROOTZONE=' + elManagedZoneInput.value  + '&OPENSHIFTSUBDOMAIN=' + elSubdomainInput.value);
     }
 
     function recycle() {
@@ -102,8 +102,8 @@
                   </span>
                   Your Workshop Environment
                 <form action="javascript:void(0);" onsu>
-                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
-                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <input size="20" id="managedzone" type="text" placeholder="AWS ROOT ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="OPENSHIFT SUBDOMAIN">
                   <button type="hidden" onclick="goWithManagedZone();">Set</button>
                 </form>
                 </span>
@@ -543,6 +543,10 @@ spec:
 </li>
 </ul>
 </div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">1.2. Echo API Walkthrough</a></h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -555,16 +559,13 @@ Due to the nature of DNS Records it may take a while for it get propagated.
 </tr>
 </table>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">1.2. Echo API Walkthrough</a></h3>
 <div class="ulist">
 <ul>
 <li>
 <p>Check if the HTTPRoute works as it should. Run this curl command from a terminal.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%</code></pre>
 </div>
 </div>
 </li>
@@ -578,7 +579,7 @@ Due to the nature of DNS Records it may take a while for it get propagated.
   "query_string": null,
   "body": "",
   "headers": {
-    "HTTP_HOST": "echo.%MANAGEDZONE%",
+    "HTTP_HOST": "echo.%AWSROOTZONE%",
     ...
   }
   ..
@@ -590,7 +591,7 @@ Due to the nature of DNS Records it may take a while for it get propagated.
 <p>Now let us run this 10 times and see how this responds to <code>RateLimitPolicy</code> that was applied</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%; done</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%; done</code></pre>
 </div>
 </div>
 </li>

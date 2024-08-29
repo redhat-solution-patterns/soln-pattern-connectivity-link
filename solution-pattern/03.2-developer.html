@@ -20,8 +20,8 @@
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () { 
       const urlParams = new URLSearchParams(window.location.search);
-      const managedzone = urlParams.get('MANAGEDZONE');
-      const subdomain = urlParams.get('SUBDOMAIN'); 
+      const managedzone = urlParams.get('AWSROOTZONE');
+      const subdomain = urlParams.get('OPENSHIFTSUBDOMAIN'); 
       if (managedzone) {
         showManagedZone( managedzone, subdomain);
       }
@@ -34,8 +34,8 @@
     function showManagedZone( managedzone, subdomain) {
       document.getElementById('navbar-form-empty').style.display = "none";
       document.getElementById('navbar-form-filled').style.display = "flex";
-      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
-      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+      document.getElementById('managedZoneDisplay').textContent = "AWS Root Zone: " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "OpenShift Subdomain: " + subdomain; 
     }
 
     function showManagedZoneForm( subdomain ) {
@@ -48,7 +48,7 @@
     function goWithManagedZone() {
       elManagedZoneInput = document.getElementById('managedzone');
       elSubdomainInput = document.getElementById('subdomain');
-      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+      window.location.search = ('&AWSROOTZONE=' + elManagedZoneInput.value  + '&OPENSHIFTSUBDOMAIN=' + elSubdomainInput.value);
     }
 
     function recycle() {
@@ -102,8 +102,8 @@
                   </span>
                   Your Workshop Environment
                 <form action="javascript:void(0);" onsu>
-                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
-                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <input size="20" id="managedzone" type="text" placeholder="AWS ROOT ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="OPENSHIFT SUBDOMAIN">
                   <button type="hidden" onclick="goWithManagedZone();">Set</button>
                 </form>
                 </span>
@@ -245,11 +245,11 @@
 <ul>
 <li>
 <p>Run the Ansible script which will setup the <code>ProductCategory Service Endpoint</code> and <code>Globex Mobile app</code>. This also setups Red Hat build of Keycloak for SSO.</p>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre>cd ../demo-setup
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">cd ../demo-setup
 ansible-playbook playbooks/globex.yml \
-  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"</pre>
+  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.globex.%AWSROOTZONE%"</code></pre>
 </div>
 </div>
 </li>
@@ -275,13 +275,13 @@ localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    res
 <div class="ulist">
 <ul>
 <li>
-<p>Access the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%SUBDOMAIN%" target="_blank" rel="noopener">here</a></p>
+<p>Access the Globex Mobile&#8217;s Route from the <strong>globex-apim-user1</strong> namespace &gt; Routes or click  <a href="https://globex-mobile-globex-apim-user1.%OPENSHIFTSUBDOMAIN%" target="_blank" rel="noopener">here</a></p>
 </li>
 <li>
 <p>Login using <code>asilva/openshift</code> credentials; Click on <code>Categories</code> button on the homespage</p>
 </li>
 <li>
-<p>You should see a 404. This is because the ProductCatalog service-enpoint hasn&#8217;t been exposed using a HTTPRoute</p>
+<p>You should see a 404. This is because the ProductCatalog service-endpoint hasn&#8217;t been exposed using a HTTPRoute</p>
 <div class="imageblock">
 <div class="content">
 <img src="_images/globex-404.png" alt="globex 404">
@@ -292,7 +292,7 @@ localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    res
 </div>
 </div>
 <div class="sect2">
-<h3 id="_set_up_httproute_for_productcatalog_service_enpoint"><a class="anchor" href="#_set_up_httproute_for_productcatalog_service_enpoint"></a><a class="link" href="#_set_up_httproute_for_productcatalog_service_enpoint">2.2. Set up HTTPRoute for ProductCatalog service-enpoint</a></h3>
+<h3 id="_set_up_httproute_for_productcatalog_service_endpoint"><a class="anchor" href="#_set_up_httproute_for_productcatalog_service_endpoint"></a><a class="link" href="#_set_up_httproute_for_productcatalog_service_endpoint">2.2. Set up HTTPRoute for ProductCatalog service-endpoint</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -319,7 +319,7 @@ spec:
       namespace: ingress-gateway
       name: prod-web
   hostnames:
-    - globex-mobile.%MANAGEDZONE%
+    - globex-mobile.globex.%AWSROOTZONE%
   rules:
     - matches:
         - path:
@@ -386,7 +386,7 @@ spec:
     authentication:
       "keycloak-users":
         jwt:
-          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
+          issuerUrl: https://sso.%OPENSHIFTSUBDOMAIN%/realms/globex-user1
     response:
       success:
         dynamicMetadata:

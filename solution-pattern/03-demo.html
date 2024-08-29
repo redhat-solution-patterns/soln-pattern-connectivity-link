@@ -20,8 +20,8 @@
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () { 
       const urlParams = new URLSearchParams(window.location.search);
-      const managedzone = urlParams.get('MANAGEDZONE');
-      const subdomain = urlParams.get('SUBDOMAIN'); 
+      const managedzone = urlParams.get('AWSROOTZONE');
+      const subdomain = urlParams.get('OPENSHIFTSUBDOMAIN'); 
       if (managedzone) {
         showManagedZone( managedzone, subdomain);
       }
@@ -34,8 +34,8 @@
     function showManagedZone( managedzone, subdomain) {
       document.getElementById('navbar-form-empty').style.display = "none";
       document.getElementById('navbar-form-filled').style.display = "flex";
-      document.getElementById('managedZoneDisplay').textContent = "Managed Zone : " + managedzone;
-      document.getElementById('subdomainDisplay').textContent = "Subdomain : " + subdomain; 
+      document.getElementById('managedZoneDisplay').textContent = "AWS Root Zone: " + managedzone;
+      document.getElementById('subdomainDisplay').textContent = "OpenShift Subdomain: " + subdomain; 
     }
 
     function showManagedZoneForm( subdomain ) {
@@ -48,7 +48,7 @@
     function goWithManagedZone() {
       elManagedZoneInput = document.getElementById('managedzone');
       elSubdomainInput = document.getElementById('subdomain');
-      window.location.search = ('&MANAGEDZONE=' + elManagedZoneInput.value  + '&SUBDOMAIN=' + elSubdomainInput.value);
+      window.location.search = ('&AWSROOTZONE=' + elManagedZoneInput.value  + '&OPENSHIFTSUBDOMAIN=' + elSubdomainInput.value);
     }
 
     function recycle() {
@@ -102,8 +102,8 @@
                   </span>
                   Your Workshop Environment
                 <form action="javascript:void(0);" onsu>
-                  <input size="20" id="managedzone" type="text" placeholder="MANAGED ZONE">
-                  <input size="20" id="subdomain" type="text" placeholder="SUBDOMAIN">
+                  <input size="20" id="managedzone" type="text" placeholder="AWS ROOT ZONE">
+                  <input size="20" id="subdomain" type="text" placeholder="OPENSHIFT SUBDOMAIN">
                   <button type="hidden" onclick="goWithManagedZone();">Set</button>
                 </form>
                 </span>
@@ -265,7 +265,7 @@ This solution walks you through the activities from the lens of a Platform Engin
 <pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">oc version #openshift cli client
 ansible --version
 ansible-galaxy --version
-ansible-galaxy collection list #the list should include kubernetes.core</code></pre>
+ansible-galaxy collection list #the list should include kubernetes.core and amazon.aws.route53 (version 8.1.0 ) module</code></pre>
 </div>
 </div>
 </div>
@@ -284,22 +284,15 @@ ansible-galaxy collection list #the list should include kubernetes.core</code></
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_managed_zone_on_aws"><a class="anchor" href="#_create_managed_zone_on_aws"></a><a class="link" href="#_create_managed_zone_on_aws">1.2. Create Managed Zone on AWS</a></h3>
+<h3 id="_managed_zone_on_aws"><a class="anchor" href="#_managed_zone_on_aws"></a><a class="link" href="#_managed_zone_on_aws">1.2. Managed Zone on AWS</a></h3>
 <div class="paragraph">
-<p>Refer: <a href="https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites" target="_blank" rel="noopener">Prerequisites on Red Hat Developers</a></p>
+<p>It is good to note that you  need a hosted zone as a <strong>subdomain</strong> in AWS Route53 ] (for example, managed.myrootdomain.com) for the applications that you want to manage and secure with Connectivity Link.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>In AWS Route53 add a hosted zone as a subdomain (for example, managed.mytopdomain.com) for the applications that you want to manage and secure with Connectivity Link.</p>
-</li>
-<li>
-<p>Refer to the the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html" target="_blank" rel="noopener">AWS documentation</a> on Route53 for instructions on how to setup the hosted zone.</p>
-</li>
-<li>
-<p>Make sure you to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in <a href="https://repost.aws/knowledge-center/create-subdomain-route-53" target="_blank" rel="noopener">this article</a>.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This <strong>subdomain</strong>  is automatically setup by the deployment scripts. But you will need to update the <code>inventory</code> file with the root domain of AWS Route53 when you are instructed to in next sections.<br></p>
+</div>
+<div class="paragraph">
+<p>Ref: <a href="https://repost.aws/knowledge-center/create-subdomain-route-53" target="_blank" rel="noopener">this article</a> to know more about how a Route53 subdomain can be created.</p>
 </div>
 </div>
 <div class="sect2">
@@ -314,10 +307,38 @@ ansible-galaxy collection list #the list should include kubernetes.core</code></
 <div class="ulist">
 <ul>
 <li>
-<p><strong>MANAGEDZONE</strong> as per the new Managed Zone that you created in the previous step</p>
+<p><strong>AWSROOTZONE</strong> is the Root Route53 domain of your AWS environment.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The AWSROOTZONE would look something like this <code>mycluster.abc.com</code> or <code>sandbox100.opentlc.com</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
-<p><strong>Subdomain</strong> to match your OpenShift cluster</p>
+<p><strong>OPENSHIFTSUBDOMAIN</strong> to match your OpenShift cluster</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The OPENSHIFTSUBDOMAIN would look something like this <code>apps.mycluster.myopenshift.com</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ul>
 </div>
@@ -339,20 +360,6 @@ ansible-galaxy collection list #the list should include kubernetes.core</code></
 </div>
 </li>
 </ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The subdomain would look something like this <code>apps.mycluster.myopenshift.com</code></p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -432,11 +439,8 @@ ansible-galaxy collection list #the list should include kubernetes.core</code></
 <pre class="highlightjs highlight"><code class="language-none hljs">ocp4_workload_connectivity_link_aws_access_key=&lt;AWS_ACCESS_KEY_ID&gt;
 ocp4_workload_connectivity_link_aws_secret_access_key=&lt;AWS_SECRET_ACCESS_KEY&gt;
 
-ocp4_workload_connectivity_link_aws_managed_zone_id=&lt;Managed Zone ID - created in the previous step&gt;
-# E.g.: Z12345677XYZ0FF0GBHIJ0
-
-ocp4_workload_connectivity_link_aws_managed_zone_domain=&lt;Managed Zone domain - created in the previous step&gt;
-# E.g.: managed.sandbox1585.opentlc.com
+# E.g.: sandbox902.opentlc.com
+ocp4_workload_connectivity_link_main_domain=&lt;AWS ROUTE53 ROOT DOMAIN&gt;
 
 ocp4_workload_connectivity_link_aws_managed_zone_region=&lt;Managed Zone region - default region of your AWS setup&gt;
 # E.g.: eu-central-1
@@ -471,13 +475,7 @@ ocp4_workload_connectivity_link_gateway_geo_code=&lt;gateway geo code&gt;
 <div class="ulist checklist">
 <ul class="checklist">
 <li>
-<p><input type="checkbox" data-item-complete="0"> New Managed Zone on the DNS provider has been created</p>
-</li>
-<li>
-<p><input type="checkbox" data-item-complete="0"> Root domain has been updated with the new Managed Zone along with its name servers</p>
-</li>
-<li>
-<p><input type="checkbox" data-item-complete="0"> The inventory file reflects the correct Managed Zone domain name and Zone ID</p>
+<p><input type="checkbox" data-item-complete="0"> The inventory file reflects the correct AWS credentials, Root zone details and region etc.</p>
 </li>
 </ul>
 </div>

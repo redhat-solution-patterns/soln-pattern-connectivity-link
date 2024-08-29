@@ -1,3 +1,5 @@
+:imagesdir: ../assets/images
+
 = Solution Patterns: Connect, Secure and Protect with Red Hat Connectivity Link
 :sectnums:
 :sectlinks:
@@ -19,10 +21,12 @@ In this solution pattern, the Globex developers are now ready to onboard the Pro
 
 *  Run the Ansible script which will setup the `ProductCategory Service Endpoint` and `Globex Mobile app`. This also setups Red Hat build of Keycloak for SSO.
 +
+[.console-input]
+[source,shell script]
 ----
 cd ../demo-setup
 ansible-playbook playbooks/globex.yml \
-  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.%MANAGEDZONE%"
+  -e ACTION=create -e "ocp4_workload_cloud_architecture_workshop_mobile_gateway_url=https://globex-mobile.globex.%AWSROOTZONE%"
 ----
 * Expected output:
 +
@@ -38,14 +42,14 @@ localhost   : ok=37   changed=10   unreachable=0    failed=0    skipped=7    res
 
 === Test Globex Mobile app
 
-* Access the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes or click  https://globex-mobile-globex-apim-user1.%SUBDOMAIN%[here^]
+* Access the Globex Mobile's Route from the *globex-apim-user1* namespace > Routes or click  https://globex-mobile-globex-apim-user1.%OPENSHIFTSUBDOMAIN%[here^]
 * Login using `asilva/openshift` credentials; Click on `Categories` button on the homespage
-* You should see a 404. This is because the ProductCatalog service-enpoint hasn't been exposed using a HTTPRoute
+* You should see a 404. This is because the ProductCatalog service-endpoint hasn't been exposed using a HTTPRoute
 +
 image::globex-404.png[]
 
 
-=== Set up HTTPRoute for ProductCatalog service-enpoint
+=== Set up HTTPRoute for ProductCatalog service-endpoint
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the OpenShift Console
 * In this YAML replace the the `spec > hostnames` as show below
@@ -67,7 +71,7 @@ spec:
       namespace: ingress-gateway
       name: prod-web
   hostnames:
-    - globex-mobile.%MANAGEDZONE%
+    - globex-mobile.globex.%AWSROOTZONE%
   rules:
     - matches:
         - path:
@@ -119,7 +123,7 @@ spec:
     authentication:
       "keycloak-users":
         jwt:
-          issuerUrl: https://sso.%SUBDOMAIN%/realms/globex-user1
+          issuerUrl: https://sso.%OPENSHIFTSUBDOMAIN%/realms/globex-user1
     response:
       success:
         dynamicMetadata:

@@ -1,3 +1,5 @@
+:imagesdir: ../assets/images
+
 = Solution Patterns: Connect, Secure and Protect with Red Hat Connectivity Link
 :sectnums:
 :sectlinks:
@@ -230,17 +232,20 @@ spec:
 +
 image::route53-dnsrecords.png[]
 
-WARNING: Due to the nature of DNS Records it may take a while for it get propagated. 
 
+
+---
 
 === Echo API Walkthrough
+
+WARNING: Due to the nature of DNS Records it may take a while for it get propagated. 
 
 * Check if the HTTPRoute works as it should. Run this curl command from a terminal. 
 +
 [.console-input]
 [source,shell script]
 ----
-curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%
+curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%
 ----
 
 * The Output will look like this
@@ -252,7 +257,7 @@ curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%
   "query_string": null,
   "body": "",
   "headers": {
-    "HTTP_HOST": "echo.%MANAGEDZONE%",
+    "HTTP_HOST": "echo.%AWSROOTZONE%",
     ...
   }
   ..
@@ -263,7 +268,7 @@ curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%
 [.console-input]
 [source,shell script]
 ----
-for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%MANAGEDZONE%; done
+for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%; done
 ----
 * You would see that you will get a response 5 times, post which you would see *Too Many Requests 429*
 * We haven't setup a RateLimitPolicy for the echoAPI itself, and so the gateway's default RateLimitPolicy gets applied to the echoAPI HTTPRoute. You can create another RateLimitPolicy and attach it to the echoAPI HTTPRoute to check this out.

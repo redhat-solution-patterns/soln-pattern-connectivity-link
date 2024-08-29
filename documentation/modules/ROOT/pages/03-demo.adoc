@@ -1,3 +1,5 @@
+:imagesdir: ../assets/images
+
 = Solution Patterns: Connect, Secure and Protect with Red Hat Connectivity Link
 :sectnums:
 :sectlinks:
@@ -28,7 +30,7 @@ To check if you have the cli tools, you can open your terminal and use following
 oc version #openshift cli client
 ansible --version
 ansible-galaxy --version
-ansible-galaxy collection list #the list should include kubernetes.core
+ansible-galaxy collection list #the list should include kubernetes.core and amazon.aws.route53 (version 8.1.0 ) module
 ----
 ******
 
@@ -41,21 +43,33 @@ ansible-galaxy collection install kubernetes.core
 ----
 ******
 
-=== Create Managed Zone on AWS
+=== Managed Zone on AWS
 
-Refer: https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift#prerequisites[Prerequisites on Red Hat Developers^]
+It is good to note that you  need a hosted zone as a *subdomain* in AWS Route53 ] (for example, managed.myrootdomain.com) for the applications that you want to manage and secure with Connectivity Link.
 
-* In AWS Route53 add a hosted zone as a subdomain (for example, managed.mytopdomain.com) for the applications that you want to manage and secure with Connectivity Link.
-* Refer to the the https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html[AWS documentation^] on Route53 for instructions on how to setup the hosted zone.
-* Make sure you to create NS records in the top domain hosted zone in order to be able to route traffic to the subdomain, as explained in https://repost.aws/knowledge-center/create-subdomain-route-53[this article^].
+
+This *subdomain*  is automatically setup by the deployment scripts. But you will need to update the `inventory` file with the root domain of AWS Route53 when you are instructed to in next sections. +
+
+Ref: https://repost.aws/knowledge-center/create-subdomain-route-53[this article^] to know more about how a Route53 subdomain can be created.
 
 
 === Personalize the instructions
 To personalize the rest of the instructions to your OpenShift environment:
 
 * At the top-right of this page enter the following information under the *Your Workshop Environment* section 
-** *MANAGEDZONE* as per the new Managed Zone that you created in the previous step
-** *Subdomain* to match your OpenShift cluster 
+** *AWSROOTZONE* is the Root Route53 domain of your AWS environment.
++
+[NOTE]
+=====
+The AWSROOTZONE would look something like this `mycluster.abc.com` or `sandbox100.opentlc.com`
+=====
+** *OPENSHIFTSUBDOMAIN* to match your OpenShift cluster 
++
+[NOTE]
+=====
+The OPENSHIFTSUBDOMAIN would look something like this `apps.mycluster.myopenshift.com`
+=====
+
 * Press enter or click on the Set button
 +
 image::setup-instructions.png[]
@@ -63,10 +77,6 @@ image::setup-instructions.png[]
 +
 image::setup-instructions-complete.png[]
 
-[NOTE]
-=====
-The subdomain would look something like this `apps.mycluster.myopenshift.com`
-=====
 
 
 [#_installing_the_demo]
@@ -114,11 +124,8 @@ git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link
 ocp4_workload_connectivity_link_aws_access_key=<AWS_ACCESS_KEY_ID>
 ocp4_workload_connectivity_link_aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
 
-ocp4_workload_connectivity_link_aws_managed_zone_id=<Managed Zone ID - created in the previous step>
-# E.g.: Z12345677XYZ0FF0GBHIJ0
-
-ocp4_workload_connectivity_link_aws_managed_zone_domain=<Managed Zone domain - created in the previous step>
-# E.g.: managed.sandbox1585.opentlc.com
+# E.g.: sandbox902.opentlc.com
+ocp4_workload_connectivity_link_main_domain=<AWS ROUTE53 ROOT DOMAIN>
 
 ocp4_workload_connectivity_link_aws_managed_zone_region=<Managed Zone region - default region of your AWS setup>
 # E.g.: eu-central-1
@@ -141,9 +148,7 @@ ocp4_workload_connectivity_link_gateway_geo_code=<gateway geo code>
 ====
 Before running the following Ansible script, check if you have done these prerequisites
 [%interactive]
-** [ ] New Managed Zone on the DNS provider has been created
-** [ ] Root domain has been updated with the new Managed Zone along with its name servers
-** [ ] The inventory file reflects the correct Managed Zone domain name and Zone ID
+** [ ] The inventory file reflects the correct AWS credentials, Root zone details and region etc.
 ====
 
 

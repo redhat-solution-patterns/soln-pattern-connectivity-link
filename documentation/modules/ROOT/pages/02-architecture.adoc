@@ -14,7 +14,7 @@ With Hybrid Cloud becoming the defacto standard, Platform Engineering teams face
 
 There is a need to  make it easy to connect, protect and manage services and infrastructure across the different environments to:
 
-* Provide a connectivity solution that leverages Gateway API as it's foundation which enables platform engineers and application developers to collaborate to connect, secure, protect and observe their HTTP based APIs and infrastructure leveraging CRD based APIs rather than additional heavy weight platforms. 
+* Provide a connectivity solution that leverages Gateway API as its foundation which enables platform engineers and application developers to collaborate to connect, secure, protect and observe their HTTP based APIs and infrastructure leveraging CRD based APIs rather than additional heavy weight platforms. 
 
 * Provide a lightweight layer of API management focused tooling that provides an “API management lens” that compliments the core connectivity features.
 
@@ -41,9 +41,9 @@ With growing demand for mobile based apps, Globex gears to support access to the
 image::architecture.png[]
 
 . Globex's development team built a `Mobile Gateway` as a single point of entry (a wrapper) in front of Globex's core services. Ref: https://martinfowler.com/articles/gateway-pattern.html[gateway-pattern^]
-. The access to this `mobile-gateway` service endpoint needs to be secured and protected for connectitiviy from the Mobile App that is being built.
+. The access to this `mobile-gateway` service endpoint needs to be secured and protected for connectivity from the Mobile App that is being built.
 . To setup such a secure connectivity for a growing demand for access to core services, the Globex team adopts a Kubernetes native approach to application connectivity through Red Hat Connectivity Link. 
-. Connectivity Link allows for clear separation of concerns with regards to the various teams involved in setting up such a secure connectivity
+. Connectivity Link allows for clear separation of concerns with regard to the various teams involved in setting up such a secure connectivity
 . *Platform Engineers* workflow: + 
 The Platform Engineer has to setup a Gateway which will allow for secure connection to the backend service endpoints. To achieve this a number of components need to be setup. 
 +
@@ -140,7 +140,7 @@ Kuadrant at its heart, provides Gateway Policies for Kubernetes. To quote https:
 
 ====  Policy Attachement 
 
-Policy Attachment augments the behavior of an object to add additional settings that can't be described within the spec of that object. A "Policy Attachment" is a specific type of resprce that can affect specific settings across either one object (this is "Direct Policy Attachment"), or objects in a hierarchy (this is "Inherited Policy Attachment"). +
+Policy Attachment augments the behavior of an object to add additional settings that can't be described within the spec of that object. A "Policy Attachment" is a specific type of resource that can affect specific settings across either one object (this is "Direct Policy Attachment"), or objects in a hierarchy (this is "Inherited Policy Attachment"). +
 Ref: https://gateway-api.sigs.k8s.io/reference/policy-attachment/
 
 
@@ -150,7 +150,7 @@ AuthPolicy and RateLimitPolicy can be attached to Gateways or to HTTPRoutes, wit
 
 Ref: More about https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec[defaults and overrides^]
 
-// For example, we can apply a RateLimit Policy to a Gateway which will by *default* be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway's rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be acheved by applying another RateLimit Policy to the HTTPRoute thereby *overriding* the default value.
+// For example, we can apply a RateLimit Policy to a Gateway which will by *default* be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway's rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be achieved by applying another RateLimit Policy to the HTTPRoute thereby *overriding* the default value.
 
 // The same can be extended for AuthPolicy - with a *default* deny-all policy which configures the system for zero-trust. Each developers can *override* this with AuthPolicy based on for e.g. APIKey or JWT Token through new AuthPolicy CR's applied for each of their service endpoints.
 

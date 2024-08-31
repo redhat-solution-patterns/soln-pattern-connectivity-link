@@ -245,7 +245,7 @@ WARNING: Due to the nature of DNS Records it may take a while for it get propaga
 [.console-input]
 [source,shell script]
 ----
-curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%
+curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%
 ----
 
 * The Output will look like this

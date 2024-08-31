@@ -268,7 +268,7 @@ curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%
 [.console-input]
 [source,shell script]
 ----
-for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%; done
+for i in {1..10}; do curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%; done
 ----
 * You would see that you will get a response 5 times, post which you would see *Too Many Requests 429*
 * We haven't setup a RateLimitPolicy for the echoAPI itself, and so the gateway's default RateLimitPolicy gets applied to the echoAPI HTTPRoute. You can create another RateLimitPolicy and attach it to the echoAPI HTTPRoute to check this out.

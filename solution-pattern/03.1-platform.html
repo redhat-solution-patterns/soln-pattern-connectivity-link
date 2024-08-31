@@ -591,7 +591,7 @@ Due to the nature of DNS Records it may take a while for it get propagated.
 <p>Now let us run this 10 times and see how this responds to <code>RateLimitPolicy</code> that was applied</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">for i in {1..10}; do curl -k -w "%{http_code}" https://echo.%AWSROOTZONE%; done</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">for i in {1..10}; do curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%; done</code></pre>
 </div>
 </div>
 </li>

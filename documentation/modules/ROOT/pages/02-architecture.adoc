@@ -25,7 +25,8 @@ There is a need to  make it easy to connect, protect and manage services and inf
 // Change links and text here as you see fit.
 * Red Hat supported products
 ** https://developers.redhat.com/products/red-hat-connectivity-link/overview[Red Hat Connectivity Link^]
-** https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift]
+** https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift^]
+** https://access.redhat.com/products/red-hat-build-of-keycloak/[Red Hat build of Keycloak^]
 ** Red Hat Application Foundation
 *** https://access.redhat.com/products/quarkus[Quarkus]
 * Other open source products:
@@ -154,3 +155,31 @@ Ref: More about https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-a
 
 // The same can be extended for AuthPolicy - with a *default* deny-all policy which configures the system for zero-trust. Each developers can *override* this with AuthPolicy based on for e.g. APIKey or JWT Token through new AuthPolicy CR's applied for each of their service endpoints.
 
+
+=== Red Hat build of Keycloak for OAuth
+
+https://access.redhat.com/products/red-hat-build-of-keycloak/[Red Hat build of Keycloak^] is a cloud-native Identity Access Management solution based on the popular open source https://keycloak.org/[Keycloak project^]
+
+This Solution Pattern leverages Keycloak to setup authentication mechanism within the APIPolicy CR. An AuthPolicy can be setup either based on an API Key or Oauth, while OAuth is more preferrable.
+
+Here is an excerpt of an AuthPolicy. 
+
+```
+  rules:
+    authentication:
+      "keycloak-users":
+        jwt:
+          issuerUrl: https://sso.mykeycloak.example.com/realms/realmname
+    response:
+      success:
+        dynamicMetadata:
+          identity:
+            json:
+              properties:
+                userid:
+                  selector: auth.identity.sub
+```
+
+* Note that the Keycloak's Issuer URL is configured within the AuthPolicy, and also the `userid` from the JWT token is being used an identifier. 
+* The mobile application used the same Keycloak realm for user authentication. 
+* Once the user logs in, the JWT token from the app is then analysed for validity as pet the APIPolicy (this is done by by https://github.com/Kuadrant/authorino[Authorino^] which is a lightweight Envoy external authorization server)

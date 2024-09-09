@@ -263,7 +263,10 @@
 <p><a href="https://developers.redhat.com/products/red-hat-connectivity-link/overview" target="_blank" rel="noopener">Red Hat Connectivity Link</a></p>
 </li>
 <li>
-<p><a href="https://www.redhat.com/en/technologies/cloud-computing/openshift">Red Hat OpenShift</a></p>
+<p><a href="https://www.redhat.com/en/technologies/cloud-computing/openshift" target="_blank" rel="noopener">Red Hat OpenShift</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/products/red-hat-build-of-keycloak/" target="_blank" rel="noopener">Red Hat build of Keycloak</a></p>
 </li>
 <li>
 <p>Red Hat Application Foundation</p>
@@ -483,6 +486,48 @@ Ref: <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" clas
 <div class="paragraph">
 <p>Ref: More about <a href="https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec" target="_blank" rel="noopener">defaults and overrides</a></p>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_red_hat_build_of_keycloak_for_oauth"><a class="anchor" href="#_red_hat_build_of_keycloak_for_oauth"></a><a class="link" href="#_red_hat_build_of_keycloak_for_oauth">4.5. Red Hat build of Keycloak for OAuth</a></h3>
+<div class="paragraph">
+<p><a href="https://access.redhat.com/products/red-hat-build-of-keycloak/" target="_blank" rel="noopener">Red Hat build of Keycloak</a> is a cloud-native Identity Access Management solution based on the popular open source <a href="https://keycloak.org/" target="_blank" rel="noopener">Keycloak project</a></p>
+</div>
+<div class="paragraph">
+<p>This Solution Pattern leverages Keycloak to setup authentication mechanism within the APIPolicy CR. An AuthPolicy can be setup either based on an API Key or Oauth, while OAuth is more preferrable.</p>
+</div>
+<div class="paragraph">
+<p>Here is an excerpt of an AuthPolicy.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">  rules:
+    authentication:
+      "keycloak-users":
+        jwt:
+          issuerUrl: https://sso.mykeycloak.example.com/realms/realmname
+    response:
+      success:
+        dynamicMetadata:
+          identity:
+            json:
+              properties:
+                userid:
+                  selector: auth.identity.sub</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Note that the Keycloak&#8217;s Issuer URL is configured within the AuthPolicy, and also the <code>userid</code> from the JWT token is being used an identifier.</p>
+</li>
+<li>
+<p>The mobile application used the same Keycloak realm for user authentication.</p>
+</li>
+<li>
+<p>Once the user logs in, the JWT token from the app is then analysed for validity as pet the APIPolicy (this is done by by <a href="https://github.com/Kuadrant/authorino" target="_blank" rel="noopener">Authorino</a> which is a lightweight Envoy external authorization server)</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

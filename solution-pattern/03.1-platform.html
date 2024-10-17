@@ -242,7 +242,7 @@
 <p>Red Hat Connectivity Link/Kuadrant operator and a Kuadrant instance</p>
 </li>
 <li>
-<p>A TLS issuer for TLS certificates. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/cert-manager.io~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml" target="_blank" rel="noopener">View CR</a>]</p>
+<p>A TLS issuer for TLS certificates. [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/cluster/cert-manager.io~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml" target="_blank" rel="noopener">View CR</a>]</p>
 <details>
 <summary class="title"><span class="underline">Click to see an example and description</span></summary>
 <div class="content">
@@ -289,7 +289,7 @@ spec:
 </details>
 </li>
 <li>
-<p>A Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io~v1~Gateway/prod-web/yaml" target="_blank" rel="noopener">View CR</a>]</p>
+<p>A Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io~v1~Gateway/prod-web/yaml" target="_blank" rel="noopener">View CR</a>]</p>
 <details>
 <summary class="title"><span class="underline">Click to see an example and description</span></summary>
 <div class="content">
@@ -341,7 +341,7 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p>A default <code>deny-all</code> Auth Policy to start with zero-trust [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1beta2~AuthPolicy/prod-web-deny-all/yaml" target="_blank" rel="noopener">View CR</a>]</p>
+<p>A default <code>deny-all</code> Auth Policy to start with zero-trust [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1beta2~AuthPolicy/prod-web-deny-all/yaml" target="_blank" rel="noopener">View CR</a>]</p>
 <details>
 <summary class="title"><span class="underline">Click to see an example and description</span></summary>
 <div class="content">
@@ -396,7 +396,7 @@ spec:
 </details>
 </li>
 <li>
-<p>TLS Policy [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml" target="_blank" rel="noopener">View CR</a>]</p>
+<p>TLS Policy [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml" target="_blank" rel="noopener">View CR</a>]</p>
 <details>
 <summary class="title"><span class="underline">Click to see an example and description</span></summary>
 <div class="content">
@@ -447,7 +447,7 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p>This is service literally echoes the request and is just used here for testing purposes. [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io~v1~HTTPRoute/echo-api/yaml" target="_blank" rel="noopener">View HTTPRoute</a>]</p>
+<p>This is service literally echoes the request and is just used here for testing purposes. [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/echo-api/gateway.networking.k8s.io~v1~HTTPRoute/echo-api/yaml" target="_blank" rel="noopener">View HTTPRoute</a>]</p>
 <details>
 <summary class="title"><span class="underline">Click to see an example and description</span></summary>
 <div class="content">
@@ -507,7 +507,7 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the <a href="https://console-openshift-console.%SUBDOMAIN%" target="_blank" rel="noopener">OpenShift Console</a></p>
+<p>Copy the following into the <strong>Import YAML</strong> utility accessible by the (+) button on top of the <a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%" target="_blank" rel="noopener">OpenShift Console</a></p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1alpha1
@@ -531,7 +531,7 @@ spec:
 <p>Note that the <strong>routingStrategy</strong> is marked as <strong>"simple"</strong> because this is a single cluster deployment. But in case of multi-cluster deployments DNSPolicy allows for <code>routingStrategy: loadbalanced</code> and can optionally include loadbalancing specifications.</p>
 </li>
 <li>
-<p>The <strong>targetRef</strong> sections refers to the [<a href="https://console-openshift-console.%SUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io~v1~Gateway/prod-web/yaml" target="_blank" rel="noopener">Gateway</a>] created when the Ansible script was executed.</p>
+<p>The <strong>targetRef</strong> sections refers to the [<a href="https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io~v1~Gateway/prod-web/yaml" target="_blank" rel="noopener">Gateway</a>] created when the Ansible script was executed.</p>
 </li>
 <li>
 <p>A number of DNS records are created on AWS Route 53.</p>

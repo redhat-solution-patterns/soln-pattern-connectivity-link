@@ -271,13 +271,14 @@ ansible-galaxy collection list #the list should include kubernetes.core and amaz
 </div>
 </div>
 <div class="paragraph">
-<p>If you can&#8217;t see <code>kubernetes.core</code> collection listed, you can install it with <code>ansible-galaxy</code>:</p>
+<p>Please run these commands to ensure you have the right dependencies</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">ansible-galaxy collection install kubernetes.core</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">pip install openshift pyyaml kubernetes botocore boto3
+ansible-galaxy collection install kubernetes.core amazon.aws community.general</code></pre>
 </div>
 </div>
 </div>

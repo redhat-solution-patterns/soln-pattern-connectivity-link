@@ -27,10 +27,18 @@ There is a need to  make it easy to connect, protect and manage services and inf
 ** https://developers.redhat.com/products/red-hat-connectivity-link/overview[Red Hat Connectivity Link^]
 ** https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift^]
 ** https://access.redhat.com/products/red-hat-build-of-keycloak/[Red Hat build of Keycloak^]
+** https://www.redhat.com/en/technologies/cloud-computing/openshift/what-is-openshift-service-mesh[Red Hat OpenShift Service Mesh^]
+
 ** Red Hat Application Foundation
 *** https://access.redhat.com/products/quarkus[Quarkus]
+
 * Other open source products:
-** https://helm.sh/[Helm]
+** https://helm.sh/[Helm^]
+** https://cert-manager.io[cert-manager^]
+
+* DNS Provider in this example
+** https://aws.amazon.com/route53[Amazon Route 53^]
+
 
 
 [#in_depth]

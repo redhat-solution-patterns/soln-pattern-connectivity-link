@@ -218,11 +218,12 @@ metadata:
   name: prod-web-dnspolicy
   namespace: ingress-gateway
 spec:
-  routingStrategy: "simple"
   targetRef:
     name: prod-web
     group: gateway.networking.k8s.io
     kind: Gateway
+  providerRefs:
+  - name: prod-web-aws-credentials
 ----
 
 * The DNSPolicy acts against a target Gateway by processing its listeners for hostnames and then create dns records for those hostnames. 

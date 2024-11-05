@@ -159,7 +159,7 @@ Before running the following Ansible script, check if you have done these prereq
 ====
 
 
-Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads
+Run the Ansible script which will setup the RHCL Operator, Cert Manager Operator, OpenShift Service Mesh Operator, Istio CR and other Kuadrant system workloads
 
 [.console-input]
 [source,shell script]

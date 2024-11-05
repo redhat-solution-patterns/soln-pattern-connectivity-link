@@ -118,7 +118,6 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   rules:
     authentication:
       "keycloak-users":
@@ -169,7 +168,6 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   limits:
     "per-user":
       rates:

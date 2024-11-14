@@ -116,6 +116,7 @@ oc login --token=<token> --server=<server>
 git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link-ansible
 ----
 
+
 * Open the `inventories/inventory.template` file and update the variables. Save the file.
 +
 .[underline]#Click for details of inventory.template file#

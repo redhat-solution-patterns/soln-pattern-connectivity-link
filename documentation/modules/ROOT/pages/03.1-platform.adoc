@@ -89,14 +89,14 @@ spec:
 
 
 * Various policies attached to the Gateway:
-** A default `deny-all` Auth Policy to start with zero-trust [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1beta2~AuthPolicy/prod-web-deny-all/yaml[View CR^]]
+** A default `deny-all` Auth Policy to start with zero-trust [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1~AuthPolicy/prod-web-deny-all/yaml[View CR^]]
 +
 .[underline]#Click to see an example and description#
 [%collapsible]
 ====
 ******
 ``` sh
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: AuthPolicy
 metadata:
   name: prod-web-deny-all
@@ -138,7 +138,7 @@ spec:
 ====
 ******
 ``` sh
-apiVersion: kuadrant.io/v1alpha1
+apiVersion: kuadrant.io/v1
 kind: TLSPolicy
 metadata:
   name: prod-web-tls-policy
@@ -213,7 +213,7 @@ Now that we have setup a secure, protected application connectivity environment,
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1alpha1
+apiVersion: kuadrant.io/v1
 kind: DNSPolicy
 metadata:
   name: prod-web-dnspolicy
@@ -278,7 +278,7 @@ for i in {1..10}; do curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: RateLimitPolicy
 metadata:
   name: echo-api-rlp

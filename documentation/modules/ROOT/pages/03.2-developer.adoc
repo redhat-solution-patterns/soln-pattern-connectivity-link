@@ -108,7 +108,7 @@ image::globex-403.png[width=70%]
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: AuthPolicy
 metadata:
   name: globex-mobile-gateway
@@ -131,8 +131,6 @@ spec:
               properties:
                 userid:
                   selector: auth.identity.sub
-  routeSelectors:
-    - matches: []
 ----
 
 === Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)
@@ -158,7 +156,7 @@ image::globex-429.png[width=70%]
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: RateLimitPolicy
 metadata:
   name: globex-mobile-gateway

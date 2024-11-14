@@ -288,8 +288,7 @@ spec:
     echoa-api:
       rates:
         - duration: 10
-          limit: 12
-          unit: second
+          window: 12s
   targetRef:
     group: gateway.networking.k8s.io
     kind: HTTPRoute

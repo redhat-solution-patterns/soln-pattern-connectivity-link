@@ -131,7 +131,7 @@ spec:
 * You can define the response to be sent in the *response* section; in this case, a response has been defined for *unauthorized* requests
 ******
 ====
-** TLS Policy [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1alpha1~TLSPolicy/prod-web-tls-policy/yaml[View CR^]]
+** TLS Policy [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1~TLSPolicy/prod-web-tls-policy/yaml[View CR^]]
 +
 .[underline]#Click to see an example and description#
 [%collapsible]

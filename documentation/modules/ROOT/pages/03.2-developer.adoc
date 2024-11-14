@@ -171,6 +171,8 @@ spec:
       rates:
         - limit: 100
           window: 10s
+      counters:
+        - expression: auth.identity.userid
 ----
 
 === Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)

@@ -226,7 +226,7 @@ Here is an excerpt of an AuthPolicy.
           issuerUrl: https://sso.mykeycloak.example.com/realms/realmname
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:

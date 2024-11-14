@@ -125,7 +125,7 @@ spec:
           issuerUrl: https://sso.%OPENSHIFTSUBDOMAIN%/realms/globex-user1
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:

@@ -371,7 +371,7 @@ spec:
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1
 kind: AuthPolicy
 metadata:
   name: globex-mobile-gateway
@@ -381,7 +381,6 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   rules:
     authentication:
       "keycloak-users":
@@ -389,14 +388,12 @@ spec:
           issuerUrl: https://sso.%OPENSHIFTSUBDOMAIN%/realms/globex-user1
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:
                 userid:
-                  selector: auth.identity.sub
-  routeSelectors:
-    - matches: []</code></pre>
+                  selector: auth.identity.sub</code></pre>
 </div>
 </div>
 </div>
@@ -447,7 +444,7 @@ spec:
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1beta2
+<pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">apiVersion: kuadrant.io/v1
 kind: RateLimitPolicy
 metadata:
   name: globex-mobile-gateway
@@ -457,13 +454,11 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   limits:
     "per-user":
       rates:
         - limit: 100
-          duration: 10
-          unit: second
+          window: 10s
       counters:
         - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid</code></pre>
 </div>

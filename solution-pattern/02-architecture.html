@@ -407,78 +407,216 @@ Now that the Gateway is made available, the developers can now start onboarding 
 <h2 id="more_tech"><a class="anchor" href="#more_tech"></a><a class="link" href="#more_tech">4. About the Technology Stack</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_what_is_gateway_api"><a class="anchor" href="#_what_is_gateway_api"></a><a class="link" href="#_what_is_gateway_api">4.1. What is Gateway API</a></h3>
+<h3 id="_gateway_api"><a class="anchor" href="#_gateway_api"></a><a class="link" href="#_gateway_api">4.1. Gateway API</a></h3>
 <div class="paragraph">
-<p><a href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener">Gateway API</a>This is the new standard for Ingress from the Kubernetes community.</p>
+<p>Ref: <a href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener">Gateway API</a></p>
 </div>
-<div class="paragraph">
-<p>Gateway API is a relatively new Kubernetes based API focused on traffic routing and is often referred to as the next generation of Ingress on kube.</p>
-</div>
-<div class="paragraph">
-<p>Used to define the Gateways and Routing rules for requests entering those gateways. Our supported provider is Istio via OpenShift Service Mesh.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>New standard for Ingress from k8s community</p>
+</li>
+<li>
+<p>Gateway API is the core API that Kuadrant integrates with.</p>
+</li>
+<li>
+<p>Represent L4/L7 routing and traffic management through generic common core API resources</p>
+</li>
+<li>
+<p>API  resources reflects the separation of responsibilities such as infra provider, PE or App Dev</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Connectivity Link (Kuadrant) provides connectivity, security and service protection capabilities in the form of Kubernetes CRDs that implement the Gateway API concept of policy attachment. These policy APIs can target specific Gateway API resources such as Gateways and HTTPRoutes to extend their capabilities and configuration.</p>
 </div>
+<details>
+<summary class="title"><span class="underline">Click to view why Gateway API</span></summary>
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Role Oriented - To allow cluster owners to designate how the infrastructure is used</p>
+</li>
+<li>
+<p>Portable - This enables concepts &amp; resources to be uniform across environments reducing complexity</p>
+</li>
+<li>
+<p>Expressive - Provides built-in capabilities for header-based matching, traffic weighting &amp; more</p>
+</li>
+</ul>
+</div>
+</div>
+</details>
 <div class="sect3">
-<h4 id="_istio_as_gateway_provider"><a class="anchor" href="#_istio_as_gateway_provider"></a><a class="link" href="#_istio_as_gateway_provider">4.1.1. Istio as Gateway provider</a></h4>
-<div class="paragraph">
-<p>Connectivity Link/Kuadrant&#8217;s focus is on HTTP traffic and Istio/OpenShift Service Mesh as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane to enforce the applied policies and register components such as Authorino and Limitador.+
-Ref: <a href="https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/" class="bare">https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/</a> [Istio with Gateway API]</p>
+<h4 id="_gateway"><a class="anchor" href="#_gateway"></a><a class="link" href="#_gateway">4.1.1. Gateway</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>describes how traffic can be translated to Services within the cluster</p>
+</li>
+<li>
+<p>can express capabilities like HTTP header manipulation, traffic weighting &amp; mirroring, TCP/UDP routing</p>
+</li>
+<li>
+<p>may be attached to one or more Route references which serve to direct traffic for a subset of traffic to a specific service</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_httproute"><a class="anchor" href="#_httproute"></a><a class="link" href="#_httproute">4.1.2. HTTPRoute</a></h4>
-<div class="paragraph">
-<p>HTTPRoute enables advanced routing capabilities for Ingress. It is a Gateway API type for specifying routing behavior of HTTP requests from a Gateway listener to an API object, i.e. Service.<br>
-Ref: <a href="https://gateway-api.sigs.k8s.io/api-types/httproute/" class="bare">https://gateway-api.sigs.k8s.io/api-types/httproute/</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>enables advanced routing capabilities for Ingress.</p>
+</li>
+<li>
+<p>specify routing behavior of HTTP requests from a Gateway listener to an API object, i.e. Service.</p>
+</li>
+<li>
+<p>Each Route includes a way to reference the parent resources it wants to attach to.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_what_is_kuadrant"><a class="anchor" href="#_what_is_kuadrant"></a><a class="link" href="#_what_is_kuadrant">4.2. What is Kuadrant</a></h3>
+<h3 id="_openshift_service_mesh_and_istio_as_gateway_provider"><a class="anchor" href="#_openshift_service_mesh_and_istio_as_gateway_provider"></a><a class="link" href="#_openshift_service_mesh_and_istio_as_gateway_provider">4.2. OpenShift Service Mesh and Istio as Gateway provider</a></h3>
+<div class="paragraph">
+<p>OpenShift Service Mesh is a supported Gateway API provider and Connectivity Link integrates with Istio (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane to enforce the applied policies and register components such as Authorino and Limitador.</p>
+</div>
+<div class="paragraph">
+<p>Ref: <a href="https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/" target="_blank" rel="noopener">Istio with Gateway API</a></p>
+</div>
+<div class="paragraph">
+<p>Kuadrant has also been proven to work with Envoy Gateway as a Gateway API provider. This is to showcase that Kudrant is extensible and can work work with other Gateway providers too. To try this out check out <a href="https://docs.kuadrant.io/latest/kuadrant-operator/doc/install/install-openshift/#step-5-optional-install-envoy-gateway-as-a-gateway-api-provider" target="_blank" rel="noopener">this tutorial</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cert_manager"><a class="anchor" href="#_cert_manager"></a><a class="link" href="#_cert_manager">4.3. Cert Manager</a></h3>
+<div class="paragraph">
+<p>The cert-manager Operator for Red Hat OpenShift is a cluster-wide service that provides application certificate lifecycle management. It allows you to integrate with external certificate authorities and provides certificate provisioning, renewal, and retirement. In this solution pattern, we integrate with <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let&#8217;s Encrypt</a>.</p>
+</div>
+<div class="paragraph">
+<p>If needed, one can create the certificates manually and inject them, rather than using cert-manager. You can create a secret <code>my-cert</code> (as an e.g.) and add that to a listener in the gateway. TLSPolicy is a very light API wrapper around cert-manager resources that makes the target, host and secret name obvious as already defined in the gateway listener.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kuadrant"><a class="anchor" href="#_kuadrant"></a><a class="link" href="#_kuadrant">4.4. Kuadrant</a></h3>
 <div class="videoblock">
 <div class="content">
 <iframe width="800" height="480" src="https://www.youtube.com/embed/euWAMvQojP4?rel=0" frameborder="0" allowfullscreen></iframe>
 </div>
 </div>
 <div class="paragraph">
-<p>It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters with policies for TLS, DNS, application authentication &amp; authorization, and rate limiting. Additionally, Kuadrant offers observability templates to further support infrastructure management.<br>
-Ref: <a href="https://docs.kuadrant.io" class="bare">https://docs.kuadrant.io</a></p>
+<p>It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters. It exposes these capabilities in the form of powerful policy APIs that implement the <a href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener">Gateway API</a> concept of <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" target="_blank" rel="noopener">policy attachment</a> -   with policies for <a href="https://docs.kuadrant.io/latest/kuadrant-operator/doc/tls/" target="_blank" rel="noopener">TLS</a>, <a href="https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/reference/dnspolicy/" target="_blank" rel="noopener">DNS</a>, application <a href="https://docs.kuadrant.io/latest/kuadrant-operator/doc/auth/" target="_blank" rel="noopener">AuthN &amp; AuthZ</a>, and <a href="https://docs.kuadrant.io/latest/kuadrant-operator/doc/rate-limiting/" target="_blank" rel="noopener">rate limiting</a>. Additionally, Kuadrant offers observability templates to further support infrastructure management.</p>
+</div>
+<div class="paragraph">
+<p>Simply put, Red Hat Connectivity Link</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>provides a  bunch of policies (through Kuadrant APIs) - that can be applied on Gateway API resources viz. Gateway and HttpRoute…</p>
+</li>
+<li>
+<p>so that you can connect, secure and protect all of your service endpoints</p>
+</li>
+<li>
+<p>providing the Platform Engineers the right level of control</p>
+</li>
+<li>
+<p>providing Developers the tools for a more fully rounded API mgmt feature set through Apicurio.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/rhcl-simplyput.png" alt="rhcl simplyput" width="60%">
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_kuadrant_list_of_underlying_components"><a class="anchor" href="#_kuadrant_list_of_underlying_components"></a><a class="link" href="#_kuadrant_list_of_underlying_components">4.3. Kuadrant: list of underlying components</a></h3>
+<h3 id="_personas"><a class="anchor" href="#_personas"></a><a class="link" href="#_personas">4.5. Personas</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Platform engineers</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>can deploy, manage, observe and protect services exposed via their gateways</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>confidently allow application developers to self-service knowing that endpoints are secured</p>
+</li>
+<li>
+<p><strong>Application developers</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>are allowed to self service and refine policies to their specific needs in order to protect exposed endpoints.</p>
+</li>
+<li>
+<p>focus on what is important for them - their applications and code</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kuadrant_underlying_components"><a class="anchor" href="#_kuadrant_underlying_components"></a><a class="link" href="#_kuadrant_underlying_components">4.6. Kuadrant' underlying components</a></h3>
+<div class="paragraph">
+<p>Here is a view on how Kuadrant Policy APIs are applied on the Request flow on Gateway API</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/policies-on-requestflow.png" alt="policies on requestflow">
+</div>
+</div>
 <div class="sect3">
-<h4 id="_dns_operator"><a class="anchor" href="#_dns_operator"></a><a class="link" href="#_dns_operator">4.3.1. DNS Operator</a></h4>
+<h4 id="_dns_operator"><a class="anchor" href="#_dns_operator"></a><a class="link" href="#_dns_operator">4.6.1. DNS Operator</a></h4>
 <div class="paragraph">
 <p>DNS operator consumes DNSRecord resources that are configured via the <strong>DNSPolicy</strong> API and applies them into the targeted cloud DNS provider. AWS, Azure and Google DNS are our main targets.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_cert_manager_for_tls_policy"><a class="anchor" href="#_cert_manager_for_tls_policy"></a><a class="link" href="#_cert_manager_for_tls_policy">4.3.2. Cert Manager for TLS Policy</a></h4>
-<div class="paragraph">
-<p>Manages TLS certificates for our components and for the Gateways. Consumes Certificate resources created by the Kuadrant operator in response to the TLSPolicy.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_authorino_operator_for_auth_policy"><a class="anchor" href="#_authorino_operator_for_auth_policy"></a><a class="link" href="#_authorino_operator_for_auth_policy">4.3.3. Authorino Operator for Auth Policy</a></h4>
+<h4 id="_authorino_operator_for_auth_policy"><a class="anchor" href="#_authorino_operator_for_auth_policy"></a><a class="link" href="#_authorino_operator_for_auth_policy">4.6.2. Authorino Operator for Auth Policy</a></h4>
 <div class="paragraph">
 <p>External authorization server fully manageable via Kubernetes Custom Resources. Supports JWT authentication, API key, mTLS, pattern-matching authz, OPA, K8s SA tokens, K8s RBAC, external metadata fetching, and more, with minimum to no coding at all, no rebuilding of your applications.<br>
 Ref: <a href="https://docs.kuadrant.io/0.8.0/authorino/" class="bare">https://docs.kuadrant.io/0.8.0/authorino/</a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_limitador_operator_for_ratelimits"><a class="anchor" href="#_limitador_operator_for_ratelimits"></a><a class="link" href="#_limitador_operator_for_ratelimits">4.3.4. Limitador Operator for Ratelimits</a></h4>
-<div class="paragraph">
+<h4 id="_limitador_operator_for_ratelimits"><a class="anchor" href="#_limitador_operator_for_ratelimits"></a><a class="link" href="#_limitador_operator_for_ratelimits">4.6.3. Limitador Operator for Ratelimits</a></h4>
+<div class="ulist">
+<ul>
+<li>
 <p>Limitador is a generic rate-limiter and can be enabled using RateLimit APIs.</p>
+</li>
+<li>
+<p>It support in-memory, Redis and disk data stores.</p>
+</li>
+<li>
+<p>In this solution pattern, for a single cluster, we go with the built-in in-memory database;</p>
+</li>
+<li>
+<p>for multi-cluster setup you can use a  Redis service (or RocksDB)</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_policies"><a class="anchor" href="#_policies"></a><a class="link" href="#_policies">4.4. Policies</a></h3>
+<h3 id="_policies"><a class="anchor" href="#_policies"></a><a class="link" href="#_policies">4.7. Policies</a></h3>
 <div class="paragraph">
-<p>Kuadrant at its heart, provides Gateway Policies for Kubernetes. To quote <a href="https://kuadrant.io/" class="bare">https://kuadrant.io/</a>:</p>
+<p>Kuadrant at its heart, provides Gateway Policies (as described previously) for Kubernetes. To quote <a href="https://kuadrant.io/" class="bare">https://kuadrant.io/</a>:</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -488,14 +626,14 @@ Ref: <a href="https://docs.kuadrant.io/0.8.0/authorino/" class="bare">https://do
 </blockquote>
 </div>
 <div class="sect3">
-<h4 id="_policy_attachement"><a class="anchor" href="#_policy_attachement"></a><a class="link" href="#_policy_attachement">4.4.1. Policy Attachement</a></h4>
+<h4 id="_policy_attachement"><a class="anchor" href="#_policy_attachement"></a><a class="link" href="#_policy_attachement">4.7.1. Policy Attachement</a></h4>
 <div class="paragraph">
 <p>Policy Attachment augments the behavior of an object to add additional settings that can&#8217;t be described within the spec of that object. A "Policy Attachment" is a specific type of resource that can affect specific settings across either one object (this is "Direct Policy Attachment"), or objects in a hierarchy (this is "Inherited Policy Attachment").<br>
 Ref: <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" class="bare">https://gateway-api.sigs.k8s.io/reference/policy-attachment/</a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_defaults_and_overrides"><a class="anchor" href="#_defaults_and_overrides"></a><a class="link" href="#_defaults_and_overrides">4.4.2. Defaults and overrides</a></h4>
+<h4 id="_defaults_and_overrides"><a class="anchor" href="#_defaults_and_overrides"></a><a class="link" href="#_defaults_and_overrides">4.7.2. Defaults and overrides</a></h4>
 <div class="paragraph">
 <p>AuthPolicy and RateLimitPolicy can be attached to Gateways or to HTTPRoutes, with cascading effects through the hierarchy that result in one effective policy per gateway-route combination.</p>
 </div>
@@ -505,7 +643,7 @@ Ref: <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" clas
 </div>
 </div>
 <div class="sect2">
-<h3 id="_red_hat_build_of_keycloak_for_oauth"><a class="anchor" href="#_red_hat_build_of_keycloak_for_oauth"></a><a class="link" href="#_red_hat_build_of_keycloak_for_oauth">4.5. Red Hat build of Keycloak for OAuth</a></h3>
+<h3 id="_red_hat_build_of_keycloak_for_oauth"><a class="anchor" href="#_red_hat_build_of_keycloak_for_oauth"></a><a class="link" href="#_red_hat_build_of_keycloak_for_oauth">4.8. Red Hat build of Keycloak for OAuth</a></h3>
 <div class="paragraph">
 <p><a href="https://access.redhat.com/products/red-hat-build-of-keycloak/" target="_blank" rel="noopener">Red Hat build of Keycloak</a> is a cloud-native Identity Access Management solution based on the popular open source <a href="https://keycloak.org/" target="_blank" rel="noopener">Keycloak project</a></p>
 </div>
@@ -524,7 +662,7 @@ Ref: <a href="https://gateway-api.sigs.k8s.io/reference/policy-attachment/" clas
           issuerUrl: https://sso.mykeycloak.example.com/realms/realmname
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:

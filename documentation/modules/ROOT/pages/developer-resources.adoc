@@ -8,4 +8,5 @@
 
 * https://developers.redhat.com/articles/2024/06/12/getting-started-red-hat-connectivity-link-openshift[Getting started with Red Hat Connectivity Link on OpenShift^]
 * Red Hat Connectivity Link on https://developers.redhat.com/products/red-hat-connectivity-link[Red Hat Developers^]
-* Kuadrant https://docs.kuadrant.io[upstream docs^]
+* Kuadrant https://docs.kuadrant.io/latest[upstream docs^]
+* How does Kuadrant integrate with Gateway Providers?[https://docs.kuadrant.io/latest/architecture/docs/design/architectural-overview/#how-does-kuadrant-integrate-with-gateway-providers^]

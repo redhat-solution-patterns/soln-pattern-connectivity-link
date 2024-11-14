@@ -93,42 +93,86 @@ Now that the Gateway is made available, the developers can now start onboarding 
 [#more_tech]
 == About the Technology Stack
 
-=== What is Gateway API
-https://gateway-api.sigs.k8s.io/[Gateway API^]This is the new standard for Ingress from the Kubernetes community. 
+=== Gateway API
+Ref: https://gateway-api.sigs.k8s.io/[Gateway API^]
 
-Gateway API is a relatively new Kubernetes based API focused on traffic routing and is often referred to as the next generation of Ingress on kube. 
-
-Used to define the Gateways and Routing rules for requests entering those gateways. Our supported provider is Istio via OpenShift Service Mesh.
+* New standard for Ingress from k8s community
+* Gateway API is the core API that Kuadrant integrates with.
+* Represent L4/L7 routing and traffic management through generic common core API resources
+* API  resources reflects the separation of responsibilities such as infra provider, PE or App Dev
 
 Connectivity Link (Kuadrant) provides connectivity, security and service protection capabilities in the form of Kubernetes CRDs that implement the Gateway API concept of policy attachment. These policy APIs can target specific Gateway API resources such as Gateways and HTTPRoutes to extend their capabilities and configuration. 
 
-==== Istio as Gateway provider
-Connectivity Link/Kuadrant's focus is on HTTP traffic and Istio/OpenShift Service Mesh as a supported Gateway API implementation. Istio is the Gateway API provider that Connectivity Link integrates with (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane to enforce the applied policies and register components such as Authorino and Limitador.+
-Ref: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/ [Istio with Gateway API]
+.[underline]#Click to view why Gateway API#
+[%collapsible]
+====
+* Role Oriented - To allow cluster owners to designate how the infrastructure is used
+* Portable - This enables concepts & resources to be uniform across environments reducing complexity
+* Expressive - Provides built-in capabilities for header-based matching, traffic weighting & more
+====
+
+==== Gateway
+* describes how traffic can be translated to Services within the cluster
+* can express capabilities like HTTP header manipulation, traffic weighting & mirroring, TCP/UDP routing
+* may be attached to one or more Route references which serve to direct traffic for a subset of traffic to a specific service
+
 
 ==== HTTPRoute
-HTTPRoute enables advanced routing capabilities for Ingress. It is a Gateway API type for specifying routing behavior of HTTP requests from a Gateway listener to an API object, i.e. Service. +
-Ref: https://gateway-api.sigs.k8s.io/api-types/httproute/
+* enables advanced routing capabilities for Ingress.
+* specify routing behavior of HTTP requests from a Gateway listener to an API object, i.e. Service.
+* Each Route includes a way to reference the parent resources it wants to attach to. 
 
+=== OpenShift Service Mesh and Istio as Gateway provider
+OpenShift Service Mesh is a supported Gateway API provider and Connectivity Link integrates with Istio (via WASM and Istio APIS) to provide service protection capabilities. It configures Envoy via the Istio control plane to enforce the applied policies and register components such as Authorino and Limitador.
 
-=== What is Kuadrant
+Ref: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/[Istio with Gateway API^]
+
+Kuadrant has also been proven to work with Envoy Gateway as a Gateway API provider. This is to showcase that Kudrant is extensible and can work work with other Gateway providers too. To try this out check out https://docs.kuadrant.io/latest/kuadrant-operator/doc/install/install-openshift/#step-5-optional-install-envoy-gateway-as-a-gateway-api-provider[this tutorial^]
+
+=== Cert Manager
+
+The cert-manager Operator for Red Hat OpenShift is a cluster-wide service that provides application certificate lifecycle management. It allows you to integrate with external certificate authorities and provides certificate provisioning, renewal, and retirement. In this solution pattern, we integrate with https://letsencrypt.org/[Let's Encrypt^].
+
+If needed, one can create the certificates manually and inject them, rather than using cert-manager. You can create a secret `my-cert` (as an e.g.) and add that to a listener in the gateway. TLSPolicy is a very light API wrapper around cert-manager resources that makes the target, host and secret name obvious as already defined in the gateway listener.
+
+=== Kuadrant
 
 
 video::euWAMvQojP4[youtube, width=800, height=480]
 
+It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters. It exposes these capabilities in the form of powerful policy APIs that implement the https://gateway-api.sigs.k8s.io/[Gateway API^] concept of https://gateway-api.sigs.k8s.io/reference/policy-attachment/[policy attachment^] -   with policies for https://docs.kuadrant.io/latest/kuadrant-operator/doc/tls/[TLS^], https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/reference/dnspolicy/[DNS^], application https://docs.kuadrant.io/latest/kuadrant-operator/doc/auth/[AuthN & AuthZ^], and https://docs.kuadrant.io/latest/kuadrant-operator/doc/rate-limiting/[rate limiting^]. Additionally, Kuadrant offers observability templates to further support infrastructure management. 
 
-It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters with policies for TLS, DNS, application authentication & authorization, and rate limiting. Additionally, Kuadrant offers observability templates to further support infrastructure management. +
-Ref: https://docs.kuadrant.io
 
-=== Kuadrant: list of underlying components
+Simply put, Red Hat Connectivity Link 
+
+* provides a  bunch of policies (through Kuadrant APIs) - that can be applied on Gateway API resources viz. Gateway and HttpRoute…
+* so that you can connect, secure and protect all of your service endpoints
+* providing the Platform Engineers the right level of control
+* providing Developers the tools for a more fully rounded API mgmt feature set through Apicurio.
+
+image::rhcl-simplyput.png[width=60%]
+
+
+=== Personas
+
+* *Platform engineers* 
+** can deploy, manage, observe and protect services exposed via their gateways 
+* confidently allow application developers to self-service knowing that endpoints are secured
+* *Application developers* 
+** are allowed to self service and refine policies to their specific needs in order to protect exposed endpoints.
+** focus on what is important for them - their applications and code
+
+
+
+=== Kuadrant' underlying components
+
+Here is a view on how Kuadrant Policy APIs are applied on the Request flow on Gateway API
+
+image::policies-on-requestflow.png[] 
 
 ==== DNS Operator
 
 DNS operator consumes DNSRecord resources that are configured via the *DNSPolicy* API and applies them into the targeted cloud DNS provider. AWS, Azure and Google DNS are our main targets.
-
-==== Cert Manager for TLS Policy
-
-Manages TLS certificates for our components and for the Gateways. Consumes Certificate resources created by the Kuadrant operator in response to the TLSPolicy.
 
 ====  Authorino Operator for Auth Policy
 
@@ -138,12 +182,14 @@ Ref: https://docs.kuadrant.io/0.8.0/authorino/
 
 ==== Limitador Operator for Ratelimits
 
-Limitador is a generic rate-limiter and can be enabled using RateLimit APIs.
-
+* Limitador is a generic rate-limiter and can be enabled using RateLimit APIs. 
+* It support in-memory, Redis and disk data stores. 
+* In this solution pattern, for a single cluster, we go with the built-in in-memory database; 
+* for multi-cluster setup you can use a  Redis service (or RocksDB)
 
 === Policies
 
-Kuadrant at its heart, provides Gateway Policies for Kubernetes. To quote https://kuadrant.io/:
+Kuadrant at its heart, provides Gateway Policies (as described previously) for Kubernetes. To quote https://kuadrant.io/:
 
 > Gateways play a pivotal role in application connectivity. With Kuadrant, platform engineers and application developers can easily connect, secure and protect their services and infrastructure using its powerful policy APIs
 
@@ -180,7 +226,7 @@ Here is an excerpt of an AuthPolicy.
           issuerUrl: https://sso.mykeycloak.example.com/realms/realmname
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:

@@ -108,7 +108,7 @@ image::globex-403.png[width=70%]
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: AuthPolicy
 metadata:
   name: globex-mobile-gateway
@@ -118,7 +118,6 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   rules:
     authentication:
       "keycloak-users":
@@ -126,14 +125,12 @@ spec:
           issuerUrl: https://sso.%OPENSHIFTSUBDOMAIN%/realms/globex-user1
     response:
       success:
-        dynamicMetadata:
+        filters:
           identity:
             json:
               properties:
                 userid:
                   selector: auth.identity.sub
-  routeSelectors:
-    - matches: []
 ----
 
 === Test Globex Mobile again (after HTTPRoute and AuthPolicy are setup)
@@ -159,7 +156,7 @@ image::globex-429.png[width=70%]
 [.console-input]
 [source,shell script]
 ----
-apiVersion: kuadrant.io/v1beta2
+apiVersion: kuadrant.io/v1
 kind: RateLimitPolicy
 metadata:
   name: globex-mobile-gateway
@@ -169,13 +166,11 @@ spec:
     group: gateway.networking.k8s.io
     kind: HTTPRoute
     name: globex-mobile-gateway
-    namespace: globex-apim-user1
   limits:
     "per-user":
       rates:
         - limit: 100
-          duration: 10
-          unit: second
+          window: 10s
       counters:
         - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
 ----

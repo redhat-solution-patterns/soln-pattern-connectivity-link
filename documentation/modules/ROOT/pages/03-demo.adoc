@@ -116,6 +116,11 @@ oc login --token=<token> --server=<server>
 git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link-ansible
 ----
 
+[IMPORTANT]
+====
+Switch to `v0.11.0` branch in your editor
+====
+
 * Open the `inventories/inventory.template` file and update the variables. Save the file.
 +
 .[underline]#Click for details of inventory.template file#
@@ -154,7 +159,7 @@ Before running the following Ansible script, check if you have done these prereq
 ====
 
 
-Run the Ansible script which will setup the RHCL Operator, Istio and Kuadrant system workloads
+Run the Ansible script which will setup the RHCL Operator, Cert Manager Operator, OpenShift Service Mesh Operator, Istio CR and other Kuadrant system workloads
 
 [.console-input]
 [source,shell script]

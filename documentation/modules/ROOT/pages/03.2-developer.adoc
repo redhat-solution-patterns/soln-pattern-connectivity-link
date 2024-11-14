@@ -171,8 +171,6 @@ spec:
       rates:
         - limit: 100
           window: 10s
-      counters:
-        - metadata.filter_metadata.envoy\.filters\.http\.ext_authz.identity.userid
 ----
 
 === Test Globex Mobile again (after HTTPRoute, AuthPolicy and RateLimitPolicy are setup)

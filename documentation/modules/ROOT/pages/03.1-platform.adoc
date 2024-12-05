@@ -228,7 +228,7 @@ spec:
 ----
 
 * The DNSPolicy acts against a target Gateway by processing its listeners for hostnames and then create dns records for those hostnames. 
-* Note that the *routingStrategy* is marked as *"simple"* because this is a single cluster deployment. But in case of multi-cluster deployments DNSPolicy allows for `routingStrategy: loadbalanced` and can optionally include loadbalancing specifications.
+* Note that the DNSPolicy doesn't contain a *routingStrategy* because this is a single cluster deployment. But in case of multi-cluster deployments DNSPolicy allows for `routingStrategy: loadbalanced` and can optionally include loadbalancing specifications.
 * The *targetRef* sections refers to the [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[Gateway^]] created when the Ansible script was executed.
 * A number of DNS records are created on AWS Route 53. 
 +

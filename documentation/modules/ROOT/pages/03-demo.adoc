@@ -15,7 +15,7 @@ This solution walks you through the activities from the lens of a Platform Engin
 
 To provision the demo you will perform the following steps - each of which is explained in detail in the next sections:
 
-* You will need an OpenShift cluster with *`cluster-admin` privileges*. This solution pattern has been tested on OpenShift 4.15 and 4.16
+* You will need an OpenShift cluster with *`cluster-admin` privileges*. This solution pattern has been tested on OpenShift 4.16 and 4.17
 * Ensure you have the *tools* `oc` and `ansible` installed in your local environment such as your laptop
 * Access to *AWS Route53* or *Google Cloud DNS* to be able to create new domain names
 

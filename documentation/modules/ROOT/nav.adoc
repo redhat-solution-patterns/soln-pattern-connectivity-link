@@ -13,6 +13,7 @@
 ** xref:03-demo.adoc#_prerequisites[{module}.{counter:submodule3}. Pre-requisites]
 ** xref:03.1-platform.adoc[{module}.{counter:submodule3}. Platform Engineer workflow]
 ** xref:03.2-developer.adoc[{module}.{counter:submodule3}. Developer workflow]
+** xref:03.3-observability.adoc[{module}.{counter:submodule3}. Monitoring & Observability]
 
 
 // * xref:04-workshop.adoc[{counter:module}. Workshop]

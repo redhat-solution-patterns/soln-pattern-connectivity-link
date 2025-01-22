@@ -1,0 +1,77 @@
+:imagesdir: ../assets/images
+
+= Solution Patterns: Connect, Secure and Protect with Red Hat Connectivity Link
+:sectnums:
+:sectlinks:
+:doctype: book
+
+= See the Solution in Action
+
+== Dynamic Plugin
+
+Connectivity Link provides a Dynamic plugin to help you view the relevant resources from a single pane of glass.
+
+* Enable this plugin as guided in this interactive demo
++
+++++
+<!--ARCADE EMBED START--><div style="position: relative; padding-bottom: calc(49.609375% + 41px); height: 0; width: 100%;"><iframe src="https://demo.arcade.software/e2XOH3IWMRzMEfEVMm8d?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="Enable Red Hat Connectivity Link&#39;s Kuadrant Dynamic Plugin on Red Hat OpenShift console" frameborder="0" loading="lazy" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="clipboard-write" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; color-scheme: light;" ></iframe></div><!--ARCADE EMBED END-->
+++++
+
+* The plugin's overview shows all the relevant Kubernetes resources from Gateway API (Gateways and HTTPRoutes) and also the Connectivity Link policies
++ 
+image::kuadrant-overview.png[] 
+
+* Here the `(AP) prod-web-deny-all` is marked as `Accepted (Not Enforced)`, because this AuthPolicy is accepted, but is overridden by the other policies `(AP) echo-api-allow-all` and `(AP) globex-mobile-gateway`
+* Explore the policies from one single place.
+* The Policy Topology view visualizes the relationships and interactions between different resources within your cluster related to Kuadrant, allowing you to explore connections between Gateways, HTTPRoutes and Kuadrant Policies.
++
+image:kuadrant-policy-topology.png[] 
+
+
+
+== Observability
+
+Connectivity Link provides a variety of starting points for monitoring your Connectivity Link installation in the Kuadrant upstream project  https://github.com/Kuadrant/kuadrant-operator/tree/main/examples[(examples from kuadrant.io)^] folder. These dashboards and alerts are ready-to-use and easily customizable to fit your environment.
+
+The example dashboards uploaded to https://grafana.com/grafana/dashboards/[Grafana.com^]
+
+[cols="1,1"]  
+|===
+| Name     | ID 
+| https://grafana.com/grafana/dashboards/21538[App Developer Dashboard^]      | `21538` 
+| https://grafana.com/grafana/dashboards/20981[Business User Dashboard^]   | `20981`
+| https://grafana.com/grafana/dashboards/20982[Platform Engineer Dashboard^] | `20982` 
+|===
+
+
+* These dashboards can be  accessed via Grafana from here https://grafana-monitoring.%OPENSHIFTSUBDOMAIN%/login
+* Login with `admin/admin` and when prompted use `admin/admin` to pick a new passowrd
++
+image::grafana-changepassword.png[width=50%] 
+* From the left-hand navigation, access *Dashboards > Browse* menu
++
+image::grafana-dashboard-leftnav.png[] 
+* Click on the Default folder to view the preloaded dahsboards
++
+image::grafana-dashboards-list.png[] 
+
+* Click on *App Developer Dashboard* to view the detail of this Dashboard.  You can view both the `echo-api` and `globex-mobile-gateway`
++
+image::grafana-app-dev-dashabord.png[] 
+* You can the other dashboard by accessing the links to Business User and Plarform Engineer dashboards from the *Kuadrant Dashboards* section on top-left of this page.
+* Explore the various persona-based dashboards available.
+* Here is a sample Platform Engineer based Dashboard
++
+image::grafana-pe-dashabord.png[] 
+* Here is a sample Business User based Dashboard
++
+image::grafana-bu-dashabord.png[] 
+
+
+== Conclusion
+
+With this setup, Globex is all set to onboard further service enpoints to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.
+
+We will also extend this pattern to include the all important Observability aspects as well.
+
+Read more https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster[here^]

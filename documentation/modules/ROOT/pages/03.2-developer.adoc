@@ -181,11 +181,3 @@ spec:
 * Click any of the Categories from the list, and then the *Categories* menu, and repeat this a few times.
 * You would now see there is no 429 for up to 100 requests in a duration of 10 seconds.
 
-
-== Conclusion
-
-With this setup, Globex is all set to onboard further service enpoints to be accessed securely. This solution can be further extended to span across a multi-cluster setup too.
-
-We will also extend this pattern to include the all important Observability aspects as well.
-
-Read more https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster[here^]

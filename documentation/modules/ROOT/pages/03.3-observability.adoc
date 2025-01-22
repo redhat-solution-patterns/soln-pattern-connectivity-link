@@ -44,7 +44,7 @@ The example dashboards uploaded to https://grafana.com/grafana/dashboards/[Grafa
 |===
 
 
-* These dashboards can be  accessed via Grafana from here https://grafana-monitoring.%OPENSHIFTSUBDOMAIN%/login
+* These dashboards can be  accessed https://grafana-monitoring.%OPENSHIFTSUBDOMAIN%/login[via Grafana from here^]
 * Login with `admin/admin` and when prompted use `admin/admin` to pick a new passowrd
 +
 image::grafana-changepassword.png[width=50%] 

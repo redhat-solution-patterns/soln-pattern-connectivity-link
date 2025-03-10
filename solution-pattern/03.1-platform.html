@@ -556,22 +556,22 @@ spec:
 </div>
 <div class="sect2">
 <h3 id="_echo_api_walkthrough"><a class="anchor" href="#_echo_api_walkthrough"></a><a class="link" href="#_echo_api_walkthrough">1.2. Echo API Walkthrough</a></h3>
-<div class="admonitionblock warning">
+<div class="ulist">
+<ul>
+<li>
+<p>Check if the HTTPRoute works as it should. Run this curl command from a terminal. You can make use of the installed OpenShift Terminal by clicking <a href="https://console-openshift-console.apps.%OPENSHIFTSUBDOMAIN%/terminal" target="terminal">here</a> to execute the <code>curl</code> command.</p>
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Due to the nature of DNS Records it may take a while for it get propagated.
+By using the OpenShift terminal, we can circumvent any delays in the DN propogation to local development environements including laptop,. Typicallu,due to the nature of DNS Records it may take a while for it get propagated.
 </td>
 </tr>
 </table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Check if the HTTPRoute works as it should. Run this curl command from a terminal.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell script hljs" data-lang="shell script">curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%</code></pre>

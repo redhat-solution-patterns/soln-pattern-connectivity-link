@@ -240,9 +240,10 @@ image::route53-dnsrecords.png[]
 
 === Echo API Walkthrough
 
-WARNING: Due to the nature of DNS Records it may take a while for it get propagated. 
+* Check if the HTTPRoute works as it should. Run this curl command from a terminal. You can make use of the installed OpenShift Terminal by clicking https://console-openshift-console.apps.%OPENSHIFTSUBDOMAIN%/terminal[here^, window="terminal"] to execute the `curl` command. 
++
+NOTE: By using the OpenShift terminal, we can circumvent any delays in the DN propogation to local development environements including laptop,. Typicallu,due to the nature of DNS Records it may take a while for it get propagated. 
 
-* Check if the HTTPRoute works as it should. Run this curl command from a terminal. 
 +
 [.console-input]
 [source,shell script]

@@ -12,7 +12,7 @@
 
 The ansible scripts we just run has setup the following as ArgoCD applicatiopns:
 
-* Red Hat Connectivity Link/Kuadrant operator and a Kuadrant instance
+* Red Hat Connectivity Link operator and a Kuadrant instance
 * A TLS issuer for TLS certificates. [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/cluster/cert-manager.io\~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml[View CR^]]
 +
 .[underline]#Click to see an example and description#
@@ -303,7 +303,7 @@ spec:
 ----
 for i in {1..10}; do curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%; done
 ----
-* Learn more about Rate Limiting https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/rate-limiting/[here^]
+* Learn more about Rate Limiting https://docs.kuadrant.io/1.0.x/kuadrant-operator/doc/overviews/rate-limiting/[here^]
 
 
 === What's next

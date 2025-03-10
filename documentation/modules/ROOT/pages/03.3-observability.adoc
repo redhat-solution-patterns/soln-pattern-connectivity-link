@@ -74,4 +74,4 @@ With this setup, Globex is all set to onboard further service enpoints to be acc
 
 We will also extend this pattern to include the all important Observability aspects as well.
 
-Read more https://docs.kuadrant.io/0.8.0/architecture/docs/design/architectural-overview-v1/#multi-cluster[here^]
+Read more https://docs.kuadrant.io/1.0.x/architecture/docs/design/architectural-overview-v1/#multi-cluster[here^]

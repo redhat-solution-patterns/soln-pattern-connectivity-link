@@ -67,13 +67,13 @@ Refer to the https://developers.redhat.com/articles/2024/06/12/getting-started-r
 
 .. https://gateway-api.sigs.k8s.io/api-types/gateway/[*Gateway*^]: create a new Gateway (using the Gateway API and Istio-based controllers) as an entrypoint for all requests to Globex's system. The Gateway uses the TLS Certificates created by the TLS Issuer.  Also a number of policies are setup to secure and protect the Gateway.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/tls/[*TLS Policy*^]: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests and is denoted with a wildcard hostname based on the root domain. These gateways can use a subdomain of the Managed Zone. E.g.  `*.managed.globex.com`.
+.. *TLS Policy*: leverages the TLS-issuer/CertificateIssuer to set up TLS certificates for the listeners defined within the Gateway. Listeners define the hostname for the various incoming requests and is denoted with a wildcard hostname based on the root domain. These gateways can use a subdomain of the Managed Zone. E.g.  `*.managed.globex.com`.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/auth/[*Auth Policy*^]: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints.
+.. *Auth Policy*: setup a zero-trust deny-all policy that result in a default 403 response for any unprotected endpoints.
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/dns/[*DNS Policy*^]: provide DNS management by managing the lifecycle of DNS records to setup ingress connectivity using DNS to bring traffic to the Gateway.  
+.. *DNS Policy*: provide DNS management by managing the lifecycle of DNS records to setup ingress connectivity using DNS to bring traffic to the Gateway.  
 
-.. https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/rate-limiting/[*RateLimit Policy*^]: set up a default artificially low global limit to further protect any endpoints exposed by this Gateway.
+.. *RateLimit Policy*^: set up a default, artificially low, global limit to further protect any endpoints exposed by this Gateway.
 ====
 
 . *Developer/Application owners* workflow: +
@@ -140,7 +140,7 @@ If needed, one can create the certificates manually and inject them, rather than
 
 video::euWAMvQojP4[youtube, width=800, height=480]
 
-It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters. It exposes these capabilities in the form of powerful policy APIs that implement the https://gateway-api.sigs.k8s.io/[Gateway API^] concept of https://gateway-api.sigs.k8s.io/reference/policy-attachment/[policy attachment^] -   with policies for https://docs.kuadrant.io/latest/kuadrant-operator/doc/tls/[TLS^], https://docs.kuadrant.io/0.8.0/kuadrant-operator/doc/reference/dnspolicy/[DNS^], application https://docs.kuadrant.io/latest/kuadrant-operator/doc/auth/[AuthN & AuthZ^], and https://docs.kuadrant.io/latest/kuadrant-operator/doc/rate-limiting/[rate limiting^]. Additionally, Kuadrant offers observability templates to further support infrastructure management. 
+It enables platform engineers and application developers to easily connect, secure, and protect their services and infrastructure across multiple clusters. It exposes these capabilities in the form of powerful policy APIs that implement the https://gateway-api.sigs.k8s.io/[Gateway API^] concept of https://gateway-api.sigs.k8s.io/reference/policy-attachment/[policy attachment^] -   with policies for https://docs.kuadrant.io/1.0.x/kuadrant-operator/doc/overviews/tls/[TLS^], https://docs.kuadrant.io/1.0.x/kuadrant-operator/doc/overviews/dns/[DNS^], application https://docs.kuadrant.io/1.0.x/kuadrant-operator/doc/overviews/auth/[AuthN & AuthZ^], and https://docs.kuadrant.io/1.0.x/kuadrant-operator/doc/overviews/rate-limiting/[rate limiting^]. Additionally, Kuadrant offers observability templates to further support infrastructure management. 
 
 
 Simply put, Red Hat Connectivity Link 
@@ -177,7 +177,7 @@ DNS operator consumes DNSRecord resources that are configured via the *DNSPolicy
 ====  Authorino Operator for Auth Policy
 
 External authorization server fully manageable via Kubernetes Custom Resources. Supports JWT authentication, API key, mTLS, pattern-matching authz, OPA, K8s SA tokens, K8s RBAC, external metadata fetching, and more, with minimum to no coding at all, no rebuilding of your applications. +
-Ref: https://docs.kuadrant.io/0.8.0/authorino/
+Ref: https://docs.kuadrant.io/1.0.x/authorino/
 
 
 ==== Limitador Operator for Ratelimits
@@ -203,7 +203,7 @@ Ref: https://gateway-api.sigs.k8s.io/reference/policy-attachment/
 
 AuthPolicy and RateLimitPolicy can be attached to Gateways or to HTTPRoutes, with cascading effects through the hierarchy that result in one effective policy per gateway-route combination. 
 
-Ref: More about https://docs.kuadrant.io/0.8.0/architecture/rfcs/0009-defaults-and-overrides/#policy-spec-resembling-more-the-target-spec[defaults and overrides^]
+Ref: More about https://docs.kuadrant.io/1.0.x/architecture/rfcs/0009-defaults-and-overrides/[defaults and overrides^]
 
 // For example, we can apply a RateLimit Policy to a Gateway which will by *default* be applied across all the resources (such as HTTPRoute) attached to it. But developers might want to apply different rate limits based on the service endpoint they are exposing. This could be higher than the Gateway's rate limits for inexpensive requests, or could be quite low if for e.g., they would like to expose an LLM API as a service. This can be achieved by applying another RateLimit Policy to the HTTPRoute thereby *overriding* the default value.
 

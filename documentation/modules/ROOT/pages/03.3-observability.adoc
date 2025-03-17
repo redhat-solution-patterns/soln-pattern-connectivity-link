@@ -44,16 +44,15 @@ The example dashboards uploaded to https://grafana.com/grafana/dashboards/[Grafa
 |===
 
 
-* These dashboards can be  accessed https://grafana-monitoring.%OPENSHIFTSUBDOMAIN%/login[via Grafana from here^]
-* Login with `admin/admin` and when prompted use `admin/admin` to pick a new passowrd
-+
-image::grafana-changepassword.png[width=50%] 
-* From the left-hand navigation, access *Dashboards > Browse* menu
-+
-image::grafana-dashboard-leftnav.png[] 
-* Click on the Default folder to view the preloaded dahsboards
+* These dashboards can be  accessed https://grafana-route-monitoring.%OPENSHIFTSUBDOMAIN%/login[via Grafana from here^]
+* Click on the *Log in with OpenShift* button, and login as a OpenShift admin user when prompted.
+* From the left-hand navigation, access *Dashboards > Browse* menu. 
 +
 image::grafana-dashboards-list.png[] 
+* Click on the *monitoring* folder to view the preloaded dashboards.
++
+image::grafana-monitoring-dashboards.png[] 
+
 
 * Click on *App Developer Dashboard* to view the detail of this Dashboard.  You can view both the `echo-api` and `globex-mobile-gateway`
 +

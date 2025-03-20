@@ -10,7 +10,7 @@
 
 == Walkthrough As a Platform Engineer
 
-The ansible scripts we just run has setup the following as ArgoCD applicatiopns:
+The ansible scripts we just ran have set up the following as ArgoCD applications:
 
 * Red Hat Connectivity Link operator and a Kuadrant instance
 * A TLS issuer for TLS certificates. [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/cluster/cert-manager.io\~v1~ClusterIssuer/prod-web-lets-encrypt-issuer/yaml[View CR^]]
@@ -43,12 +43,12 @@ spec:
               name: ********
 ``` 
 
-* TLS Issuer references to the ACME server  https://letsencrypt.org/[Let's Encrypt^]
-* It uses the DNS providers credentials, in this case AWS to create the TLS certificates
+* TLS Issuer references the ACME server  https://letsencrypt.org/[Let's Encrypt^]
+* It uses the DNS providers credentials, in this case AWS, to create the TLS certificates
 ******
 ====
 
-* A Gateway (based on istio gateway) with a wildcard hostname based on the root domain. [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[View CR^]]
+* A Gateway (based on Istio Gateway) with a wildcard hostname based on the root domain. [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[View CR^]]
 +
 .[underline]#Click to see an example and description#
 [%collapsible]
@@ -89,7 +89,7 @@ spec:
 
 
 * Various policies attached to the Gateway:
-** A default `deny-all` Auth Policy to start with zero-trust [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1~AuthPolicy/prod-web-deny-all/yaml[View CR^]]
+** A default `deny-all` Auth Policy to start with zero trust [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/kuadrant.io\~v1~AuthPolicy/prod-web-deny-all/yaml[View CR^]]
 +
 .[underline]#Click to see an example and description#
 [%collapsible]
@@ -206,7 +206,7 @@ spec:
 
 === Create a DNS Policy
 
-Now that we have setup a secure, protected application connectivity environment, we are now ready to expose this to the Internet. We will do so by creating a DNSPolicy +
+Now that we have set up a secure, protected application connectivity environment, we are now ready to expose this to the Internet. We will do so by creating a DNSPolicy +
 
 * Copy the following into the *Import YAML* utility accessible by the (+) button on top of the https://console-openshift-console.%OPENSHIFTSUBDOMAIN%[OpenShift Console^]
 +
@@ -227,8 +227,8 @@ spec:
   - name: prod-web-aws-credentials
 ----
 
-* The DNSPolicy acts against a target Gateway by processing its listeners for hostnames and then create dns records for those hostnames. 
-* Note that the DNSPolicy doesn't contain a *routingStrategy* because this is a single cluster deployment. But in case of multi-cluster deployments DNSPolicy allows for `routingStrategy: loadbalanced` and can optionally include loadbalancing specifications.
+* The DNSPolicy acts against a target Gateway by processing its listeners for hostnames and then creating DNS records for those hostnames. 
+* Note that the DNSPolicy doesn't contain a *routingStrategy* because this is a single cluster deployment. But in case of multi-cluster deployments DNSPolicy allows for `routingStrategy: loadbalanced` and can optionally include load-balancing specifications.
 * The *targetRef* sections refers to the [https://console-openshift-console.%OPENSHIFTSUBDOMAIN%/k8s/ns/ingress-gateway/gateway.networking.k8s.io\~v1~Gateway/prod-web/yaml[Gateway^]] created when the Ansible script was executed.
 * A number of DNS records are created on AWS Route 53. 
 +
@@ -242,7 +242,7 @@ image::route53-dnsrecords.png[]
 
 * Check if the HTTPRoute works as it should. Run this curl command from a terminal. You can make use of the installed OpenShift Terminal by clicking https://console-openshift-console.apps.%OPENSHIFTSUBDOMAIN%/terminal[here^, window="terminal"] to execute the `curl` command. 
 +
-NOTE: By using the OpenShift terminal, we can circumvent any delays in the DN propogation to local development environements including laptop,. Typicallu,due to the nature of DNS Records it may take a while for it get propagated. 
+NOTE: By using the OpenShift terminal, we can circumvent any delays in the DN propogation to local development environments, including a laptop. Typically, due to the nature of DNS Records it may take a while for them to get propagated. 
 
 +
 [.console-input]
@@ -273,8 +273,8 @@ curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%
 ----
 for i in {1..10}; do curl -k -w "%{http_code}" https://echo.globex.%AWSROOTZONE%; done
 ----
-* You would see that you will get a response 5 times, post which you would see *Too Many Requests 429*
-* We haven't setup a RateLimitPolicy for the echoAPI itself, and so the gateway's default RateLimitPolicy gets applied to the echoAPI HTTPRoute. You can create another RateLimitPolicy and attach it to the echoAPI HTTPRoute to check this out.
+* You will see that you get a response 5 times, after which you see *Too Many Requests 429*
+* We haven't set up a RateLimitPolicy for the echoAPI itself, and so the gateway's default RateLimitPolicy gets applied to the echoAPI HTTPRoute. You can create another RateLimitPolicy and attach it to the echoAPI HTTPRoute to check this out.
 +
 [.console-input]
 [source,shell script]

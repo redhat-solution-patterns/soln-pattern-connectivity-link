@@ -117,7 +117,7 @@ git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link
 ----
 
 
-* Open the `inventories/inventory.template` file and update the variables. Save the file.
+* Open the `operator-setup/inventories/inventory.template` file and update the variables. Save the file.
 +
 .[underline]#Click for details of inventory.template file#
 [%collapsible]

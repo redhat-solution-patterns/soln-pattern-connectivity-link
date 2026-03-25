@@ -18,6 +18,7 @@ To provision the demo you will perform the following steps - each of which is ex
 * You will need an OpenShift cluster with *`cluster-admin` privileges*. This solution pattern has been tested on OpenShift 4.16 and 4.17
 * Ensure you have the *tools* `oc` and `ansible` installed in your local environment such as your laptop
 * Access to *AWS Route53* or *Google Cloud DNS* to be able to create new domain names
+* *Gateway API GatewayClass* named "istio" must exist in your cluster before running the deployment scripts
 
 === CLI tools
 
@@ -27,7 +28,7 @@ To check if you have the cli tools, you can open your terminal and use following
 [.console-input]
 [source,shell script]
 ----
-oc version #openshift cli client
+ oc version #openshift cli client
 ansible --version
 ansible-galaxy --version
 ansible-galaxy collection list #the list should include kubernetes.core and amazon.aws.route53 (version 8.1.0 ) module
@@ -55,17 +56,93 @@ This *subdomain*  is automatically setup by the deployment scripts. But you will
 Ref: https://repost.aws/knowledge-center/create-subdomain-route-53[this article^] to know more about how a Route53 subdomain can be created.
 
 
+=== GatewayClass Prerequisite
+
+[IMPORTANT]
+====
+The deployment scripts require a GatewayClass named *"istio"* to exist in your cluster before running the Ansible playbook. This GatewayClass is used by the Gateway resources deployed by the Connectivity Link solution.
+====
+
+==== Check if GatewayClass exists
+
+Run this command to check if the GatewayClass "istio" exists:
+
+******
+[.console-input]
+[source,shell script]
+----
+oc get gatewayclass istio
+----
+******
+
+If the GatewayClass exists, you will see output like:
+```
+NAME    CONTROLLER                                AGE
+istio   openshift.io/gateway-controller/v1        5d
+```
+
+If it does not exist, you will see an error like: `Error from server (NotFound): gatewayclasses.gateway.networking.k8s.io "istio" not found`
+
+==== How GatewayClass is created
+
+The GatewayClass "istio" can be created by one of these methods:
+
+*Option 1: OpenShift Ingress Operator (Automatic)*
+
+When you install the OpenShift Service Mesh 3 Operator (Sail Operator), the OpenShift Ingress Operator can automatically create a GatewayClass named "istio" with the controller `openshift.io/gateway-controller/v1`.
+
+[NOTE]
+=====
+If you have Red Hat OpenShift AI (RHOAI) installed, it may have already created this GatewayClass or a similar one (e.g., "data-science-gateway-class") that uses the same Istio control plane.
+=====
+
+*Option 2: Manual Creation*
+
+If the GatewayClass does not exist after installing the Sail Operator, you can create it manually:
+
+******
+[.console-input]
+[source,shell script]
+----
+oc apply -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: istio
+spec:
+  controllerName: openshift.io/gateway-controller/v1
+EOF
+----
+******
+
+Verify the GatewayClass was created:
+******
+[.console-input]
+[source,shell script]
+----
+oc get gatewayclass istio -o yaml
+----
+******
+
+You should see the GatewayClass with `controllerName: openshift.io/gateway-controller/v1` in the output.
+
+[TIP]
+=====
+The OpenShift Ingress Operator automatically creates and manages the Istio control plane (Istio CR named "openshift-gateway" in "openshift-ingress" namespace) when you create a GatewayClass with controller `openshift.io/gateway-controller/v1`. You do not need to create the Istio CR manually.
+=====
+
+
 === Personalize the instructions
 To personalize the rest of the instructions to your OpenShift environment:
 
-* At the top-right of this page enter the following information under the *Your Workshop Environment* section 
+* At the top-right of this page enter the following information under the *Your Workshop Environment* section
 ** *AWSROOTZONE* is the Root Route53 domain of your AWS environment.
 +
 [NOTE]
 =====
 The AWSROOTZONE would look something like this `mycluster.abc.com` or `sandbox100.opentlc.com`
 =====
-** *OPENSHIFTSUBDOMAIN* to match your OpenShift cluster 
+** *OPENSHIFTSUBDOMAIN* to match your OpenShift cluster
 +
 [NOTE]
 =====
@@ -90,8 +167,8 @@ The primary goal of a Platform Engineer is to deploy a Gateway that provides sec
 
 In this demo, the deployment script uses ArgoCD to:
 
-* Install Red Hat Connectivity Link (Kuadrant) operator 
-* Setup a ManagedZone for DNS configuration. 
+* Install Red Hat Connectivity Link (Kuadrant) operator
+* Setup a ManagedZone for DNS configuration.
 * Define a TLS issuer for TLS certificates for secure communication to the Gateways.
 * Create a Gateway (based on Istio gateway) with a wildcard hostname based on the root domain.
 * Kuadrant Custom Resources (CRs) including various policies: DNS, TLS.
@@ -117,9 +194,16 @@ git clone https://github.com/rh-soln-pattern-connectivity-link/connectivity-link
 ----
 
 
-* Open the `inventories/inventory.template` file and update the variables. Save the file.
+* Copy the inventory template and edit it with your configuration:
 +
-.[underline]#Click for details of inventory.template file#
+----
+cd operator-setup
+cp inventories/inventory.template inventories/inventory
+----
++
+* Open the `inventories/inventory` file and update the variables with your AWS credentials and cluster details. Save the file.
++
+.[underline]#Click for details of inventory file#
 [%collapsible]
 ====
 ```
@@ -152,6 +236,7 @@ ocp4_workload_connectivity_link_gateway_geo_code=<gateway geo code>
 Before running the following Ansible script, check if you have done these prerequisites
 [%interactive]
 ** [ ] The inventory file reflects the correct AWS credentials, Root zone details and region etc.
+** [ ] GatewayClass "istio" exists in your cluster (check with `oc get gatewayclass istio`)
 ====
 
 
@@ -160,8 +245,8 @@ Run the Ansible script which will setup the RHCL Operator, Cert Manager Operator
 [.console-input]
 [source,shell script]
 ----
-cd operator-setup 
-ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory.template
+cd operator-setup
+ansible-playbook playbooks/ocp4_workload_connectivity_link.yml -e ACTION=create -i inventories/inventory
 ----
 
 === What's next
